@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -23,6 +25,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
+        return view('dashboard', [
+            'userShop' => 'https://'.$shopifyUser->nickname
+        ]);
     }
 }

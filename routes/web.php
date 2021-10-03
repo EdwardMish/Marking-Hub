@@ -33,5 +33,5 @@ Route::get('/auth/logout', )->name('logout');
 Route::get('auth/shopify/install',
     [App\Http\Controllers\Auth\ShopifyController::class, 'install'])->name('Shopify.Install');
 
-
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+Route::get('/campaign', [App\Http\Controllers\CampaignController::class, 'index'])->name('campaign');
