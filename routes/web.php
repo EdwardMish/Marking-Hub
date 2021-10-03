@@ -18,14 +18,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Auth Routes
 Route::get('/auth/redirect', function () {
     return Socialite::driver('shopify')->scopes(['write_orders', 'read_customers'])->stateless()->redirect();
-});
-Route::get('/auth/callback', function () {
-    $user = Socialite::driver('shopify')->user();
-    // $user->token
-});
-Route::get('auth/shopify/install', [App\Http\Controllers\Auth\ShopifyController::class, 'install'])->name('Shopify.Install');
+})->name('Shopify.Install');
+Route::get('/auth/callback',
+    [App\Http\Controllers\Auth\ShopifyController::class, 'callback'])->name('Shopify.CallBack');
+Route::get('/auth/login', function () {
+    return view('auth/login');
+})->name('login');
+Route::get('/auth/logout', )->name('logout');
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('auth/shopify/install',
+    [App\Http\Controllers\Auth\ShopifyController::class, 'install'])->name('Shopify.Install');
+
+
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
