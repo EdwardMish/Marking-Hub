@@ -1,1 +1,3 @@
-API
+<?php
+
+echo xdebug_info();
