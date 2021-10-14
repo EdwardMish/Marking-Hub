@@ -34,5 +34,10 @@ return [
         'client_secret' => env('SHOPIFY_API_SECRET'),
         'redirect' => env('SHOPIFY_REDIRECT_URI'),
     ],
+    'design_huddle' => [
+        'client_id' => env('DESIGN_HUDDLE_CLIENT_ID'),
+        'client_secret' => env('DESIGN_HUDDLE_CLIENT_SECRET'),
+        'api_url' => env('DESIGN_HUDDLE_API_URL')
+    ]
 
 ];

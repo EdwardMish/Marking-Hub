@@ -31,7 +31,7 @@ class ShopifyController extends Controller
                 'user_id' => $users->id,
                 'avatar' => $shopifyUser->getAvatar(),
                 'nickname' => $shopifyUser->getNickname(),
-                'token' => $shopifyUser->token,
+                'access_token' => $shopifyUser->token,
                 'refresh_token' => $shopifyUser->refreshToken,
                 'token_expiration' => $shopifyUser->expiresIn
             ]

@@ -19,7 +19,7 @@ class CreateUserSocialProviders extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->longText('avatar')->nullable();
             $table->longText('nickname')->nullable();
-            $table->string('token')->nullable();
+            $table->string('access_token')->nullable();
             $table->string('refresh_token')->nullable();
             $table->dateTime('token_expiration')->nullable();
             $table->timestamps();
