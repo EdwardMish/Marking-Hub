@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shopify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -36,6 +37,8 @@ class ShopifyController extends Controller
                 'token_expiration' => $shopifyUser->expiresIn
             ]
         );
+
+        (new Shopify())->addTrackingPixel($shopifyUser->token, $shopifyUser->getNickname());
 
         Auth::login($users, true);
 
