@@ -15,7 +15,7 @@ class Shopify
             'headers' => ['X-Shopify-Access-Token' => $accessToken],
             'json' => [
                 'script_tag' => [
-                    'src' => config('services.design_huddle.api_url'),
+                    'src' => config('services.shopify.script_tag'),
                     'event' => 'onload'
                 ]
             ]
