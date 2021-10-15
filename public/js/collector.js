@@ -54,7 +54,7 @@ function getIP() {
 async function saveCustomerLog(ip, path, sessionID, variant) {
     let ipAddress = await fetch("https://api.ipify.org/?format=json");
 
-    await fetch(`${api_url}saveCustomerLog`, {
+    await fetch(`${api_url}`, {
         method: 'POST',
         body: JSON.stringify({
             shopName: window.Shopify.shop,
