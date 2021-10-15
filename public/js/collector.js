@@ -1,4 +1,4 @@
-let api_url = 'https://local.app.simplepost.co/';
+let api_url = 'https://analytics.simplepost.co/api/logVisit';
 let apiHeaders = {
     "Content-Type": "application/json"
 }
