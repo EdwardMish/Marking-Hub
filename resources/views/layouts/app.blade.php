@@ -10,14 +10,14 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}" defer></script>
     <script src="{{ asset('js/popper.min.js') }}" defer></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}" defer></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}" defer></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}" defer></script>
     <script src="{{ asset('js/inspinia.js') }}" defer></script>
-
+    @stack('onload-js')
 
     <!-- Fonts -->
 
@@ -26,6 +26,7 @@
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
     <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    @stack('css')
 </head>
 <body>
     <div id="wrapper">
