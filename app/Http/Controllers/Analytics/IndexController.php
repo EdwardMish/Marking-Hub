@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Analytics;
 
 use App\Http\Controllers\Controller;
 use App\Models\Analytics\Dynamo;
+use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,6 +30,8 @@ class IndexController extends Controller
         }
 
         $validated = $validator->validated();
+        $userSP = SocialProviders::where(['provider_id' => 1, 'nickname' => $validated['shopName']])->first();
+        $validated['userId'] = strval($userSP->user_id);
 
         $logVisit = (new Dynamo())->logVisit($validated);
 

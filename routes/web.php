@@ -34,7 +34,7 @@ Route::get('/campaign', [App\Http\Controllers\CampaignController::class, 'index'
 Route::get('/campaign/create/{project_id}',
     [App\Http\Controllers\CampaignController::class, 'createCampaign'])->where('project_id',
     '[A-Za-z0-9]+')->name('createCampaign');
-Route::get('/campaign/start/{project_id}',
+Route::post('/campaign/start/{project_id}',
     [App\Http\Controllers\CampaignController::class, 'startCampaign'])->where('project_id',
     '[A-Za-z0-9]+')->name('startCampaign');
 Route::get('/campaign/select-audience/{project_id}',

@@ -7,16 +7,13 @@
                         <span class="block m-t-xs font-bold">{{ auth()->user()->name }}</span>
                     </a>
                 </div>
-                <div class="logo-element">
-                    IN+
-                </div>
             </li>
             <li class="{{ Route::is('dashboard') ? 'active' : '' }}">
-                <a href="{{ Route('dashboard') }}"><i class="fa fa-th-large"></i> <span
+                <a href="{{ Route('dashboard') }}"><i class="fa fa-dashboard"></i> <span
                         class="nav-label">Dashboard</span></a>
             </li>
             <li class="{{ (Route::is('viewCampaigns', 'createCampaign', 'selectPostcard')) ? 'active' : '' }}">
-                <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Campaign</span><span
+                <a href="#"><i class="fa fa-bullhorn"></i> <span class="nav-label">Campaign</span><span
                         class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li class="{{ Route::is('viewCampaigns') ? 'active' : '' }}"><a href="{{ Route('viewCampaigns') }}">View

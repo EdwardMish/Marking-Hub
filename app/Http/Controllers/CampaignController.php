@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Campaign\CampaignAudienceSizes;
 use App\Models\Campaign\Campaigns;
+use App\Models\Campaign\CampaignsState;
 use App\Models\Campaign\DesignHuddle;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CampaignController extends Controller
 {
@@ -66,7 +69,7 @@ class CampaignController extends Controller
             'user_id' => $userId,
             'project_id' => $projectId,
             'thumbnail_url' => $thumbnailUrl,
-            'state' => 1
+            'state_id' => 1
             //Hardcoded State, could call DB and retrieve value however this is part of migration so I can be reasonably certain this value is correct
         ]);
 
@@ -75,19 +78,30 @@ class CampaignController extends Controller
 
     public function startCampaign(Request $request)
     {
+
+        // Could add validator against audience_states but there's no real need for the extra call as only malicious
+        // users could break this, and they can only break their own campaigns, why would they do this.
+        $rules = [
+            'audience' => 'required|int',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
         $projectId = $request->route('project_id');
         $userId = Auth::id();
-        $access_token = SocialProviders::where(['provider_id' => 2, 'user_id' => $userId])->first()->access_token;
+        $campaign = Campaigns::where(['user_id' => $userId, 'project_id' => $projectId])->first();
+        $campaignState = CampaignsState::where(['name' => 'Active'])->first();
 
-        $thumbnailUrl = (new DesignHuddle())->getThumbnail($access_token, $projectId);
-        Campaigns::create([
-            'user_id' => $userId,
-            'project_id' => $projectId,
-            'thumbnail_url' => $thumbnailUrl,
-            'state' => 1
-            //Hardcoded State, could call DB and retrieve value however this is part of migration so I can be reasonably certain this value is correct
-        ]);
-        //@todo: Send to 3rd Party
+        if ($validator->validated()) {
+            //using request here should be fine given it was just validated
+            $campaign->audience_size_id = $request->get('audience');
+        }
+
+        if ($request->get('submit') == 'start') {
+            $campaign->state_id = $campaignState->id;
+        }
+
+        $campaign->save();
 
         return redirect()->route('viewCampaigns');
     }
@@ -97,17 +111,19 @@ class CampaignController extends Controller
         $projectId = $request->route('project_id');
         $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
         $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
+        $audienceSizes = CampaignAudienceSizes::all();
         return view('campaign.select-audience', [
             'userShop' => 'https://'.$shopifyUser->nickname,
             'userToken' => $DH->access_token,
-            'projectId' => $projectId
+            'projectId' => $projectId,
+            'audienceSizes' => $audienceSizes
         ]);
     }
 
     public function viewCampaigns(Request $request)
     {
         $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
-        $campaigns = Campaigns::all();
+        $campaigns = (new Campaigns)->getAllCampaignsReadable(Auth::id());
         return view('campaign.view', [
             'userShop' => 'https://'.$shopifyUser->nickname,
             'campaigns' => $campaigns

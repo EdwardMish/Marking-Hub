@@ -31,7 +31,7 @@ class CreateCampaigns extends Migration
             $table->timestamps();
         });
 
-        DB::table('campaigns_state')->insert(
+        \Illuminate\Support\Facades\DB::table('campaigns_state')->insert(
             [
                 [
                     'id' => '1',
@@ -39,16 +39,12 @@ class CreateCampaigns extends Migration
                 ],
                 [
                     'id' => '10',
-                    'name' => 'Processing'
+                    'name' => 'Active'
                 ],
                 [
                     'id' => '20',
-                    'name' => 'Delayed'
-                ],
-                [
-                    'id' => '30',
-                    'name' => 'Complete'
-                ],
+                    'name' => 'Paused'
+                ]
             ]
         );
     }

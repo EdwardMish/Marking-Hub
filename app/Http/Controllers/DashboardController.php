@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Campaign\Campaigns;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,10 @@ class DashboardController extends Controller
     public function index()
     {
         $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
+        $campaigns = Campaigns::all();
         return view('dashboard', [
-            'userShop' => 'https://'.$shopifyUser->nickname
+            'userShop' => 'https://'.$shopifyUser->nickname,
+            'campaigns' => $campaigns
         ]);
     }
 }

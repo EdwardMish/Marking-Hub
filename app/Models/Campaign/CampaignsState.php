@@ -12,6 +12,8 @@ class CampaignsState extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'campaigns_state';
+
     protected $fillable = [
         'name', 'description'
     ];

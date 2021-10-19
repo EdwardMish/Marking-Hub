@@ -23,12 +23,12 @@ class Dynamo extends Model
         $result = $client->putItem( [
             'TableName'     => Config::get('aws.dynamo.visits.name'),
             'Item' => [
-                'storename' => ['S' => $data['shopName'].'ZZZ'],
+                'user_id' => ['N' => $data['userId']],
                 'created_at' => ['N' => $epochTime],
                 'expires_at' => ['N' => $expiresAtEpoch],
                 'path' => ['S' => $data['path']],
-                'variantId' =>['S' => (empty($data['variantId']) ? '' : $date['variantId'])],
-                'sessionId' => ['S' => $data['sessionId']],
+                'variant_id' =>['S' => (empty($data['variantId']) ? '' : $date['variantId'])],
+                'session_id' => ['S' => $data['sessionId']],
                 'ip' => ['S' => $data['ip']],
                 'type' => ['S' => $data['type']]
             ]
