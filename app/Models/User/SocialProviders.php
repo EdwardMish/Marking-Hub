@@ -2,9 +2,11 @@
 
 namespace App\Models\User;
 
+use App\Models\Campaign\DesignHuddle;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 
 class SocialProviders extends Model
@@ -57,5 +59,23 @@ class SocialProviders extends Model
 
     public function getShopifyById($userId) {
         return $this::where(['provider_id' => 1, 'user_id' => $userId])->first();
+    }
+
+
+    public function getExpiredTokens() {
+
+        $expirations = $this->where('token_expiration', '<=', date('Y-m-d H:i:s'))->get();
+        $DesignHuddle = new DesignHuddle();
+        foreach ($expirations as $expired) {
+            if ($expired->provider_id == 2) {
+                $res = $DesignHuddle->getRefreshToken($expired->user_id);
+                $DesignHuddle->updateUser($expired, $res);
+                //$DesignHuddle->updateThumbnails($expired, $res->);
+            } else {
+                Log::error('Unhandled Token Expiration');
+            }
+        }
+        return $expirations;
+
     }
 }

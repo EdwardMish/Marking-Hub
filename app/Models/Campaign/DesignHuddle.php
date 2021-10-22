@@ -74,6 +74,18 @@ class DesignHuddle extends Model
         return $resBody->data->thumbnail_url;
     }
 
+    public function updateThumbnail()
+    {
+
+
+
+    }
+
+    public function updateThumbnails()
+    {
+
+    }
+
     public function convertExpiration($epoch)
     {
         $dt = (new \DateTime())->add(new \DateInterval('PT'.$epoch.'S'));

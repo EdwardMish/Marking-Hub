@@ -2,6 +2,7 @@
 
 namespace App\Models\Analytics;
 
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -20,6 +21,9 @@ class Dynamo extends Model
         $expiresAtEpoch = $expiresAt->format('U');
         //Inserting value with tableName: "Logs" and columnName: "userId"
         $client = \AWS::createClient('DynamoDb');
+
+        //@ToDo: enable to determine value for 'audience'
+
         $result = $client->putItem( [
             'TableName'     => Config::get('aws.dynamo.visits.name'),
             'Item' => [
@@ -35,5 +39,21 @@ class Dynamo extends Model
         ]);
 
         return $result;
+    }
+
+    public function getVisitByShop(int $userId, $audience, int $createdAt)
+    {
+        $client = \AWS::createClient('DynamoDb');
+
+        $response = $client->query([
+            'TableName' =>  Config::get('aws.dynamo.visits.name'),
+            'Key' => [
+                'user_id'  => array('N' => strval($userId)),
+            ],
+            'ExpressionAttributeValues'
+        ]);
+
+        echo $response;
+
     }
 }

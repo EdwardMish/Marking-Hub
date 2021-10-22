@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Models\Campaign\CampaignCron;
+use App\Models\User\SocialProviders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -25,7 +27,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('')->daily();
+        $schedule->command(CampaignCron::queueCampaigns())->daily();
+        $schedule->command((new SocialProviders())->getExpiredTokens())->daily();
     }
 
     /**

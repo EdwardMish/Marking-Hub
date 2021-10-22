@@ -51,4 +51,9 @@ class Campaigns extends Model
 
         return $campaigns;
     }
+
+    public function refreshThumbnail($projectId)
+    {
+        $project = $this->where(['project_id' => $projectId])->first();
+    }
 }

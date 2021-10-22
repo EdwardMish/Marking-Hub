@@ -17,3 +17,6 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+Artisan::command('refresh_social', function () {
+    $this->comment((new \App\Models\User\SocialProviders())->getExpiredTokens());
+})->describe('Refresh Social Tokens');

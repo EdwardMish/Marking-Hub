@@ -98,12 +98,19 @@ class CampaignController extends Controller
         }
 
         if ($request->get('submit') == 'start') {
-            $campaign->state_id = $campaignState->id;
+            //Check to see if there is already an active campaign
+            $activeCampaigns = Campaigns::where(['user_id' => $userId, 'state_id' => $campaignState->id])->get();
+            if ($activeCampaigns->count() == 0) {
+                $campaign->state_id = $campaignState->id;
+            } else {
+                $validator->errors()->add('campaign_id',
+                    'There is already an active campaign.  You can only have one active campaign at a time, your campaign was saved, however, it was not activated.');
+            }
         }
 
         $campaign->save();
 
-        return redirect()->route('viewCampaigns');
+        return redirect()->route('viewCampaigns')->withErrors($validator);
     }
 
     public function selectAudience(Request $request)
