@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campaign\CampaignAudienceSizes;
+use App\Models\Campaign\CampaignCron;
 use App\Models\Campaign\Campaigns;
 use App\Models\Campaign\CampaignsState;
 use App\Models\Campaign\DesignHuddle;
@@ -131,6 +132,7 @@ class CampaignController extends Controller
     {
         $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
         $campaigns = (new Campaigns)->getAllCampaignsReadable(Auth::id());
+        (new CampaignCron())->queueCampaigns();
         return view('campaign.view', [
             'userShop' => 'https://'.$shopifyUser->nickname,
             'campaigns' => $campaigns

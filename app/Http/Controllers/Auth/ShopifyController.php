@@ -23,7 +23,7 @@ class ShopifyController extends Controller
                 'password' => User::makePassword()
             ]
         );
-        $socialUser = SocialProviders::firstOrCreate(
+        $socialUser = SocialProviders::updateOrCreate(
             [
                 'provider_id' => 1,
                 'provider_user_id' => $shopifyUser->getId()

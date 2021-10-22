@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User\SocialProviders;
 use GuzzleHttp\Client;
 
 class Shopify
@@ -23,5 +24,23 @@ class Shopify
 
         return $res;
 
+    }
+
+    public function getOrders(SocialProviders $social, $sinceDateTime) {
+        $client = new Client();
+        $res = json_decode($client->request('GET', 'https://'.$social->nickname.'/admin/api/2021-10/orders.json?updated_at_min='. $sinceDateTime, [
+            'headers' => ['X-Shopify-Access-Token' => $social->access_token],
+        ])->getBody());
+
+        return $res->orders;
+    }
+
+    public function getAbandonCart(SocialProviders $social, $sinceDateTime) {
+        $client = new Client();
+        $res = json_decode($client->request('GET', 'https://'.$social->nickname.'/admin/api/2021-10/checkouts.json?created_at_min='. $sinceDateTime, [
+            'headers' => ['X-Shopify-Access-Token' => $social->access_token],
+        ])->getBody());
+
+        return $res->checkouts;
     }
 }

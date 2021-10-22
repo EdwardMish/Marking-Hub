@@ -17,9 +17,9 @@ class CreateCampaignTargetHistory extends Migration
             $table->char('id', 36)->primary();
             $table->bigInteger('campaign_id')->unsigned();
             $table->bigInteger('campaign_history_id')->unsigned();
-            $table->bigInteger('external_user_id')->unsigned()->nullable();
-            $table->tinyInteger('match_found')->unsigned();
             $table->string('user_ip');
+            $table->bigInteger('external_user_id')->unsigned()->nullable();
+            $table->tinyInteger('match_found')->unsigned()->default(0);
             $table->timestamps();
         });
     }
