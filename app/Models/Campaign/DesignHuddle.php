@@ -6,6 +6,8 @@ use App\Models\User\SocialProviders;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 
 class DesignHuddle extends Model
 {
@@ -71,7 +73,11 @@ class DesignHuddle extends Model
             ]);
 
         $resBody = json_decode($res->getBody()->getContents());
-        return $resBody->data->thumbnail_url;
+        $thumbnailUrl = $resBody->data->thumbnail_url;
+        $file = Storage::putFileAs('campaigns/thumbnails', $thumbnailUrl, $projectId.'.jpg');
+        $hostname = config('filesystems.disks.s3.url');
+        $url = $hostname.$file;
+        return $url;
     }
 
     public function updateThumbnail()

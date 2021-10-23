@@ -44,6 +44,7 @@
                         </div>
                     </form>
                 </div>
+                @include('campaign.create-code')
             </div>
             <div class="col-lg-6 col-md-4">
                 @include('campaign.calculator')

@@ -2,6 +2,7 @@
 
 namespace App\Models\Campaign;
 
+use App\Events\CampaignProcessed;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shopify;
 use App\Models\User\SocialProviders;
@@ -44,8 +45,6 @@ class CampaignCron
             $lastRan = ($campaign->last_ran === null) ? 0 : \DateTime::createFromFormat('Y-m-d H:i:s',$campaign->last_ran)->getTimestamp();
             $visitors = $dynamo->getVisitByShop($campaign->user_id, $lastRan);
 
-            if (count($visitors) == 0)
-                continue;
             $campaignHistory = CampaignHistory::create([
                 'campaign_id' => $campaign->id,
                 'state_id' => 1
@@ -77,8 +76,12 @@ class CampaignCron
             $campaign->last_ran = $nextRun->format('Y-m-d H:i:s');
             $campaign->save();
 
-            //Sent List to El Toro
-            //@ToDo:Trigger Toro Event
+            $campaignHistory->state_id = 5;
+            $campaignHistory->save();
+
+            //Fire Event
+            CampaignProcessed::dispatch($campaign);
+
         }
 
         return null;

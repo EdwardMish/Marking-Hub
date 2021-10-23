@@ -29,7 +29,7 @@ class DashboardController extends Controller
         $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
         $campaigns = Campaigns::all();
         return view('dashboard', [
-            'userShop' => 'https://'.$shopifyUser->nickname,
+            'userShop' => $shopifyUser->nickname,
             'campaigns' => $campaigns
         ]);
     }

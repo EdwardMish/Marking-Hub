@@ -10,6 +10,7 @@ use App\Models\Campaign\DesignHuddle;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CampaignController extends Controller
@@ -30,7 +31,7 @@ class CampaignController extends Controller
 //        $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
 //
 //        return view('campaign.design', [
-//            'userShop' => 'https://'.$shopifyUser->nickname,
+//            'userShop' => $shopifyUser->nickname,
 //            'userToken' => $DH->access_token
 //        ]);
 //    }
@@ -43,7 +44,7 @@ class CampaignController extends Controller
         $DH = $DesignHuddle->firstOrCreate($shopifyUser);
 
         return view('campaign.design-postcard', [
-            'userShop' => 'https://'.$shopifyUser->nickname,
+            'userShop' => $shopifyUser->nickname,
             'userToken' => $DH->access_token,
             'projectId' => $projectId
         ]);
@@ -54,7 +55,7 @@ class CampaignController extends Controller
         $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
         $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
         return view('campaign.select-postcard', [
-            'userShop' => 'https://'.$shopifyUser->nickname,
+            'userShop' => $shopifyUser->nickname,
             'userToken' => $DH->access_token
         ]);
     }
@@ -121,7 +122,7 @@ class CampaignController extends Controller
         $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
         $audienceSizes = CampaignAudienceSizes::all();
         return view('campaign.select-audience', [
-            'userShop' => 'https://'.$shopifyUser->nickname,
+            'userShop' => $shopifyUser->nickname,
             'userToken' => $DH->access_token,
             'projectId' => $projectId,
             'audienceSizes' => $audienceSizes
@@ -134,7 +135,7 @@ class CampaignController extends Controller
         $campaigns = (new Campaigns)->getAllCampaignsReadable(Auth::id());
         (new CampaignCron())->queueCampaigns();
         return view('campaign.view', [
-            'userShop' => 'https://'.$shopifyUser->nickname,
+            'userShop' => $shopifyUser->nickname,
             'campaigns' => $campaigns
         ]);
 

@@ -38,7 +38,7 @@
                     </div>
                     <ul class="nav navbar-top-links navbar-right">
                         <li>
-                            <a href="{{ $userShop  }}">
+                            <a href="https://{{ $userShop  }}">
                                 <i class="fa fa-sign-out"></i> Back To Shopify
                             </a>
                         </li>

@@ -26,12 +26,20 @@ class CreateCampaignHistoryStates extends Migration
                     'state_name' => 'Created'
                 ],
                 [
+                    'id' => '10',
+                    'state_name' => 'List Compiled'
+                ],
+                [
                     'id' => '30',
                     'state_name' => 'Sent to El Toro'
                 ],
                 [
                     'id' => '60',
                     'state_name' => 'Sent to Next Page'
+                ],
+                [
+                    'id' => '80',
+                    'state_name' => 'No Recipients'
                 ],
                 [
                     'id' => '90',

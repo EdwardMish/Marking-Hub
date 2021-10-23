@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CampaignCodes extends Model
 {
     use HasFactory;
+
+
+
 }
