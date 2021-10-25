@@ -7,11 +7,13 @@ use App\Models\Campaign\CampaignCron;
 use App\Models\Campaign\Campaigns;
 use App\Models\Campaign\CampaignsState;
 use App\Models\Campaign\DesignHuddle;
+use App\Models\Shopify\Shopify;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CampaignController extends Controller
 {
@@ -88,8 +90,16 @@ class CampaignController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
+        $offerValidation = $this->addOffer($request);
 
         $projectId = $request->route('project_id');
+
+        if ($offerValidation->errors()->messages()) {
+            return redirect()->route('selectAudience', ['project_id' => $projectId])->withErrors($offerValidation);
+        }
+
+
+
         $userId = Auth::id();
         $campaign = Campaigns::where(['user_id' => $userId, 'project_id' => $projectId])->first();
         $campaignState = CampaignsState::where(['name' => 'Active'])->first();
@@ -109,10 +119,25 @@ class CampaignController extends Controller
                     'There is already an active campaign.  You can only have one active campaign at a time, your campaign was saved, however, it was not activated.');
             }
         }
-
+        $shopify = new Shopify();
+        $social = (new SocialProviders)->getShopifyById(Auth::id());
+        $priceRule = $shopify->submitPriceRule($social, $offerValidation->validated());
         $campaign->save();
 
         return redirect()->route('viewCampaigns')->withErrors($validator);
+    }
+
+    public function addOffer(Request $request) {
+        $rules = [
+            'discount_type' => ['required' ,Rule::in(['1','2'])],
+            'discount_amount' => ['required', 'regex:/^\$?([0-9]+)%?$/'],
+            'discount_prefix' => ['required', 'string']
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        return $validator;
+
     }
 
     public function selectAudience(Request $request)

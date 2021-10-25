@@ -21,7 +21,7 @@ class Dynamo extends Model
         $ttlValue = Config::get('aws.dynamo.visits.ttl');
         $expiresAt = $date->add(new \DateInterval('PT'.$ttlValue.'S'));
         $expiresAtEpoch = $expiresAt->format('U');
-        //Inserting value with tableName: "Logs" and columnName: "userId"
+
         $client = \AWS::createClient('DynamoDb');
 
         //@ToDo: enable to determine value for 'audience'

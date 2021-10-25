@@ -56,7 +56,7 @@ class CampaignCron
                     continue;
 
                 //@ToDo: Put this check back in
-//                if($visit['audience_ip'] != $campaign->audience_size_id)
+//                if($visit['audience_id'] != $campaign->audience_size_id)
 //                    continue;
 
                 //Check for Matching Records

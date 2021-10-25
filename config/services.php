@@ -33,7 +33,8 @@ return [
         'client_id' => env('SHOPIFY_API_ID'),
         'client_secret' => env('SHOPIFY_API_SECRET'),
         'redirect' => env('SHOPIFY_REDIRECT_URI'),
-        'script_tag' => env('SHOPIFY_SCRIPT_TAG', 'https://app.simplepost.co/js/collector.js')
+        'script_tag' => env('SHOPIFY_SCRIPT_TAG', 'https://app.simplepost.co/js/collector.js'),
+        'api_version' => env('SHOPIFY_API_VERSION','2021-10')
     ],
     'design_huddle' => [
         'client_id' => env('DESIGN_HUDDLE_CLIENT_ID'),

@@ -1,15 +1,7 @@
 @extends('layouts.app', ['activePage' => 'design', 'titlePage' => __('Select A Postcard')])
 
 @section('content')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
             <h2>Your Campaigns</h2>

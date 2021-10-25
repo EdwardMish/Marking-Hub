@@ -1,15 +1,23 @@
 @extends('layouts.app', ['activePage' => 'design', 'titlePage' => __('Select your audience')])
 
 @section('content')
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
-            <div class="col-lg-6">
+            <form action="{{ Route('startCampaign', ['project_id' => $projectId]) }}" method="post">
+            <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-title">
                         <h5>Step 3: Set Your Rules</h5>
                     </div>
-
-                    <form action="{{ Route('startCampaign', ['project_id' => $projectId]) }}" method="post">
                         @csrf
                         <div class="ibox-content">
 
@@ -42,10 +50,10 @@
                             <button class="btn btn-secondary btn-lg" name="submit"  value="save" type="submit">Save & Exit</button>
                             <button class="btn btn-primary btn-lg" name="submit" value="start" type="submit">Start Campaign</button>
                         </div>
-                    </form>
                 </div>
                 @include('campaign.create-code')
             </div>
+            </form>
             <div class="col-lg-6 col-md-4">
                 @include('campaign.calculator')
             </div>

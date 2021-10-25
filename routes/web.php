@@ -16,7 +16,9 @@ use Laravel\Socialite\Facades\Socialite;
 
 // Auth Routes
 Route::get('/auth/redirect', function () {
-    return Socialite::driver('shopify')->scopes(['write_orders', 'read_customers', 'write_script_tags'])->stateless()->redirect();
+    return Socialite::driver('shopify')->scopes([
+        'write_orders', 'read_customers', 'write_script_tags', 'write_discounts', 'write_price_rules'
+    ])->stateless()->redirect();
 })->name('Shopify.Install');
 Route::get('/auth/callback',
     [App\Http\Controllers\Auth\ShopifyController::class, 'callback'])->name('Shopify.CallBack');
