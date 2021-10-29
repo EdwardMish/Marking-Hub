@@ -1,35 +1,43 @@
-<div class="ibox ">
-    <div class="ibox-title">
-        <h5>Step 3: Create Your Offer</h5>
-    </div>
-    <div class="ibox-content">
-        <p>Statistics show that customers are more likely to convert when presented an offer.
-            Each customer’s
-            post card will come with a custom printed code they can use at checkout</p>
-
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="form-group"><label>Offer Type</label><select class="form-control m-b" name="discount_type"
-                                                                         id="input_discount_type">
-                        <option value="1">% Off</option>
-                        <option value="2">Flat Discount</option>
-                    </select></div>
-            </div>
-            <div class="col-lg-3">
-                <div class="form-group"><label>Amount</label><input class="form-control" name="discount_amount"
-                                                                    id="input_discount_amount" value="10"></div>
-            </div>
+<div class="col-lg-12">
+    <div class="ibox ">
+        <div class="ibox-title">
+            <h5>Step 3: Create Your Offer</h5>
         </div>
-        <div class="row">
-            <div class="col-lg-3">
-                Discount Prefix
+        <div class="ibox-content">
+            <p>Statistics show that customers are more likely to convert when presented an offer.
+                Each customer’s
+                post card will come with a custom printed code they can use at checkout</p>
+
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="form-group"><label>Offer Type</label><select class="form-control m-b"
+                                                                             name="discount_type"
+                                                                             id="input_discount_type">
+                            <option value="1">% Off</option>
+                            <option value="2">Flat Discount</option>
+                        </select></div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group"><label>Amount</label><input class="form-control" name="discount_amount"
+                                                                        id="input_discount_amount" value="10"></div>
+                </div>
             </div>
-            <div class="col-lg-3">
-                <input class="form-control" name="discount_prefix" id="input_discount_prefix" value="
+            <div class="row">
+                <div class="col-lg-3">
+                    Discount Prefix
+                </div>
+                <div class="col-lg-3">
+                    <input class="form-control" name="discount_prefix" id="input_discount_prefix" value="
 {{ preg_replace("/[^A-Z0-9 ]/", '', strtoupper(substr($userShop, 0,6))) }}">
+                </div>
+                <div class="col-lg-6">
+                    <p id="discount-code-sample"></p>
+                </div>
             </div>
-            <div class="col-lg-6">
-                <p id="discount-code-sample"></p>
+            <div class="row">
+                <div class="col-lg-12">
+                <button class="btn btn-primary btn-lg" name="submit" value="start" type="submit">Start Campaign</button>
+                </div>
             </div>
         </div>
     </div>
@@ -63,7 +71,7 @@
         function updateOfferAmount($offerType) {
             let discountAmount = document.getElementById('input_discount_amount');
             let discountAmountVal = discountAmount.value
-            discountAmountVal = discountAmountVal.replace(/\D/g,'');
+            discountAmountVal = discountAmountVal.replace(/\D/g, '');
             if ($offerType == 1) {
                 discountAmount.value = discountAmountVal + '%';
             } else if ($offerType == 2) {
@@ -73,7 +81,7 @@
 
         function updateOfferDescription($discountPrefix, $discountAmount) {
             let discountDescription = document.getElementById('discount-code-sample');
-            discountDescription.innerText = 'Ex. Code: `' + $discountPrefix + '-ABC123` grants '+ $discountAmount + ' off purchases'
+            discountDescription.innerText = 'Ex. Code: `' + $discountPrefix + '-ABC123` grants ' + $discountAmount + ' off purchases'
 
         }
 

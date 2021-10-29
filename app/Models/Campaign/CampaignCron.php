@@ -22,6 +22,7 @@ class CampaignCron
         $social = new SocialProviders();
         $orders = new Shopify\Orders();
         $history = new CampaignTargetHistory();
+        $codes = new CampaignCodes();
 
         foreach ($campaigns as $campaign) {
             //Can set NextRun now, if there is overlap it's okay as there is no non-breaking code
@@ -63,12 +64,16 @@ class CampaignCron
                 if (array_key_exists($visit['ip'], $exemptVisitors))
                     continue;
 
+                //Find a unique discount code
+                $discountCode = $codes->createUniqueCode($shopifyUser, $campaign);
+
                 //Create CampaignHistory Record
                 CampaignTargetHistory::create([
                     'id' => Uuid::uuid4(),
+                    'browser_ip' => $visit['ip'],
                     'campaign_id' => $campaign->id,
                     'campaign_history_id' => $campaignHistory->id,
-                    'browser_ip' => $visit['ip']
+                    'discount_code' => $discountCode
                 ]);
                 $current[$visit['ip']] = 1;
             }
@@ -80,7 +85,7 @@ class CampaignCron
             $campaignHistory->save();
 
             //Fire Event
-            CampaignProcessed::dispatch($campaign);
+            CampaignProcessed::dispatch($campaignHistory);
 
         }
 

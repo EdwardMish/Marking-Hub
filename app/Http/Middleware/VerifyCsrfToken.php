@@ -12,6 +12,11 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+//        route('GdrpCustomerData'),
+//        route('GdrpRedact'),
+//        route('GdrpShopRedact')
+        '/customers/data_request',
+        '/customers/redact',
+        '/shop/redact',
     ];
 }

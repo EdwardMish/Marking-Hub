@@ -13,10 +13,11 @@ class CampaignTargetHistory extends Model
 
     protected $fillable = [
         'id',
+        'browser_ip',
+        'browser_user_id',
         'campaign_id',
         'campaign_history_id',
-        'browser_ip',
-        'browser_user_id'
+        'discount_code',
     ];
 
     public function getExemptUsers($campaignId) {

@@ -9844,3 +9844,8 @@ body.md-skin {
     margin: 0;
   }
 }
+
+
+.modal-90 {
+        max-width: 90%;
+}

@@ -15,15 +15,19 @@ class Campaigns extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'project_id',
-        'user_id',
-        'thumbnail_url',
-        'state_id',
         'audience_size_id',
+        'discount_amount',
+        'discount_prefix',
+        'discount_price_rule_id',
+        'discount_type',
+        'last_ran',
+        'project_id',
+        'state_id',
+        'thumbnail_url',
         'total_recipients',
         'total_cost',
         'total_revenue',
-        'last_ran'
+        'user_id',
     ];
 
     public function user()

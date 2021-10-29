@@ -2,11 +2,25 @@
 
 namespace App\Models\Shopify;
 
+use App\Models\Campaign\Campaigns;
 use App\Models\User\SocialProviders;
 use GuzzleHttp\Client;
+use Illuminate\Http\Request;
 
 class Shopify
 {
+
+    public function validateRequestor(Request $request) {
+
+        $hmac = $request->header('X-Shopify-Hmac-SHA256');
+        if (!$hmac)
+            return false;
+        $shopifySecret = config('service.shopify.client_secret');
+        $body = $request->getContent();
+        $calculated_hmac = base64_encode(hash_hmac('sha256', $body, $shopifySecret, true));
+        return hash_equals($hmac, $calculated_hmac);
+
+    }
 
     public function addTrackingPixel($accessToken, $storeName)
     {
@@ -57,7 +71,7 @@ class Shopify
         $title = $deal['discount_prefix'];
 
         //Get rid of the $/%
-        // They want a BigDecimal and it needs to be negative
+        // Shopify wants a BigDecimal, and it needs to be negative
         $discountAmount = -1 * floatval(preg_replace("/[^0-9.]/", "", $deal['discount_amount']));
 
         if ($deal['discount_type'] == 1) {
@@ -70,13 +84,12 @@ class Shopify
 
         $startsAt = (new \DateTime())->format(\DateTime::ATOM);
 
-
-
+        //Send the price rule to Shopify
         $res = $client->request('POST', 'https://'.$social->nickname.'/admin/api/'.$apiV.'/price_rules.json', [
             'headers' => ['X-Shopify-Access-Token' => $social->access_token],
             'json' => [
                 "price_rule" => [
-                    "title" => "'.$title.'",
+                    "title" => $title,
                     "target_type" => "line_item",
                     "target_selection" => "all",
                     "allocation_method" => "across",
@@ -88,6 +101,26 @@ class Shopify
             ]
         ]);
 
-        return $res;
+        return json_decode($res->getBody());
+    }
+
+    public function submitDiscountCode(SocialProviders $social, Campaigns $campaign, $discountCode)
+    {
+        $client = new Client();
+        $apiV = config('services.shopify.api_version');
+
+        $res = $client->request(
+            'POST',
+            'https://'.$social->nickname.'/admin/api/'.$apiV.'/price_rules/'.$campaign->discount_price_rule_id.'/discount_codes.json',
+            [
+                'headers' => ['X-Shopify-Access-Token' => $social->access_token],
+                'json' => [
+                    "discount_code" => [
+                        "code" => $discountCode
+                    ]
+                ]
+            ]);
+
+        return json_decode($res->getBody());
     }
 }

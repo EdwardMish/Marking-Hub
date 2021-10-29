@@ -2,7 +2,7 @@
 
 @section('content')
     <div style="height: 30px; margin: 18px 25px">
-        <a class="btn btn-lg btn-primary pull-right"
+        <a class="btn btn-lg btn-primary pull-right" id="savePostCard"
            href="{{ Route('createCampaign', $projectId) }}">Save & Continue</a>
     </div>
     <div></div>

@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
-Artisan::command('refresh_social', function () {
+Artisan::command('refresh-social', function () {
     $this->comment((new \App\Models\User\SocialProviders())->getExpiredTokens());
 })->describe('Refresh Social Tokens');
+Artisan::command('process-campaigns', function () {
+    $this->comment((new \App\Models\Campaign\CampaignCron())->queueCampaigns());
+})->describe('Run the Campaign Process Job Manually');

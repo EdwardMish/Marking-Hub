@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Shopify\Shopify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User\User;
 use App\Models\User\SocialProviders;
@@ -44,7 +45,7 @@ class ShopifyController extends Controller
 
         $user = Auth::user();
 
-        return redirect()->intended('dashboard');
+        return redirect()->intended(route('gettingStarted'));
 
     }
 }

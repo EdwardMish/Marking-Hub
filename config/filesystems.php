@@ -64,7 +64,18 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
-
+        'eltoro' => [
+            'driver' => 'sftp',
+            'host' => env('EL_TORO_FTP_HOST', 'sftp3.eltoro.com'),
+            'username' => env('EL_TORO_FTP_USER', 'simplepost'),
+            'password' => env('EL_TORO_FTP_PASS'),
+        ],
+        'nextpage' => [
+            'driver' => 'sftp',
+            'host' => env('NEXT_PAGE_FTP_HOST', 'transfer.gonextpage.com'),
+            'username' => env('NEXT_PAGE_FTP_USER', 'ezure'),
+            'password' => env('NEXT_PAGE_FTP_PASS'),
+        ],
     ],
 
     /*
