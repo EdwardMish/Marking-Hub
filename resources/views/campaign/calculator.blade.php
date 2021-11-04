@@ -150,7 +150,7 @@
                 let incrementalOrders = document.getElementById('incremental-orders');
                 incrementalOrders.innerText = Math.ceil(conversionRate / 100 * postCardsToSend.innerText);
                 let totalPostCardCost = document.getElementById('total-post-card-cost');
-                let totalPostCardCostVal = Math.round(1.15 * postCardsToSend.innerText);
+                let totalPostCardCostVal = Math.round(1.5 * postCardsToSend.innerText);
                 totalPostCardCost.innerText = '$' + totalPostCardCostVal
 
 

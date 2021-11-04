@@ -28,7 +28,6 @@ class DesignHuddle extends Model
 
     }
 
-
     public function createUser(SocialProviders $socialUser)
     {
         $userName = $socialUser->provider_user_id;
@@ -43,7 +42,6 @@ class DesignHuddle extends Model
                 'refresh_token' => $resBody->refresh_token,
                 'token_expiration' => $resBody->token_expiration,
                 'nickname' => $socialUser->nickname
-
             ]
         );
 
@@ -61,6 +59,7 @@ class DesignHuddle extends Model
         }
 
         $socialUser->save();
+        return $socialUser;
     }
 
     public function getThumbnail($accessToken, $projectId)
@@ -78,18 +77,6 @@ class DesignHuddle extends Model
         $hostname = config('filesystems.disks.s3.url');
         $url = $hostname.$file;
         return $url;
-    }
-
-    public function updateThumbnail()
-    {
-
-
-
-    }
-
-    public function updateThumbnails()
-    {
-
     }
 
     public function convertExpiration($epoch)
