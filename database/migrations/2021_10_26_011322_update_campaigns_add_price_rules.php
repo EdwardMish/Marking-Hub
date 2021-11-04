@@ -21,10 +21,6 @@ class UpdateCampaignsAddPriceRules extends Migration
         });
 
         Schema::table('campaign_target_history', function (Blueprint $table) {
-            $table->dropIndex('campaign_target_history_campaign_id_discount_code');
-        });
-
-        Schema::table('campaign_target_history', function (Blueprint $table) {
             $table->unique(['campaign_id', 'discount_code']);
         });
 
@@ -43,5 +39,10 @@ class UpdateCampaignsAddPriceRules extends Migration
             $table->dropColumn('discount_amount');
             $table->dropColumn('discount_price_rule_id');
         });
+
+        Schema::table('campaign_target_history', function (Blueprint $table) {
+            $table->dropIndex('campaign_target_history_campaign_id_discount_code');
+        });
+
     }
 }
