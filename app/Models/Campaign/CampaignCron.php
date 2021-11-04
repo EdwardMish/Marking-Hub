@@ -30,6 +30,7 @@ class CampaignCron
             //Search DynamoDB
             unset($exemptVisitors);
             unset($current);
+            $i = 0;
             $exemptVisitors = [];
             $current = [];
 
@@ -76,12 +77,14 @@ class CampaignCron
                     'discount_code' => $discountCode
                 ]);
                 $current[$visit['ip']] = 1;
+                $i++;
             }
 
             $campaign->last_ran = $nextRun->format('Y-m-d H:i:s');
             $campaign->save();
 
             $campaignHistory->state_id = 5;
+            $campaignHistory->count_unique_ip = $i;
             $campaignHistory->save();
 
             //Fire Event

@@ -16,9 +16,9 @@ class GdrpRequest extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -28,6 +28,9 @@ class GdrpRequest extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->from('noreply@simplepost.co', 'SimplePost No Reply')
+            ->view('mailer.gdrp')
+            ->to('chad.l.ross@acce.lerate.us')
+            ->with(['json' => $this->data]);
     }
 }
