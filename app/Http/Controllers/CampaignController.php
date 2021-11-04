@@ -203,9 +203,7 @@ class CampaignController extends Controller
                 'userToken' => $DH->access_token
             ]);
         } else {
-
-
-            return view('dashboard', [
+            return view('campaign.view', [
                 'userShop' => $shopifyUser->nickname,
                 'campaigns' => $campaigns
             ]);

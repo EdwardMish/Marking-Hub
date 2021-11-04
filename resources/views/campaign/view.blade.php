@@ -23,7 +23,6 @@
                                 <th>Project Id</th>
                                 <th>Audience Size</th>
                                 <th>Status</th>
-                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -33,13 +32,6 @@
                                     <td>{{ $campaign->project_id }}</td>
                                     <td>{{ $campaign->audienceSize }}</td>
                                     <td>{{ $campaign->stateName }}</td>
-                                    <td>
-                                        @if ($campaign->state_id == 1)
-                                            <button class="btn btn-primary " type="button">Start</button>
-                                        @elseif ($campaign->state_id == 10)
-                                            <button class="btn btn-danger" type="button">Stop</button>
-                                        @endif
-                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
