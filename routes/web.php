@@ -25,6 +25,9 @@ Route::get('/auth/callback',
 Route::get('/auth/login', function () {
     return view('auth/login');
 })->name('login');
+Route::post('/auth/login', function () {
+    return view('auth/login');
+})->name('postLogin');
 Route::get('/auth/logout',)->name('logout');
 Route::get('/', function () {
     return redirect()->away('https://www.simplepost.co');
