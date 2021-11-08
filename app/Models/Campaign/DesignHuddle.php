@@ -66,10 +66,10 @@ class DesignHuddle extends Model
     {
 
         $client = new Client();
-        $url = config('services.design_huddle.api_url').'api/projects/'.$projectId.'?generate_latest_thumbnail=1';
+        $url = config('services.design_huddle.api_url').'api/projects/'.$projectId;
         $res = $client->request('GET', $url, [
             'headers' => ['Authorization' => 'Bearer '.$accessToken]
-            ]);
+        ]);
 
         $resBody = json_decode($res->getBody()->getContents());
         $thumbnailUrl = $resBody->data->thumbnail_url;
@@ -103,5 +103,19 @@ class DesignHuddle extends Model
         $resBody->token_expiration = $this->convertExpiration($resBody->expires_in);
 
         return $resBody;
+    }
+
+    public function exportDesign($accessToken, $projectId)
+    {
+        $client = new Client();
+        $body = ['format' => 'pdf'];
+        $url = config('services.design_huddle.api_url').'api/projects/'.$projectId.'/export';
+        $res = $client->request('POST', $url, [
+            'headers' => ['Authorization' => 'Bearer '.$accessToken],
+            'json' => $body
+        ]);
+
+        $resBody = json_decode($res->getBody()->getContents());
+
     }
 }
