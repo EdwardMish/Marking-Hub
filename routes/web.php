@@ -19,7 +19,7 @@ Route::get('/auth/redirect', function () {
     return Socialite::driver('shopify')->scopes([
         'write_orders', 'read_customers', 'write_script_tags', 'write_discounts', 'write_price_rules'
     ])->stateless()->redirect();
-})->name('Shopify.Install');
+})->name('Shopify.Redirect');
 Route::get('/auth/callback',
     [App\Http\Controllers\Auth\ShopifyController::class, 'callback'])->name('Shopify.CallBack');
 Route::get('/auth/login', function () {
