@@ -16,7 +16,8 @@ class SocialProviders extends Model
     protected $table = 'users_social_providers';
 
     protected $fillable = [
-        'avatar', 'nickname', 'provider_id', 'provider_user_id', 'refresh_token', 'access_token', 'token_expiration', 'user_id'
+        'avatar', 'nickname', 'provider_id', 'provider_user_id', 'refresh_token', 'access_token', 'token_expiration',
+        'user_id'
     ];
 
 
@@ -27,11 +28,11 @@ class SocialProviders extends Model
     protected function setKeysForSaveQuery($query)
     {
         $keys = $this->getKeyName();
-        if(!is_array($keys)){
+        if (!is_array($keys)) {
             return parent::setKeysForSaveQuery($query);
         }
 
-        foreach($keys as $keyName){
+        foreach ($keys as $keyName) {
             $query->where($keyName, '=', $this->getKeyForSaveQuery($keyName));
         }
 
@@ -41,12 +42,12 @@ class SocialProviders extends Model
     /**
      * Get the primary key value for a save query.
      *
-     * @param mixed $keyName
+     * @param  mixed  $keyName
      * @return mixed
      */
     protected function getKeyForSaveQuery($keyName = null)
     {
-        if(is_null($keyName)){
+        if (is_null($keyName)) {
             $keyName = $this->getKeyName();
         }
 
@@ -57,20 +58,37 @@ class SocialProviders extends Model
         return $this->getAttribute($keyName);
     }
 
-    public function getShopifyById($userId) {
+    public function getShopifyById($userId)
+    {
         return $this::where(['provider_id' => 1, 'user_id' => $userId])->first();
     }
 
+    static public function getDesignHuddleAppToken()
+    {
+        $socialProvider = SocialProviders::where(['provider_user_id' => 0, 'provider_id' => 2])->get();
+        if (!isset($socialProvider->token_expiration))
+            $socialProvider = (new DesignHuddle())->refreshAppToken();
+        $expireAt = new \DateTime($socialProvider->token_expiration);
+        $now = new \DateTime();
+        //Refresh that Token!
+        if ($expireAt < $now) {
+            $socialProvider = (new DesignHuddle())->refreshAppToken();
+        }
+        return $socialProvider;
+    }
 
-    public function getExpiredTokens() {
 
-        $expirations = $this->where('token_expiration', '<=', date('Y-m-d H:i:s'))->get();
+    public function getExpiredTokens()
+    {
+
+        $expirations = $this->whereRaw('token_expiration <=  NOW() + INTERVAL 1 HOUR')->get();
         $DesignHuddle = new DesignHuddle();
         foreach ($expirations as $expired) {
-            if ($expired->provider_id == 2) {
+            if ($expired->provider_id == 2 && $expired->provider_user_id) {
+                $DesignHuddle->refreshAppToken();
+            } elseif ($expired->provider_id == 2) {
                 $res = $DesignHuddle->getRefreshToken($expired->user_id);
                 $DesignHuddle->updateUser($expired, $res);
-                //$DesignHuddle->updateThumbnails($expired, $res->);
             } else {
                 Log::error('Unhandled Token Expiration');
             }

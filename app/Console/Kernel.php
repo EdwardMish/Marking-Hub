@@ -27,8 +27,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command(CampaignCron::queueCampaigns())->dailyAt('04:00');
-        $schedule->command((new SocialProviders())->getExpiredTokens())->daily();
+        $schedule->command('process-campaigns')->dailyAt('04:00');
+        $schedule->command((new SocialProviders())->getExpiredTokens())->hourly();
+        $schedule->command('postcard-export')->everyFifteenMinutes();
     }
 
     /**

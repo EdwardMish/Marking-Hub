@@ -2,6 +2,7 @@
 
 namespace App\Models\Campaign;
 
+use App\Events\CampaignProcessComplete;
 use App\Events\CampaignProcessed;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shopify;
@@ -33,6 +34,7 @@ class CampaignCron
             $i = 0;
             $exemptVisitors = [];
             $current = [];
+            $campaignLimits = [];
 
             //Get Orders since last campaign
             $shopifyUser = $social->where(['user_id' => $campaign->user_id, 'provider_id' => 1])->first();
@@ -46,7 +48,6 @@ class CampaignCron
 
             $lastRan = ($campaign->last_ran === null) ? 0 : \DateTime::createFromFormat('Y-m-d H:i:s',$campaign->last_ran)->getTimestamp();
             $visitors = $dynamo->getVisitByShop($campaign->user_id, $lastRan);
-
             $campaignHistory = CampaignHistory::create([
                 'campaign_id' => $campaign->id,
                 'state_id' => 1
@@ -89,8 +90,17 @@ class CampaignCron
 
             //Fire Event
             CampaignProcessed::dispatch($campaignHistory);
-
+            if ($i > 0) {
+                //@ToDO: pull from campaign limit field && current_field
+                $campaignLimits[$campaign->id] = [
+                    'max' => 999999999,
+                    'current' => $campaign->total_recipients
+                ];
+            }
         }
+
+        //Fire Event
+        CampaignProcessComplete::dispatch($campaignLimits);
 
         return null;
 

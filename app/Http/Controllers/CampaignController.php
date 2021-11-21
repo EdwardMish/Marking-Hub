@@ -157,6 +157,8 @@ class CampaignController extends Controller
         $campaign->discount_type = $params['discount_type'];
         $campaign->thumbnail_url = $params['thumbnail_url'];
         $campaign->save();
+        // Queue the design to be downloaded
+        (new DesignHuddle())->exportDesignQueue($campaign);
 
         return redirect()->route('viewCampaigns')->withErrors($validator);
     }

@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\CampaignProcessComplete;
 use App\Events\CampaignProcessed;
+use App\Listeners\SendToCompleteElToro;
 use App\Listeners\SendToElToro;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         CampaignProcessed::class => [
             SendToElToro::class,
+        ],
+        CampaignProcessComplete::class => [
+            SendToCompleteElToro::class,
         ],
     ];
 
