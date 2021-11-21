@@ -64,6 +64,29 @@ class Campaigns extends Model
         return $campaigns;
     }
 
+    public function getAllDeletedCampaignsReadable($userId)
+    {
+
+        $campaignStates = new CampaignsState();
+        $campaignAudienceSizes = new CampaignAudienceSizes();
+
+        $campaigns = DB::table($this->getTable())
+            ->join($campaignStates->getTable(), $this->table.'.state_id', '=',
+                $campaignStates->getTable().'.id')
+            ->join($campaignAudienceSizes->getTable(), $this->table.'.audience_size_id', '=',
+                $campaignAudienceSizes->getTable().'.id')
+            ->select(
+                $this->getTable().'.*',
+                $campaignStates->getTable().'.name as stateName',
+                $campaignAudienceSizes->getTable().'.name as audienceSize'
+            )
+            ->where('user_id', $userId)
+            ->whereNotNull($this->getTable().'.deleted_at')
+            ->get();
+
+        return $campaigns;
+    }
+
     public function refreshThumbnail($projectId)
     {
         $project = $this->where(['project_id' => $projectId])->first();

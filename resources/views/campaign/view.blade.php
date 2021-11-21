@@ -15,28 +15,7 @@
                         <h5>Your Campaigns</h5>
                     </div>
                     <div class="ibox-content">
-
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Design</th>
-                                <th>Project Id</th>
-                                <th>Audience Size</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach ($campaigns as $campaign)
-                                <tr>
-                                    <td><img src="{{ $campaign->thumbnail_url }}"></td>
-                                    <td>{{ $campaign->project_id }}</td>
-                                    <td>{{ $campaign->audienceSize }}</td>
-                                    <td>{{ $campaign->stateName }}</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-
+                        @include('data.campaign')
                     </div>
                 </div>
             </div>
