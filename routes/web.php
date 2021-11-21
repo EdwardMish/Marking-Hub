@@ -49,6 +49,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/campaign/start/{project_id}',
         [App\Http\Controllers\CampaignController::class, 'startCampaign'])->where('project_id',
         '[A-Za-z0-9]+')->name('startCampaign');
+    Route::get('/campaign/restart/{project_id}',
+        [App\Http\Controllers\CampaignController::class, 'restartCampaign'])->where('project_id',
+        '[A-Za-z0-9]+')->name('restartCampaign');
+    Route::get('/campaign/stop/{project_id}',
+        [App\Http\Controllers\CampaignController::class, 'stopCampaign'])->where('project_id',
+        '[A-Za-z0-9]+')->name('stopCampaign');
     Route::post('/campaign/save',
         [App\Http\Controllers\CampaignController::class, 'startCampaign'])->name('saveCampaign');
     Route::get('/campaign/select-audience/{project_id}',

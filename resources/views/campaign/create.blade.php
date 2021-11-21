@@ -13,13 +13,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-6 col-md-8">
-            <form action="{{ Route('saveCampaign') }}" method="post">
-                @csrf
-                @include('campaign.select-audience')
-                @include('campaign.select-postcard')
-                @include('campaign.create-code')
-
-            </form>
+                @include('form.campaign')
             </div>
             <div class="col-lg-6 col-md-4">
                 @include('campaign.calculator')

@@ -11,6 +11,8 @@ use App\Models\Shopify\Shopify;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -22,9 +24,17 @@ class CampaignController extends Controller
      *
      * @return void
      */
+
+    protected $userId;
+
     public function __construct()
     {
-       // $this->middleware('auth');
+       $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            $this->userId = Auth::user()->id;
+            return $next($request);
+        });
+
     }
 
 //    public function designPostcard()
@@ -161,6 +171,51 @@ class CampaignController extends Controller
         return redirect()->route('viewCampaigns')->withErrors($validator);
     }
 
+    public function restartCampaign(Request $request)
+    {
+
+        $projectId = $request->route('project_id');
+        $campaignState = CampaignsState::where(['name' => 'Active'])->first();
+
+        //Check to see if there is already an active campaign
+        $activeCampaigns = Campaigns::where(['user_id' => $this->userId, 'state_id' => $campaignState->id])->get();
+        if ($activeCampaigns->count() > 0) {
+            $message = [
+                'error' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'
+            ];
+            return Redirect::back()->with($message);
+        }
+        $campaign = Campaigns::where([ 'user_id' => $this->userId, 'project_id' => $request->route('project_id')])->restore();
+        if ($campaign === 0) {
+            $message = [
+                'error' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'
+            ];
+        } else {
+            $message = [
+                'success' => 'Campaign successfully restarted'
+            ];
+        }
+
+        return Redirect::route('viewCampaigns')->with($message);
+    }
+
+    public function stopCampaign(Request $request)
+    {
+        $campaign = Campaigns::where([ 'user_id' => $this->userId, 'project_id' => $request->route('project_id')])->delete();
+
+        if ($campaign === 0) {
+            $message = [
+                'error' => 'Something went wrong we were unable to stop your campaign.  Please contact us.'
+            ];
+        } else {
+            $message = [
+                'success' => 'Campaign stopped successfully'
+            ];
+        }
+
+        return redirect()->route('viewCampaigns')->with($message);
+    }
+
     public function addOffer(Request $request)
     {
         $rules = [
@@ -191,16 +246,25 @@ class CampaignController extends Controller
 
     public function viewCampaigns(Request $request)
     {
-        $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
-        $campaigns = (new Campaigns)->getAllCampaignsReadable(Auth::id());
+        $shopifyUser = (new SocialProviders)->getShopifyById($this->userId);
+        $campaigns = (new Campaigns)->getAllCampaignsReadable($this->userId);
         $audienceSizes = CampaignAudienceSizes::all();
+        $deletedCampaigns = (new Campaigns)->getAllDeletedCampaignsReadable($this->userId);
 
-        if ($campaigns->count() == 0) {
+        if ($campaigns->count() == 0 && $deletedCampaigns->count() == 0) {
             $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
             return view('campaign.create', [
                 'audienceSizes' => $audienceSizes,
                 'userShop' => $shopifyUser->nickname,
                 'userToken' => $DH->access_token
+            ]);
+        } elseif ($campaigns->count() == 0) {
+            $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
+            return view('campaign.old_create', [
+                'audienceSizes' => $audienceSizes,
+                'userShop' => $shopifyUser->nickname,
+                'userToken' => $DH->access_token,
+                'campaigns' => $deletedCampaigns
             ]);
         } else {
             return view('campaign.view', [

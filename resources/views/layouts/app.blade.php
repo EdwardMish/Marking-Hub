@@ -52,6 +52,7 @@
                 </nav>
             </div>
             <div style="min-height: 100%">
+            @include('layouts.flash')
             @yield('content')
             </div>
             <div class="footer">
