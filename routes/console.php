@@ -23,3 +23,6 @@ Artisan::command('refresh-social', function () {
 Artisan::command('process-campaigns', function () {
     $this->comment((new \App\Models\Campaign\CampaignCron())->queueCampaigns());
 })->describe('Run the Campaign Process Job Manually');
+Artisan::command('fetch-orders', function () {
+    $this->comment((new \App\Models\Cron())->fetchOrderHistory());
+})->describe('Updates the order history of shops');

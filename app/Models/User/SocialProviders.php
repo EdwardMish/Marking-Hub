@@ -3,6 +3,7 @@
 namespace App\Models\User;
 
 use App\Models\Campaign\DesignHuddle;
+use App\Models\Shops;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,6 +24,18 @@ class SocialProviders extends Model
     // Support for Composite Key
     protected $primaryKey = ['provider_id', 'provider_user_id'];
     public $incrementing = false;
+
+    public static function boot()
+    {
+        parent::boot();
+
+
+        self::updated(function($model){
+            $shop = Shops::where(['external_shop_id' => $model->provider_user_id])->first();
+            $shop->shop_name = $model->nickname;
+            $shop->save();
+        });
+    }
 
     protected function setKeysForSaveQuery($query)
     {
@@ -60,7 +73,6 @@ class SocialProviders extends Model
     public function getShopifyById($userId) {
         return $this::where(['provider_id' => 1, 'user_id' => $userId])->first();
     }
-
 
     public function getExpiredTokens() {
 

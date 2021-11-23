@@ -47,12 +47,12 @@ class Orders extends Model
                 foreach($order->discount_codes as $codes) {
                     OrdersDiscountCodes::create([
                         'order_id' => $order->id,
-                        'discount_code' => $codes['code']
+                        'discount_code' => $codes->code
                     ]);
 
                     //Update Campaign Stats & Campaign History Data
-                    //@ToDo: Move this to an event
-                    //@ToDo: update stats :D
+                    // @ToDo: Serch for Discount Code and Update
+
                 }
                 //Get the last date for the next potential run
                 $ordersSince = $order->updated_at;

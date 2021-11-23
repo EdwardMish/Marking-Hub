@@ -46,6 +46,7 @@ class ShopifyController extends Controller
             $shop = Shops::create([
                 'user_id' => $users->id,
                 'shop_name' => $shopifyUser->getNickname(),
+                'external_shop_id' => $socialUser->getId()
             ]);
 
             (new Shopify())->addTrackingPixel($shopifyUser->token, $shopifyUser->getNickname());
