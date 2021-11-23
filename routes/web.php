@@ -17,7 +17,7 @@ use Laravel\Socialite\Facades\Socialite;
 // Auth Routes
 Route::get('/auth/redirect', function () {
     return Socialite::driver('shopify')->scopes([
-        'write_orders', 'read_customers', 'write_script_tags', 'write_discounts', 'write_price_rules'
+        'write_orders', 'read_customers', 'write_script_tags', 'write_discounts', 'write_price_rules', 'read_all_orders'
     ])->stateless()->redirect();
 })->name('Shopify.Redirect');
 Route::get('/auth/callback',
@@ -67,7 +67,19 @@ Route::middleware(['auth'])->group(function () {
         '[A-Za-z0-9]+')->name('designPostcard'); //This is hardcoded in some JS
     Route::get('/campaign/view',
         [App\Http\Controllers\CampaignController::class, 'viewCampaigns'])->name('viewCampaigns');
+
+
+
+
+
+
+
+
+    //@ToDo: Remove
+    Route::get('/order/test',
+        [App\Http\Controllers\Auth\ShopifyController::class, 'retrieveOrder'])->name('test');
 });
+
 
 
 //GDRP

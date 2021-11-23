@@ -39,12 +39,12 @@ class Shopify
         return $res;
     }
 
-    public function getOrders(SocialProviders $social, $sinceDateTime)
+    public function getOrders(SocialProviders $social, $sinceDateTime, $limit = 50)
     {
         $client = new Client();
         $apiV = config('services.shopify.api_version');
         $res = json_decode($client->request('GET',
-            'https://'.$social->nickname.'/admin/api/'.$apiV.'/orders.json?updated_at_min='.$sinceDateTime, [
+            'https://'.$social->nickname.'/admin/api/'.$apiV.'/orders.json?limit='.$limit.'&updated_at_min='.$sinceDateTime, [
                 'headers' => ['X-Shopify-Access-Token' => $social->access_token],
             ])->getBody());
 
