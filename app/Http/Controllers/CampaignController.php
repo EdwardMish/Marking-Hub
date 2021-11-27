@@ -8,6 +8,7 @@ use App\Models\Campaign\Campaigns;
 use App\Models\Campaign\CampaignsState;
 use App\Models\Campaign\DesignHuddle;
 use App\Models\Shopify\Shopify;
+use App\Models\Shops;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -250,7 +251,11 @@ class CampaignController extends Controller
         $campaigns = (new Campaigns)->getAllCampaignsReadable($this->userId);
         $audienceSizes = CampaignAudienceSizes::all();
         $deletedCampaigns = (new Campaigns)->getAllDeletedCampaignsReadable($this->userId);
+        $shops = new Shops();
 
+        $available = $shops->shopsWithoutCampaigns($this->userId);
+
+        //@ToDo: Update this to use $avaiable
         if ($campaigns->count() == 0 && $deletedCampaigns->count() == 0) {
             $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
             return view('campaign.create', [
