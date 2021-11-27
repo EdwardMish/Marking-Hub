@@ -30,7 +30,7 @@ class CampaignController extends Controller
 
     public function __construct()
     {
-       $this->middleware('auth');
+        $this->middleware('auth');
         $this->middleware(function ($request, $next) {
             $this->userId = Auth::user()->id;
             return $next($request);
@@ -182,11 +182,13 @@ class CampaignController extends Controller
         $activeCampaigns = Campaigns::where(['user_id' => $this->userId, 'state_id' => $campaignState->id])->get();
         if ($activeCampaigns->count() > 0) {
             $message = [
-                'error' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'
+                'error' => 'You have other active campaigns for this shop.  Please stop those campaigns before restarting this one.'
             ];
             return Redirect::back()->with($message);
         }
-        $campaign = Campaigns::where([ 'user_id' => $this->userId, 'project_id' => $request->route('project_id')])->restore();
+        $campaign = Campaigns::where([
+            'user_id' => $this->userId, 'project_id' => $request->route('project_id')
+        ])->restore();
         if ($campaign === 0) {
             $message = [
                 'error' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'
@@ -202,7 +204,9 @@ class CampaignController extends Controller
 
     public function stopCampaign(Request $request)
     {
-        $campaign = Campaigns::where([ 'user_id' => $this->userId, 'project_id' => $request->route('project_id')])->delete();
+        $campaign = Campaigns::where([
+            'user_id' => $this->userId, 'project_id' => $request->route('project_id')
+        ])->delete();
 
         if ($campaign === 0) {
             $message = [
@@ -250,32 +254,20 @@ class CampaignController extends Controller
         $shopifyUser = (new SocialProviders)->getShopifyById($this->userId);
         $campaigns = (new Campaigns)->getAllCampaignsReadable($this->userId);
         $audienceSizes = CampaignAudienceSizes::all();
-        $deletedCampaigns = (new Campaigns)->getAllDeletedCampaignsReadable($this->userId);
+        $archivedCampaigns = (new Campaigns)->getAllDeletedCampaignsReadable($this->userId);
         $shops = new Shops();
 
         $available = $shops->shopsWithoutCampaigns($this->userId);
+        $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
 
-        //@ToDo: Update this to use $avaiable
-        if ($campaigns->count() == 0 && $deletedCampaigns->count() == 0) {
-            $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
-            return view('campaign.create', [
-                'audienceSizes' => $audienceSizes,
-                'userShop' => $shopifyUser->nickname,
-                'userToken' => $DH->access_token
-            ]);
-        } elseif ($campaigns->count() == 0) {
-            $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
-            return view('campaign.old_create', [
-                'audienceSizes' => $audienceSizes,
-                'userShop' => $shopifyUser->nickname,
-                'userToken' => $DH->access_token,
-                'campaigns' => $deletedCampaigns
-            ]);
-        } else {
-            return view('campaign.view', [
-                'userShop' => $shopifyUser->nickname,
-                'campaigns' => $campaigns
-            ]);
-        }
+        return view('campaign.view', [
+            'availableShops' => $available,
+            'audienceSizes' => $audienceSizes,
+            'userToken' => $DH->access_token,
+            'userShop' => $shopifyUser->nickname,
+            'campaigns' => $campaigns,
+            'archivedCampaigns' => $archivedCampaigns
+        ]);
+
     }
 }
