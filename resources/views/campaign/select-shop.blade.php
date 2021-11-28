@@ -1,7 +1,7 @@
 <h5>Select Your Shop</h5>
-<select class="form-control m-b" name="shop_id">
+<select class="form-control m-b" name="shop_id" id="input_shop_id">
     @foreach($availableShops as $shop)
-        <option value="{{$shop->id}}" @if(count($availableShops) == '1') disabled selected
+        <option value="{{$shop->id}}" @if(count($availableShops) == '1') selected
                 @endif @if(old('shop_id') == '{{$shop->id}}') selected @endif>{{$shop->shop_name}}</option>
     @endforeach
 </select>

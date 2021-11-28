@@ -2,26 +2,27 @@
 
 <input type="hidden" name="project_id" id="input_project_id" value="">
 <input type="hidden" name="thumbnail_url" id="input_thumbnail_url" value="">
-
-Choose from hundreds of pre-made, conversion optimized templates to amplify your sales
-<div style="padding: 20px 10px 0px 0px">
-    <button type="button" id="openPostCard" class="btn-primary btn" data-toggle="modal"
-            data-target="#postCardsTemplates">Open Designer
-    </button>
-</div>
-<div class="modal inmodal fade" id="postCardsTemplates" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-90">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span
-                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Pick Your Template</h4>
-            </div>
-            <div class="modal-body" style="min-height: 700px;padding: 0px 0px">
-                <iframe frameborder="0" src=
-                "https://simplepost.designhuddle.com/projects?noheader=1&token={{ $userToken }}#/create"
-                        style="overflow: hidden; height: 100%; width:100%; position: absolute"
-                ></iframe>
+<div id="designPostcardContent">
+    Choose from hundreds of pre-made, conversion optimized templates to amplify your sales
+    <div style="padding: 20px 10px 0px 0px">
+        <button type="button" id="openPostCard" class="btn-primary btn" data-toggle="modal"
+                data-target="#postCardsTemplates">Open Designer
+        </button>
+    </div>
+    <div class="modal inmodal fade" id="postCardsTemplates" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-90">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Pick Your Template</h4>
+                </div>
+                <div class="modal-body" style="min-height: 700px;padding: 0px 0px">
+                    <iframe frameborder="0" src=
+                    "https://simplepost.designhuddle.com/projects?noheader=1&token={{ $userToken }}#/create"
+                            style="overflow: hidden; height: 100%; width:100%; position: absolute"
+                    ></iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -97,7 +98,5 @@ Choose from hundreds of pre-made, conversion optimized templates to amplify your
                 $("#designPostcardContent").html('<img src="' + data.thumbnail_url + '" />')
             });
         }
-
-
     </script>
 @endpush
