@@ -74,11 +74,11 @@ async function saveCartLog() {
         .then((ipAddress) => ipAddress.json())
         .then((ipRes) => {
             let ip = ipRes?.ip || '';
-            let variant = '';
+            let variant = window.meta.product.id;
             let urlSearchParams = new URLSearchParams(window.location.search);
             let params = Object.fromEntries(urlSearchParams.entries());
-            if (params?.variant) {
-                variant = params?.variant;
+                if (params?.variant) {
+                    variant = params?.variant;
             }
             let session = {
                 timestamp: new Date().getTime(),
@@ -111,10 +111,24 @@ setInterval(function () {
     }
 }, 500);
 
-let addToCartText = ['Add to cart', 'ADD TO CART', 'Add To Cart', 'add to cart'];
 
-let buttonElem = document.querySelector(`button[aria-label="${addToCartText[0]}"]`) || document.querySelector(`button[aria-label="${addToCartText[1]}"]`) || document.querySelector(`button[aria-label="${addToCartText[2]}"]`) || document.querySelector(`button[aria-label="${addToCartText[3]}"]`);
+//every time a customer clicks
+window.addEventListener('click', () => {
+    
+    //check if we're on the product page
+    if(window.location.href.indexOf("products") > -1) {
+        
+        function checkCart(){
+            //check if there are items in the cart
+            jQuery.getJSON('/cart.js', function(cart) {
+                if(cart.item_count > 0){
+                    saveCartLog();
+                }
+            });
+        }
 
-buttonElem?.addEventListener('click', () => {
-    saveCartLog();
-})
+        setTimeout(function(){ checkCart(); }, 1000);
+
+    }
+
+});
