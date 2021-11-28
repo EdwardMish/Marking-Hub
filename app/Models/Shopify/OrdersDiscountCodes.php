@@ -9,12 +9,9 @@ class OrdersDiscountCodes extends Model
 {
     use HasFactory;
 
-    protected $table = 'client_order_history_discount_codes';
+    protected $table = 'shop_order_history_discount_codes';
 
-    protected $fillable = [
-        'order_id',
-        'discount_code',
-    ];
+    protected $guarded = ['id'];
 
     public function orders()
     {

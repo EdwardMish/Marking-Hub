@@ -10,7 +10,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach ($campaigns as $campaign)
+    @foreach ($archivedCampaigns as $campaign)
         <tr>
             <td><img src="{{ $campaign->thumbnail_url }}"></td>
             <td>{{ $campaign->project_id }}</td>

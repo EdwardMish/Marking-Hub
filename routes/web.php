@@ -68,18 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/campaign/view',
         [App\Http\Controllers\CampaignController::class, 'viewCampaigns'])->name('viewCampaigns');
 
-
-
-
-
-
-
-
-    //@ToDo: Remove
-    Route::get('/order/test',
-        [App\Http\Controllers\Auth\ShopifyController::class, 'retrieveOrder'])->name('test');
 });
-
 
 
 //GDRP

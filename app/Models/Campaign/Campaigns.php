@@ -2,6 +2,7 @@
 
 namespace App\Models\Campaign;
 
+use App\Models\Shops;
 use App\Models\User\SocialProviders;
 use App\Models\User\User;
 use GuzzleHttp\Client;
@@ -26,24 +27,32 @@ class Campaigns extends Model
         return $this->hasMany(CampaignHistory::class);
     }
 
+    public function shop()
+    {
+        return $this->belongsTo(Shops::class, 'shop_id');
+    }
 
     public function getAllCampaignsReadable($userId)
     {
 
         $campaignStates = new CampaignsState();
         $campaignAudienceSizes = new CampaignAudienceSizes();
+        $shop = new Shops();
 
         $campaigns = DB::table($this->getTable())
-            ->join($campaignStates->getTable(), $this->table.'.state_id', '=',
+            ->join($campaignStates->getTable(), $this->getTable().'.state_id', '=',
                 $campaignStates->getTable().'.id')
-            ->join($campaignAudienceSizes->getTable(), $this->table.'.audience_size_id', '=',
+            ->join($campaignAudienceSizes->getTable(), $this->getTable().'.audience_size_id', '=',
                 $campaignAudienceSizes->getTable().'.id')
+            ->join($shop->getTable(), $this->getTable().'.shop_id', '=',
+                $shop->getTable().'.id')
             ->select(
                 $this->getTable().'.*',
-                $campaignStates->getTable().'.name as stateName',
-                $campaignAudienceSizes->getTable().'.name as audienceSize'
+                $campaignStates->getTable().'.name as state_name',
+                $campaignAudienceSizes->getTable().'.name as audience_size',
+                $shop->getTable().'.shop_name',
             )
-            ->where('user_id', $userId)
+            ->where($this->getTable().'.user_id', $userId)
             ->whereNull($this->getTable().'.deleted_at')
             ->get();
 
@@ -55,18 +64,22 @@ class Campaigns extends Model
 
         $campaignStates = new CampaignsState();
         $campaignAudienceSizes = new CampaignAudienceSizes();
+        $shop = new Shops();
 
         $campaigns = DB::table($this->getTable())
             ->join($campaignStates->getTable(), $this->table.'.state_id', '=',
                 $campaignStates->getTable().'.id')
             ->join($campaignAudienceSizes->getTable(), $this->table.'.audience_size_id', '=',
                 $campaignAudienceSizes->getTable().'.id')
+            ->join($shop->getTable(), $this->getTable().'.shop_id', '=',
+                $shop->getTable().'.id')
             ->select(
                 $this->getTable().'.*',
-                $campaignStates->getTable().'.name as stateName',
-                $campaignAudienceSizes->getTable().'.name as audienceSize'
+                $campaignStates->getTable().'.name as state_name',
+                $campaignAudienceSizes->getTable().'.name as audience_size',
+                $shop->getTable().'.shop_name'
             )
-            ->where('user_id', $userId)
+            ->where($this->getTable().'.user_id', $userId)
             ->whereNotNull($this->getTable().'.deleted_at')
             ->get();
 
