@@ -36,12 +36,10 @@ class CampaignCron
             $current = [];
             $campaignLimits = [];
 
-            //Get Orders since last campaign
             $shopifyUser = $social->where(['user_id' => $campaign->user_id, 'provider_id' => 1])->first();
-            $orders->upsertOrder($shopifyUser, $campaign->last_ran);
 
             //Check against Shopify Recent Purchases
-            $exemptOrders = $orders->getExemptUsers($campaign->user_id);
+            $exemptOrders = $orders->getExemptUsers($campaign->shop_id);
             //Check against Previous Mailings
             $exemptHistory = $history->getExemptUsers($campaign->id);
             $exemptVisitors = array_merge($exemptOrders, $exemptHistory);
@@ -72,10 +70,11 @@ class CampaignCron
                 //Create CampaignHistory Record
                 CampaignTargetHistory::create([
                     'id' => Uuid::uuid4(),
-                    'browser_ip' => $visit['ip'],
+                    'shop_id' => $campaign->shop_id,
                     'campaign_id' => $campaign->id,
                     'campaign_history_id' => $campaignHistory->id,
-                    'discount_code' => $discountCode
+                    'discount_code' => $discountCode,
+                    'browser_ip' => $visit['ip']
                 ]);
                 $current[$visit['ip']] = 1;
                 $i++;

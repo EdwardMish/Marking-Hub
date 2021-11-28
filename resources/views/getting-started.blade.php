@@ -22,7 +22,7 @@
                         </p>
 
                         <iframe width="90%" height="500px"
-                                src="https://www.youtube.com/embed/tgbNymZ7vqY">
+                                src="https://www.youtube.com/embed/8TjQDK5_1cU">
                         </iframe>
                         <div style="padding: 20px 10px 0px 0px">
                             <input type="button" class="btn-primary btn" onclick="location.href='{{ Route('viewCampaigns') }}'" value="Create My Campaign">

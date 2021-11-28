@@ -26,3 +26,6 @@ Artisan::command('process-campaigns', function () {
 Artisan::command('postcard-export', function () {
     $this->comment((new \App\Models\Campaign\DesignHuddle())->processPostcardQueue());
 })->describe('Get PDF From Design Huddle');
+Artisan::command('fetch-orders', function () {
+    $this->comment((new \App\Models\Cron())->fetchOrderHistory());
+})->describe('Updates the order history of shops');

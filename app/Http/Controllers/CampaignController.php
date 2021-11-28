@@ -8,9 +8,12 @@ use App\Models\Campaign\Campaigns;
 use App\Models\Campaign\CampaignsState;
 use App\Models\Campaign\DesignHuddle;
 use App\Models\Shopify\Shopify;
+use App\Models\Shops;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -22,9 +25,17 @@ class CampaignController extends Controller
      *
      * @return void
      */
+
+    protected $userId;
+
     public function __construct()
     {
-       // $this->middleware('auth');
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            $this->userId = Auth::user()->id;
+            return $next($request);
+        });
+
     }
 
 //    public function designPostcard()
@@ -108,15 +119,15 @@ class CampaignController extends Controller
 
     public function startCampaign(Request $request)
     {
-
         // Could add validator against audience_states but there's no real need for the extra call as only malicious
         // users could break this, and they can only break their own campaigns, why would they do this.
         $rules = [
             'audience' => 'required|int',
-            'project_id' => 'required|alpha_num',
             'discount_type' => ['required', Rule::in(['1', '2'])],
             'discount_amount' => ['required', 'regex:/^\$?([0-9]+)%?$/'],
             'discount_prefix' => ['required', 'string'],
+            'project_id' => 'required|alpha_num',
+            'shop_id' => 'required|int',
             'thumbnail_url' => ['required', 'url']
         ];
 
@@ -131,20 +142,20 @@ class CampaignController extends Controller
 
         $params = $validator->validate();
         $projectId = $params['project_id'];
-        $userId = Auth::id();
-        $campaign = Campaigns::firstOrNew(['user_id' => $userId, 'project_id' => $projectId]);
+        $campaign = Campaigns::firstOrNew(['shop_id' => $params['shop_id'], 'project_id' => $projectId]);
         $campaignState = CampaignsState::where(['name' => 'Active'])->first();
 
         $campaign->audience_size_id = $params['audience'];
 
 
         //Check to see if there is already an active campaign
-        $activeCampaigns = Campaigns::where(['user_id' => $userId, 'state_id' => $campaignState->id])->get();
+        $activeCampaigns = Campaigns::where(['shop_id' => $params['shop_id'], 'state_id' => $campaignState->id])->get();
         if ($activeCampaigns->count() == 0) {
             $campaign->state_id = $campaignState->id;
         } else {
             $validator->errors()->add('campaign_id',
                 'There is already an active campaign.  You can only have one active campaign at a time, your campaign was saved, however, it was not activated.');
+            $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
         }
 
         $shopify = new Shopify();
@@ -156,11 +167,61 @@ class CampaignController extends Controller
         $campaign->discount_prefix = $params['discount_prefix'];
         $campaign->discount_type = $params['discount_type'];
         $campaign->thumbnail_url = $params['thumbnail_url'];
+        $campaign->user_id = $this->userId;
         $campaign->save();
         // Queue the design to be downloaded
         (new DesignHuddle())->exportDesignQueue($campaign);
 
         return redirect()->route('viewCampaigns')->withErrors($validator);
+    }
+
+    public function restartCampaign(Request $request)
+    {
+
+        $projectId = $request->route('project_id');
+        $campaignState = CampaignsState::where(['name' => 'Active'])->first();
+
+        //Check to see if there is already an active campaign
+        $activeCampaigns = Campaigns::where(['user_id' => $this->userId, 'state_id' => $campaignState->id])->get();
+        if ($activeCampaigns->count() > 0) {
+            $message = [
+                'error' => 'You have other active campaigns for this shop.  Please stop those campaigns before restarting this one.'
+            ];
+            return Redirect::back()->with($message);
+        }
+        $campaign = Campaigns::where([
+            'user_id' => $this->userId, 'project_id' => $request->route('project_id')
+        ])->restore();
+        if ($campaign === 0) {
+            $message = [
+                'error' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'
+            ];
+        } else {
+            $message = [
+                'success' => 'Campaign successfully restarted'
+            ];
+        }
+
+        return Redirect::route('viewCampaigns')->with($message);
+    }
+
+    public function stopCampaign(Request $request)
+    {
+        $campaign = Campaigns::where([
+            'user_id' => $this->userId, 'project_id' => $request->route('project_id')
+        ])->delete();
+
+        if ($campaign === 0) {
+            $message = [
+                'error' => 'Something went wrong we were unable to stop your campaign.  Please contact us.'
+            ];
+        } else {
+            $message = [
+                'success' => 'Campaign stopped successfully'
+            ];
+        }
+
+        return redirect()->route('viewCampaigns')->with($message);
     }
 
     public function addOffer(Request $request)
@@ -193,22 +254,23 @@ class CampaignController extends Controller
 
     public function viewCampaigns(Request $request)
     {
-        $shopifyUser = (new SocialProviders)->getShopifyById(Auth::id());
-        $campaigns = (new Campaigns)->getAllCampaignsReadable(Auth::id());
+        $shopifyUser = (new SocialProviders)->getShopifyById($this->userId);
+        $campaigns = (new Campaigns)->getAllCampaignsReadable($this->userId);
         $audienceSizes = CampaignAudienceSizes::all();
+        $archivedCampaigns = (new Campaigns)->getAllDeletedCampaignsReadable($this->userId);
+        $shops = new Shops();
 
-        if ($campaigns->count() == 0) {
-            $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
-            return view('campaign.create', [
-                'audienceSizes' => $audienceSizes,
-                'userShop' => $shopifyUser->nickname,
-                'userToken' => $DH->access_token
-            ]);
-        } else {
-            return view('campaign.view', [
-                'userShop' => $shopifyUser->nickname,
-                'campaigns' => $campaigns
-            ]);
-        }
+        $available = $shops->shopsWithoutCampaigns($this->userId);
+        $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
+
+        return view('campaign.view', [
+            'availableShops' => $available,
+            'audienceSizes' => $audienceSizes,
+            'userToken' => $DH->access_token,
+            'userShop' => $shopifyUser->nickname,
+            'campaigns' => $campaigns,
+            'archivedCampaigns' => $archivedCampaigns
+        ]);
+
     }
 }

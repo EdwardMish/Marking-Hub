@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\ShopConnected;
 use App\Http\Controllers\Controller;
+use App\Models\Shopify\Orders;
 use App\Models\Shopify\Shopify;
+use App\Models\Shops;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,7 +42,18 @@ class ShopifyController extends Controller
             ]
         );
 
-        (new Shopify())->addTrackingPixel($shopifyUser->token, $shopifyUser->getNickname());
+        if ($socialUser->wasRecentlyCreated) {
+            $shop = Shops::create([
+                'user_id' => $users->id,
+                'shop_name' => $shopifyUser->getNickname(),
+                'external_shop_id' => $socialUser->getId()
+            ]);
+
+            (new Shopify())->addTrackingPixel($shopifyUser->token, $shopifyUser->getNickname());
+
+            ShopConnected::dispatch($shop, $socialUser);
+
+        }
 
         Auth::login($users, true);
 

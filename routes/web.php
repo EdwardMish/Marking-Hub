@@ -17,9 +17,9 @@ use Laravel\Socialite\Facades\Socialite;
 // Auth Routes
 Route::get('/auth/redirect', function () {
     return Socialite::driver('shopify')->scopes([
-        'write_orders', 'read_customers', 'write_script_tags', 'write_discounts', 'write_price_rules'
+        'write_orders', 'read_customers', 'write_script_tags', 'write_discounts', 'write_price_rules', 'read_all_orders'
     ])->stateless()->redirect();
-})->name('Shopify.Install');
+})->name('Shopify.Redirect');
 Route::get('/auth/callback',
     [App\Http\Controllers\Auth\ShopifyController::class, 'callback'])->name('Shopify.CallBack');
 Route::get('/auth/login', function () {
@@ -49,6 +49,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/campaign/start/{project_id}',
         [App\Http\Controllers\CampaignController::class, 'startCampaign'])->where('project_id',
         '[A-Za-z0-9]+')->name('startCampaign');
+    Route::get('/campaign/restart/{project_id}',
+        [App\Http\Controllers\CampaignController::class, 'restartCampaign'])->where('project_id',
+        '[A-Za-z0-9]+')->name('restartCampaign');
+    Route::get('/campaign/stop/{project_id}',
+        [App\Http\Controllers\CampaignController::class, 'stopCampaign'])->where('project_id',
+        '[A-Za-z0-9]+')->name('stopCampaign');
     Route::post('/campaign/save',
         [App\Http\Controllers\CampaignController::class, 'startCampaign'])->name('saveCampaign');
     Route::get('/campaign/select-audience/{project_id}',
@@ -61,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
         '[A-Za-z0-9]+')->name('designPostcard'); //This is hardcoded in some JS
     Route::get('/campaign/view',
         [App\Http\Controllers\CampaignController::class, 'viewCampaigns'])->name('viewCampaigns');
+
 });
 
 
