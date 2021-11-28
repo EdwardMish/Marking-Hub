@@ -6,7 +6,7 @@
         <th>Shop Name</th>
         <th>Audience Size</th>
         <th>Status</th>
-        <th>Actionsz</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>

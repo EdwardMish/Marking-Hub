@@ -124,10 +124,11 @@ class CampaignController extends Controller
         // users could break this, and they can only break their own campaigns, why would they do this.
         $rules = [
             'audience' => 'required|int',
-            'project_id' => 'required|alpha_num',
             'discount_type' => ['required', Rule::in(['1', '2'])],
             'discount_amount' => ['required', 'regex:/^\$?([0-9]+)%?$/'],
             'discount_prefix' => ['required', 'string'],
+            'project_id' => 'required|alpha_num',
+            'shop_id' => 'required|int',
             'thumbnail_url' => ['required', 'url']
         ];
 
@@ -142,20 +143,20 @@ class CampaignController extends Controller
 
         $params = $validator->validate();
         $projectId = $params['project_id'];
-        $userId = Auth::id();
-        $campaign = Campaigns::firstOrNew(['user_id' => $userId, 'project_id' => $projectId]);
+        $campaign = Campaigns::firstOrNew(['shop_id' => $params['shop_id'], 'project_id' => $projectId]);
         $campaignState = CampaignsState::where(['name' => 'Active'])->first();
 
         $campaign->audience_size_id = $params['audience'];
 
 
         //Check to see if there is already an active campaign
-        $activeCampaigns = Campaigns::where(['user_id' => $userId, 'state_id' => $campaignState->id])->get();
+        $activeCampaigns = Campaigns::where(['shop_id' => $params['shop_id'], 'state_id' => $campaignState->id])->get();
         if ($activeCampaigns->count() == 0) {
             $campaign->state_id = $campaignState->id;
         } else {
             $validator->errors()->add('campaign_id',
                 'There is already an active campaign.  You can only have one active campaign at a time, your campaign was saved, however, it was not activated.');
+            $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
         }
 
         $shopify = new Shopify();
@@ -167,6 +168,7 @@ class CampaignController extends Controller
         $campaign->discount_prefix = $params['discount_prefix'];
         $campaign->discount_type = $params['discount_type'];
         $campaign->thumbnail_url = $params['thumbnail_url'];
+        $campaign->user_id = $this->userId;
         $campaign->save();
 
         return redirect()->route('viewCampaigns')->withErrors($validator);
