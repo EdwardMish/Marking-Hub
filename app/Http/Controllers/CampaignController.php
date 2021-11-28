@@ -119,7 +119,6 @@ class CampaignController extends Controller
 
     public function startCampaign(Request $request)
     {
-
         // Could add validator against audience_states but there's no real need for the extra call as only malicious
         // users could break this, and they can only break their own campaigns, why would they do this.
         $rules = [

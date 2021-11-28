@@ -62,10 +62,4 @@ class ShopifyController extends Controller
         return redirect()->intended(route('gettingStarted'));
 
     }
-
-    public function retrieveOrder() {
-        $social = SocialProviders::where(['provider_id' => 1, 'provider_user_id' => 55088120039])->first();
-        $shop = Shops::find(2);
-        (new Orders())->upsertOrder($social, $shop);
-    }
 }
