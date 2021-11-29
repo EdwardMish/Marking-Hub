@@ -28,6 +28,7 @@ class Shops extends Model
                     ->whereRaw($campaigns->getTable().'.deleted_at IS NULL');
             })
             ->whereNull($campaigns->getTable().'.shop_id')
+            ->where([$this->getTable().'.user_id' => $userId])
         ->get();
 
         return $res;

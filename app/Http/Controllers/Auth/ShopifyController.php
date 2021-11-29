@@ -9,6 +9,7 @@ use App\Models\Shopify\Shopify;
 use App\Models\Shops;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User\User;
@@ -43,16 +44,28 @@ class ShopifyController extends Controller
         );
 
         if ($socialUser->wasRecentlyCreated) {
+            Log::info('Recently Created True');
             $shop = Shops::create([
                 'user_id' => $users->id,
                 'shop_name' => $shopifyUser->getNickname(),
-                'external_shop_id' => $socialUser->getId()
+                'external_shop_id' => $shopifyUser->getId()
             ]);
 
             (new Shopify())->addTrackingPixel($shopifyUser->token, $shopifyUser->getNickname());
 
             ShopConnected::dispatch($shop, $socialUser);
 
+        } else {
+            ///@ToDo: look into why this is false when it should be true
+            $shop = Shops::firstOrCreate([
+                'shop_name' => $shopifyUser->getNickname()],[
+                'user_id' => $users->id,
+                'external_shop_id' => $socialUser->getId()
+            ]);
+
+            (new Shopify())->addTrackingPixel($shopifyUser->token, $shopifyUser->getNickname());
+
+            ShopConnected::dispatch($shop, $socialUser);
         }
 
         Auth::login($users, true);

@@ -6,6 +6,7 @@ use App\Events\CampaignProcessComplete;
 use App\Events\CampaignProcessed;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shopify;
+use App\Models\Shops;
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,7 @@ class CampaignCron
             $campaignLimits = [];
 
             $shopifyUser = $social->where(['user_id' => $campaign->user_id, 'provider_id' => 1])->first();
+            $shop = Shops::where(['shop_name' => $shopifyUser->nickname])->first();
 
             //Check against Shopify Recent Purchases
             $exemptOrders = $orders->getExemptUsers($campaign->shop_id);
@@ -45,7 +47,7 @@ class CampaignCron
             $exemptVisitors = array_merge($exemptOrders, $exemptHistory);
 
             $lastRan = ($campaign->last_ran === null) ? 0 : \DateTime::createFromFormat('Y-m-d H:i:s',$campaign->last_ran)->getTimestamp();
-            $visitors = $dynamo->getVisitByShop($campaign->user_id, $lastRan);
+            $visitors = $dynamo->getVisitByShop($shop->id, $lastRan);
             $campaignHistory = CampaignHistory::create([
                 'campaign_id' => $campaign->id,
                 'state_id' => 1

@@ -30,22 +30,23 @@ class Dynamo extends Model
         $result = $client->putItem([
             'TableName' => Config::get('aws.dynamo.visits.name'),
             'Item' => [
-                'user_id' => ['N' => $data['userId']],
-                'created_at' => ['N' => $epochTime],
-                'expires_at' => ['N' => $expiresAtEpoch],
-                'audience_size_id' => ['N' => $audienceSizeId],
-                'path' => ['S' => $data['path']],
-                'variant_id' => ['S' => (empty($data['variantId']) ? '' : $date['variantId'])],
-                'session_id' => ['S' => $data['sessionId']],
-                'browser_ip' => ['S' => $data['ip']],
-                'type' => ['S' => $data['type']]
+                'shop_id' => ['N' => (string) $data['shop_id']],
+                'created_at' => ['N' => (string) $epochTime],
+                'expires_at' => ['N' => (string) $expiresAtEpoch],
+                'audience_size_id' => ['N' => (string) $audienceSizeId],
+                'path' => ['S' => (string) $data['path']],
+                'variant_id' => ['S' => (empty($data['variantId']) ? '' : (string) $data['variantId'])],
+                'session_id' => ['S' => (string) $data['sessionId']],
+                'browser_ip' => ['S' => (string) $data['ip']],
+                'type' => ['S' => (string) $data['type']]
             ]
         ]);
 
         return $result;
+
     }
 
-    public function getVisitByShop(int $userId, int $createdAt)
+    public function getVisitByShop(int $shopId, int $createdAt)
     {
         $client = \AWS::createClient('DynamoDb');
         $marshaler = new Marshaler();
@@ -53,7 +54,7 @@ class Dynamo extends Model
 
         $eav = $marshaler->marshalJson('
         {
-            ":userId":'.$userId.',
+            ":shopId":'.$shopId.',
             ":createdAt":'.$createdAt.'
         }');
 
@@ -61,7 +62,7 @@ class Dynamo extends Model
 
         $params = [
             'TableName' => $tableName,
-            'KeyConditionExpression' => 'user_id = :userId and created_at >= :createdAt',
+            'KeyConditionExpression' => 'shop_id = :shopId and created_at >= :createdAt',
             'ExpressionAttributeValues'=> $eav
         ];
 
