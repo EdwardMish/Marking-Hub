@@ -56,6 +56,9 @@ class CampaignCron
             ]);
             foreach ($visitors as $visit) {
 
+                if (!isset($visit['ip']) && !empty($visit['ip']))
+                    continue;
+
                 //Check Current Send
                 if (key_exists($visit['ip'], $current))
                     continue;
