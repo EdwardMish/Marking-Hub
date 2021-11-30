@@ -4,6 +4,7 @@ namespace App\Models\Campaign;
 
 use App\Events\CampaignProcessComplete;
 use App\Events\CampaignProcessed;
+use App\Models\Analytics\CampaignAnalytics;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shopify;
 use App\Models\Shops;
@@ -50,6 +51,7 @@ class CampaignCron
             $visitors = $dynamo->getVisitByShop($shop->id, $lastRan);
             $campaignHistory = CampaignHistory::create([
                 'campaign_id' => $campaign->id,
+                'shop_id' => $shop->id,
                 'state_id' => 1
             ]);
             foreach ($visitors as $visit) {
@@ -95,7 +97,7 @@ class CampaignCron
                 //@ToDO: pull from campaign limit field && current_field
                 $campaignLimits[$campaign->id] = [
                     'max' => 999999999,
-                    'current' => $campaign->total_recipients
+                    'current' => (new CampaignAnalytics())->getMonthlySent($campaign)
                 ];
             }
         }
