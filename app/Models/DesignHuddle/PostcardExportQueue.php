@@ -11,7 +11,5 @@ class PostcardExportQueue extends Model
 
     protected $table = 'design_huddle_postcard_export_queue';
 
-    protected $fillable = [
-        'project_id', 'design_huddle_project_id', 'job_id'
-    ];
+    protected $guarded = [];
 }

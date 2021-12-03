@@ -15,7 +15,7 @@ class DesignHuddle extends Model
     public function firstOrCreate(SocialProviders $socialUser)
     {
         $res = SocialProviders::where([
-            'provider_id' => 2, 'provider_user_id' => $socialUser->provider_user_id
+            'provider_id' => 2, 'user_id' => $socialUser->user_id
         ])->first();
         if (!$res) {
             $res = $this->createUser($socialUser);
@@ -144,7 +144,7 @@ class DesignHuddle extends Model
 
         if ($resBody->success == true && $resBody->data->completed == true) {
             //Find the Campaign
-            $campaign = Campaigns::find($export->project_id);
+            $campaign = Campaigns::withTrashed()->find($export->project_id);
             //Save it to S3
             $file = Storage::putFileAs('campaigns/postcards', $resBody->data->download_url,
                 $export->project_id.'.pdf');
@@ -154,6 +154,7 @@ class DesignHuddle extends Model
             $campaign->postcard_design_url = $url;
             //Update the Campaign
             $campaign->save();
+
             //Remove the Record from the Queue
             $export->delete();
             return true;
