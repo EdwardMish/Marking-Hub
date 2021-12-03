@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Analytics\CampaignAnalytics;
 use App\Models\Campaign\CampaignAudienceSizes;
 use App\Models\Campaign\CampaignCron;
 use App\Models\Campaign\Campaigns;
@@ -128,7 +129,8 @@ class CampaignController extends Controller
             'discount_prefix' => ['required', 'string'],
             'project_id' => 'required|alpha_num',
             'shop_id' => 'required|int',
-            'thumbnail_url' => ['required', 'url']
+            'thumbnail_url' => ['required', 'url'],
+            'max_sends' => ['int', 'min:1', 'nullable']
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages = [
@@ -167,6 +169,7 @@ class CampaignController extends Controller
         $campaign->discount_prefix = $params['discount_prefix'];
         $campaign->discount_type = $params['discount_type'];
         $campaign->thumbnail_url = $params['thumbnail_url'];
+        $campaign->max_sends_per_period = $params['max_sends'];
         $campaign->user_id = $this->userId;
         $campaign->save();
         // Queue the design to be downloaded

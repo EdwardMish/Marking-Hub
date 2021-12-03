@@ -70,8 +70,8 @@ class Dynamo extends Model
 
         foreach ($response['Items'] as $v) {
             $visitor[] = [
-                'ip' => !empty($v['ip']) ? $marshaler->unmarshalValue($v['ip']) : null,
-                'audience_id' => !empty($v['audience_id']) ? $marshaler->unmarshalValue($v['audience_id']) : null
+                'ip' => !empty($v['browser_ip']) ? $marshaler->unmarshalValue($v['browser_ip']) : null,
+                'audience_id' => !empty($v['audience_size_id']) ? $marshaler->unmarshalValue($v['audience_size_id']) : null
             ];
         }
 

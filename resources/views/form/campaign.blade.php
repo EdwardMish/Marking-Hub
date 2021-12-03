@@ -3,12 +3,16 @@
         <h5>Create A New Campaign</h5>
     </div>
     <div class="ibox-content">
+        @foreach ($errors->all() as $error)
+            {{ $error }}<br/>
+        @endforeach
         <form action="{{ Route('saveCampaign') }}" method="post">
             @csrf
-            @include('campaign.select-shop')
-            @include('campaign.select-audience')
-            @include('campaign.select-postcard')
-            @include('campaign.create-code')
+            @include('form.campaign.select-shop')
+            @include('form.campaign.select-audience')
+            @include('form.campaign.select-postcard')
+            @include('form.campaign.limit-send')
+            @include('form.campaign.create-code')
         </form>
     </div>
 </div>

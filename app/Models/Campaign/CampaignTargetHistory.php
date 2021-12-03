@@ -11,14 +11,7 @@ class CampaignTargetHistory extends Model
 
     protected $table = 'campaign_target_history';
 
-    protected $fillable = [
-        'id',
-        'browser_ip',
-        'browser_user_id',
-        'campaign_id',
-        'campaign_history_id',
-        'discount_code',
-    ];
+    protected $guarded = [];
 
     public function getExemptUsers($campaignId) {
         $exempt = [];

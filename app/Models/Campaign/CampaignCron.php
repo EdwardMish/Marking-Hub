@@ -20,14 +20,14 @@ class CampaignCron
     {
 
         // Get List of Active Campaigns
-        $campaigns = Campaigns::where(['state_id' => 10])->get();
+        $campaigns = Campaigns::with('shop')->get();
         $dynamo = new Dynamo();
         $social = new SocialProviders();
         $orders = new Shopify\Orders();
         $history = new CampaignTargetHistory();
         $codes = new CampaignCodes();
-
         foreach ($campaigns as $campaign) {
+
             //Can set NextRun now, if there is overlap it's okay as there is no non-breaking code
             $nextRun = now();
             //Search DynamoDB
@@ -37,9 +37,11 @@ class CampaignCron
             $exemptVisitors = [];
             $current = [];
             $campaignLimits = [];
-
-            $shopifyUser = $social->where(['user_id' => $campaign->user_id, 'provider_id' => 1])->first();
-            $shop = Shops::where(['shop_name' => $shopifyUser->nickname])->first();
+            $shopifyUser = $social->where([
+                'provider_id' => 1,
+                'user_id' => $campaign->user_id,
+                'nickname' => $campaign->shop->shop_name
+            ])->first();
 
             //Check against Shopify Recent Purchases
             $exemptOrders = $orders->getExemptUsers($campaign->shop_id);
@@ -48,15 +50,15 @@ class CampaignCron
             $exemptVisitors = array_merge($exemptOrders, $exemptHistory);
 
             $lastRan = ($campaign->last_ran === null) ? 0 : \DateTime::createFromFormat('Y-m-d H:i:s',$campaign->last_ran)->getTimestamp();
-            $visitors = $dynamo->getVisitByShop($shop->id, $lastRan);
+            $visitors = $dynamo->getVisitByShop($campaign->shop->id, $lastRan);
             $campaignHistory = CampaignHistory::create([
                 'campaign_id' => $campaign->id,
-                'shop_id' => $shop->id,
+                'shop_id' => $campaign->shop->id,
                 'state_id' => 1
             ]);
             foreach ($visitors as $visit) {
 
-                if (!isset($visit['ip']) && !empty($visit['ip']))
+                if (!isset($visit['ip']) || empty($visit['ip']))
                     continue;
 
                 //Check Current Send
@@ -85,6 +87,8 @@ class CampaignCron
                 ]);
                 $current[$visit['ip']] = 1;
                 $i++;
+                //@ToDo: Change this to be handled outside the loop and using batch
+                usleep(500000);
             }
 
             $campaign->last_ran = $nextRun->format('Y-m-d H:i:s');
@@ -97,9 +101,8 @@ class CampaignCron
             //Fire Event
             CampaignProcessed::dispatch($campaignHistory);
             if ($i > 0) {
-                //@ToDO: pull from campaign limit field && current_field
                 $campaignLimits[$campaign->id] = [
-                    'max' => 999999999,
+                    'max' => empty($campaign->max_sends_per_period) ? 999999999 : $campaign->max_sends_per_period,
                     'current' => (new CampaignAnalytics())->getMonthlySent($campaign)
                 ];
             }
