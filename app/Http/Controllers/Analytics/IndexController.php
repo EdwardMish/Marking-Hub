@@ -20,6 +20,7 @@ class IndexController extends Controller
             'sessionId' => 'required',
             'timestamp' => 'required|date',
             'ip' => 'required|ip',
+            'audience_size_id' => 'int',
             'type' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
