@@ -182,24 +182,32 @@ class CampaignController extends Controller
     {
 
         $projectId = $request->route('project_id');
+        $campaign = Campaigns::where([
+            'user_id' => $this->userId,
+            'project_id' => $projectId
+        ])->withTrashed()->first();
+
         $campaignState = CampaignsState::where(['name' => 'Active'])->first();
 
         //Check to see if there is already an active campaign
-        $activeCampaigns = Campaigns::where(['user_id' => $this->userId, 'state_id' => $campaignState->id])->get();
+        $activeCampaigns = Campaigns::where([
+            'user_id' => $this->userId,
+            'state_id' => $campaignState->id,
+            'shop_id' => $campaign->shop_id
+        ])->get();
         if ($activeCampaigns->count() > 0) {
             $message = [
                 'error' => 'You have other active campaigns for this shop.  Please stop those campaigns before restarting this one.'
             ];
             return Redirect::back()->with($message);
         }
-        $campaign = Campaigns::where([
-            'user_id' => $this->userId, 'project_id' => $request->route('project_id')
-        ])->restore();
+
         if ($campaign === 0) {
             $message = [
                 'error' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'
             ];
         } else {
+            $campaign->restore();
             $message = [
                 'success' => 'Campaign successfully restarted'
             ];
