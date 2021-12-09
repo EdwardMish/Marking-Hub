@@ -68,6 +68,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/campaign/view',
         [App\Http\Controllers\CampaignController::class, 'viewCampaigns'])->name('viewCampaigns');
 
+    //Shop Links
+    Route::post('/shop/subscription/',
+        [App\Http\Controllers\CampaignController::class, 'createCampaign'])->name('startSubscription');
+
 });
 
 

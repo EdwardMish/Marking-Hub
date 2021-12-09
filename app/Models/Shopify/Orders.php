@@ -5,7 +5,7 @@ namespace App\Models\Shopify;
 use App\Models\Campaign\CampaignHistory;
 use App\Models\Campaign\Campaigns;
 use App\Models\Campaign\CampaignTargetHistory;
-use App\Models\Shops;
+use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +23,7 @@ class Orders extends Model
         return $this->hasMany(OrdersDiscountCodes::class);
     }
 
-    public function upsertOrder(SocialProviders $shopifyUser, Shops $shop, $limit = 50)
+    public function upsertOrder(SocialProviders $shopifyUser, Shop $shop, $limit = 50)
     {
         $updated = $shop->order_history_last_updated ?? '1970-01-01 00:00:00';
         $ordersSince = \DateTime::createFromFormat('Y-m-d H:i:s', $updated)->format(\DateTime::ISO8601);
@@ -81,7 +81,7 @@ class Orders extends Model
         return $exempt;
     }
 
-    public function updateCampaignStats(Shops $shop, Orders $orderRecord, $discountCode, $order)
+    public function updateCampaignStats(Shop $shop, Orders $orderRecord, $discountCode, $order)
     {
 
         $campaignTarget = CampaignTargetHistory::where([

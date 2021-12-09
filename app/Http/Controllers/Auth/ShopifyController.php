@@ -6,7 +6,7 @@ use App\Events\ShopConnected;
 use App\Http\Controllers\Controller;
 use App\Models\Shopify\Orders;
 use App\Models\Shopify\Shopify;
-use App\Models\Shops;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +45,7 @@ class ShopifyController extends Controller
 
         if ($socialUser->wasRecentlyCreated) {
             Log::info('Recently Created True');
-            $shop = Shops::create([
+            $shop = Shop::create([
                 'user_id' => $users->id,
                 'shop_name' => $shopifyUser->getNickname(),
                 'external_shop_id' => $shopifyUser->getId()
@@ -57,7 +57,7 @@ class ShopifyController extends Controller
 
         } else {
             ///@ToDo: look into why this is false when it should be true
-            $shop = Shops::firstOrCreate([
+            $shop = Shop::firstOrCreate([
                 'shop_name' => $shopifyUser->getNickname()],[
                 'user_id' => $users->id,
                 'external_shop_id' => $shopifyUser->getId()
