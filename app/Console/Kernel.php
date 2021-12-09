@@ -27,11 +27,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->command(CampaignCron::queueCampaigns())->dailyAt('04:00');
-        $schedule->command((new SocialProviders())->getExpiredTokens())->daily();
         $schedule->command('postcard-export')->everyFifteenMinutes();
-        $schedule->command((new Cron())->fetchOrderHistory())->dailyAt('02:00');
+
+        $schedule->command('refresh-social')->daily();
+        $schedule->command('fetch-orders')->dailyAt('02:00');
+        $schedule->command('process-campaigns')->dailyAt('04:00');
     }
 
     /**
