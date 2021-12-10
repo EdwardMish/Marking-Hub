@@ -179,13 +179,15 @@ class CampaignController extends Controller
             'user_id' => $this->userId
         ])->first();
 
-        if ($shop->subscribed('default'))
-            return redirect()->route('viewCampaigns')->withErrors($validator);
-        else {
-            return view('form.payment', [
-                'shop' => $shop,
-            ]);
-        }
+        return redirect()->route('viewCampaigns')->withErrors($validator);
+
+//        if ($shop->subscribed('default'))
+//            return redirect()->route('viewCampaigns')->withErrors($validator);
+//        else {
+//            return view('form.payment', [
+//                'shop' => $shop,
+//            ]);
+//        }
 
     }
 
