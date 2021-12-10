@@ -100,7 +100,7 @@ class CampaignCron
 
             //Fire Event
             CampaignProcessed::dispatch($campaignHistory);
-            $fileUrl = config('filesystem.disk.s3.url');
+            $fileUrl = config('filesystems.disks.s3.url');
             if ($i > 0) {
                 $campaignLimits[$campaign->id] = [
                     'max' => empty($campaign->max_sends_per_period) ? 999999999 : $campaign->max_sends_per_period,
