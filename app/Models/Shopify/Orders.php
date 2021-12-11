@@ -30,7 +30,12 @@ class Orders extends Model
         $shopify = new Shopify();
         $count = $limit;
         while ($count == $limit) {
-            $orders = $shopify->getOrders($shopifyUser, $ordersSince, $limit);
+            try {
+                $orders = $shopify->getOrders($shopifyUser, $ordersSince, $limit);
+            } catch (\Exception $e) {
+                $orders = [];
+            }
+
             $count = count($orders);
             foreach ($orders as $order) {
                 //Insert into Order History
