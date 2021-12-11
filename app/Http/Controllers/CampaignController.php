@@ -9,7 +9,7 @@ use App\Models\Campaign\Campaigns;
 use App\Models\Campaign\CampaignsState;
 use App\Models\Campaign\DesignHuddle;
 use App\Models\Shopify\Shopify;
-use App\Models\Shops;
+use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -174,8 +174,21 @@ class CampaignController extends Controller
         $campaign->save();
         // Queue the design to be downloaded
         (new DesignHuddle())->exportDesignQueue($campaign);
+        $shop = Shop::where([
+            'id' => $campaign->shop_id,
+            'user_id' => $this->userId
+        ])->first();
 
         return redirect()->route('viewCampaigns')->withErrors($validator);
+
+//        if ($shop->subscribed('default'))
+//            return redirect()->route('viewCampaigns')->withErrors($validator);
+//        else {
+//            return view('form.payment', [
+//                'shop' => $shop,
+//            ]);
+//        }
+
     }
 
     public function restartCampaign(Request $request)
@@ -201,6 +214,15 @@ class CampaignController extends Controller
             ];
             return Redirect::back()->with($message);
         }
+
+        $shop = Shop::where([
+            'id' => $campaign->shop_id,
+            'user_id' => $this->userId
+        ])->first();
+
+        //No Active Subscription
+        if (!$shop->subscribed('default'))
+            return view('form.payment', ['shop' => $shop]);
 
         if ($campaign === 0) {
             $message = [
@@ -269,9 +291,9 @@ class CampaignController extends Controller
         $campaigns = (new Campaigns)->getAllCampaignsReadable($this->userId);
         $audienceSizes = CampaignAudienceSizes::all();
         $archivedCampaigns = (new Campaigns)->getAllDeletedCampaignsReadable($this->userId);
-        $shops = new Shops();
+        $shop = new Shop();
 
-        $available = $shops->shopsWithoutCampaigns($this->userId);
+        $available = $shop->shopsWithoutCampaigns($this->userId);
         $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
 
         return view('campaign.view', [

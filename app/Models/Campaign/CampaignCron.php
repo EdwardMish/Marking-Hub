@@ -7,7 +7,7 @@ use App\Events\CampaignProcessed;
 use App\Models\Analytics\CampaignAnalytics;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shopify;
-use App\Models\Shops;
+use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -115,7 +115,6 @@ class CampaignCron
         CampaignProcessComplete::dispatch($campaignLimits);
 
         return null;
-
     }
 
 }

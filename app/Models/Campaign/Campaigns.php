@@ -2,7 +2,7 @@
 
 namespace App\Models\Campaign;
 
-use App\Models\Shops;
+use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use App\Models\User\User;
 use GuzzleHttp\Client;
@@ -29,7 +29,7 @@ class Campaigns extends Model
 
     public function shop()
     {
-        return $this->belongsTo(Shops::class, 'shop_id');
+        return $this->belongsTo(Shop::class, 'shop_id');
     }
 
     public function getAllCampaignsReadable($userId)
@@ -37,7 +37,7 @@ class Campaigns extends Model
 
         $campaignStates = new CampaignsState();
         $campaignAudienceSizes = new CampaignAudienceSizes();
-        $shop = new Shops();
+        $shop = new Shop();
 
         $campaigns = DB::table($this->getTable())
             ->join($campaignStates->getTable(), $this->getTable().'.state_id', '=',
@@ -64,7 +64,7 @@ class Campaigns extends Model
 
         $campaignStates = new CampaignsState();
         $campaignAudienceSizes = new CampaignAudienceSizes();
-        $shop = new Shops();
+        $shop = new Shop();
 
         $campaigns = DB::table($this->getTable())
             ->join($campaignStates->getTable(), $this->table.'.state_id', '=',

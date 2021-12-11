@@ -6,10 +6,11 @@ use App\Models\Campaign\Campaigns;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Laravel\Cashier\Billable;
 
-class Shops extends Model
+class Shop extends Model
 {
-    use HasFactory;
+    use HasFactory, Billable;
 
     protected $guarded = ['id'];
 
