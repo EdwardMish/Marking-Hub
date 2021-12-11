@@ -31,7 +31,7 @@ class Dynamo extends Model
                 'shop_id' => ['N' => (string) $data['shop_id']],
                 'created_at' => ['N' => (string) $epochTime],
                 'expires_at' => ['N' => (string) $expiresAtEpoch],
-                'audience_size_id' => ['N' => strval(isset($data['audience_size']) ? $data['audience_size'] : '10')],
+                'audience_size_id' => ['N' => (string) $data['audience_size'] ?? 10],
                 'path' => ['S' => (string) $data['path']],
                 'variant_id' => ['S' => (empty($data['variantId']) ? '' : (string) $data['variantId'])],
                 'session_id' => ['S' => (string) $data['sessionId']],

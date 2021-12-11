@@ -37,6 +37,8 @@ Route::get('auth/shopify/install',
     [App\Http\Controllers\Auth\ShopifyController::class, 'install'])->name('Shopify.Install');
 
 Route::get('/getting-started', [App\Http\Controllers\Controller::class, 'index'])->name('gettingStarted');
+Route::get('/analytics-dashboard', [App\Http\Controllers\Controller::class, 'analyticsDashboard'])->name('analyticsDashboard');
+Route::get('/account', [App\Http\Controllers\Controller::class, 'account'])->name('account');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/campaign/thumbnail',
@@ -79,3 +81,4 @@ Route::get('/shop/redact', [App\Http\Controllers\Shopify\GdprController::class, 
 Route::post('/customers/data_request', [App\Http\Controllers\Shopify\GdprController::class, 'customerDataRequest'])->name('GdrpCustomerData');
 Route::post('/customers/redact', [App\Http\Controllers\Shopify\GdprController::class, 'customerDataRequest'])->name('GdrpRedact');
 Route::post('/shop/redact', [App\Http\Controllers\Shopify\GdprController::class, 'customerDataRequest'])->name('GdrpShopRedact');
+

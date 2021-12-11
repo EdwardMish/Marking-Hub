@@ -19,11 +19,21 @@
                 <a href="{{ Route('gettingStarted') }}"><i class="fa fa-hand-o-right"></i> <span
                         class="nav-label">Getting Started</span></a>
             </li>
+            <li class="{{ Route::is('account') ? 'active' : '' }}">
+                <a href="{{ Route('account') }}"><i class="fa fa-cog"></i> <span
+                        class="nav-label">Account</span></a>
+            </li>
 
             <li class="{{ Route::is('viewCampaigns') ? 'active' : '' }}">
                 <a href="{{ Route('viewCampaigns') }}"><i class="fa fa-bullhorn"></i> <span
                         class="nav-label">Automated Retargeting</span></a>
             </li>
+
+            <li class="{{ Route::is('analyticsDashboard') ? 'active' : '' }}">
+                <a href="{{ Route('analyticsDashboard') }}"><i class="fa fa-line-chart"></i> <span
+                        class="nav-label">Analytics Dashboard</span></a>
+            </li>
+
             {{--            <li class="{{ (Route::is('viewCampaigns', 'createCampaign', 'selectPostcard')) ? 'active' : '' }}">--}}
             {{--                <a href="{{ Route('viewCampaigns') }}"><i class="fa fa-bullhorn"></i> <span class="nav-label">Automated Retargeting</span><span--}}
             {{--                        class="fa arrow"></span></a>--}}
