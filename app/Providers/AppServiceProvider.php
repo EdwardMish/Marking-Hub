@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $loader = AliasLoader::getInstance();
-        $loader->alias(\SocialiteProviders\Shopify\Provider::class,\App\Overrides\Socialite\Shopify\Provider::class);
+        $loader->alias(\SocialiteProviders\Shopify\Provider::class, \App\Overrides\Socialite\Shopify\Provider::class);
     }
 
     /**
