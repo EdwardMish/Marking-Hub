@@ -16,4 +16,14 @@ class Controller extends BaseController
         return view('getting-started', [
         ]);
     }
+    public function analyticsDashboard()
+    {
+        return view('analytics-dashboard', [
+        ]);
+    }
+    public function account()
+    {
+        return view('account', [
+        ]);
+    }
 }
