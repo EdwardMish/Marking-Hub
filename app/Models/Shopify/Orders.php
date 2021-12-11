@@ -9,6 +9,8 @@ use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Uuid;
 
 class Orders extends Model
 {
@@ -81,7 +83,13 @@ class Orders extends Model
                 $orderRecord->save();
                 //Get the last date for the next potential run
                 $ordersSince = $order->updated_at;
-
+                $date = new \DateTime();
+                Storage::disk('s3-private')->put(
+                    'Year=' . $date->format('Y') .
+                    '/Month=' . $date->format('m') .
+                    '/Day=' . $date->format('d') .
+                    '/' .$shop->id . '/' . Uuid::uuid4().'.json',
+                json_encode($order));
 
             }
         }
