@@ -42,16 +42,30 @@ class Orders extends Model
                 $orderRecord = Orders::firstOrNew([
                     'id' => $order->id
                 ]);
-                $data = [
-                    'shop_id' => $shop->id,
-                    'order_total' => $order->total_price,
-                    'browser_ip' => $order->browser_ip,
-                    'billing_address_street' => $order->billing_address->address1,
-                    'billing_address_street2' => $order->billing_address->address2,
-                    'billing_address_city' => $order->billing_address->city,
-                    'billing_address_province_code' => $order->billing_address->province_code,
-                    'billing_address_zip' => $order->billing_address->zip,
-                ];
+                try {
+                    $data = [
+                        'shop_id' => $shop->id,
+                        'order_total' => $order->total_price,
+                        'browser_ip' => $order->browser_ip,
+                        'billing_address_street' => $order->billing_address->address1,
+                        'billing_address_street2' => $order->billing_address->address2,
+                        'billing_address_city' => $order->billing_address->city,
+                        'billing_address_province_code' => $order->billing_address->province_code,
+                        'billing_address_zip' => $order->billing_address->zip,
+                    ];
+                } catch (\Exception $e) {
+                    $data = [
+                        'shop_id' => $shop->id,
+                        'order_total' => $order->total_price,
+                        'browser_ip' => $order->browser_ip,
+                        'billing_address_street' => '',
+                        'billing_address_street2' => '',
+                        'billing_address_city' => '',
+                        'billing_address_province_code' => '',
+                        'billing_address_zip' => '',
+                    ];
+                }
+
                 OrdersDiscountCodes::where(['order_id' => $order->id])->delete();
                 foreach ($order->discount_codes as $codes) {
                     OrdersDiscountCodes::create([
@@ -67,6 +81,8 @@ class Orders extends Model
                 $orderRecord->save();
                 //Get the last date for the next potential run
                 $ordersSince = $order->updated_at;
+
+
             }
         }
         $lastUpdate = \DateTime::createFromFormat(\DateTime::ISO8601, $ordersSince)->format('Y-m-d H:i:s');
