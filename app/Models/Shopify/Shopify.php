@@ -56,7 +56,7 @@ class Shopify
         $client = new Client();
         $apiV = config('services.shopify.api_version');
         $res = json_decode($client->request('GET',
-            'https://'.$social->nickname.'/admin/api/'.$apiV.'/checkouts.json?created_at_min='.$sinceDateTime, [
+            'https://'.$social->nickname.'/admin/api/'.$apiV.'/checkouts.json?created_at_min='.$sinceDateTime.'&order=updated_at asc', [
                 'headers' => ['X-Shopify-Access-Token' => $social->access_token],
             ])->getBody());
 
