@@ -54,6 +54,7 @@ class Orders extends Model
                         'billing_address_city' => $order->billing_address->city,
                         'billing_address_province_code' => $order->billing_address->province_code,
                         'billing_address_zip' => $order->billing_address->zip,
+                        'order_date' => $order->created_at,
                     ];
                 } catch (\Exception $e) {
                     $data = [
@@ -65,6 +66,7 @@ class Orders extends Model
                         'billing_address_city' => '',
                         'billing_address_province_code' => '',
                         'billing_address_zip' => '',
+                        'order_date' => $order->created_at,
                     ];
                 }
 
