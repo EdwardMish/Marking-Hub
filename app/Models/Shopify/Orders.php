@@ -9,6 +9,8 @@ use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Uuid;
 
 class Orders extends Model
 {
@@ -30,23 +32,44 @@ class Orders extends Model
         $shopify = new Shopify();
         $count = $limit;
         while ($count == $limit) {
-            $orders = $shopify->getOrders($shopifyUser, $ordersSince, $limit);
+            try {
+                $orders = $shopify->getOrders($shopifyUser, $ordersSince, $limit);
+            } catch (\Exception $e) {
+                $orders = [];
+            }
+
             $count = count($orders);
             foreach ($orders as $order) {
                 //Insert into Order History
                 $orderRecord = Orders::firstOrNew([
                     'id' => $order->id
                 ]);
-                $data = [
-                    'shop_id' => $shop->id,
-                    'order_total' => $order->total_price,
-                    'browser_ip' => $order->browser_ip,
-                    'billing_address_street' => $order->billing_address->address1,
-                    'billing_address_street2' => $order->billing_address->address2,
-                    'billing_address_city' => $order->billing_address->city,
-                    'billing_address_province_code' => $order->billing_address->province_code,
-                    'billing_address_zip' => $order->billing_address->zip,
-                ];
+                try {
+                    $data = [
+                        'shop_id' => $shop->id,
+                        'order_total' => $order->total_price,
+                        'browser_ip' => $order->browser_ip,
+                        'billing_address_street' => $order->billing_address->address1,
+                        'billing_address_street2' => $order->billing_address->address2,
+                        'billing_address_city' => $order->billing_address->city,
+                        'billing_address_province_code' => $order->billing_address->province_code,
+                        'billing_address_zip' => $order->billing_address->zip,
+                        'order_date' => $order->created_at,
+                    ];
+                } catch (\Exception $e) {
+                    $data = [
+                        'shop_id' => $shop->id,
+                        'order_total' => $order->total_price,
+                        'browser_ip' => $order->browser_ip,
+                        'billing_address_street' => '',
+                        'billing_address_street2' => '',
+                        'billing_address_city' => '',
+                        'billing_address_province_code' => '',
+                        'billing_address_zip' => '',
+                        'order_date' => $order->created_at,
+                    ];
+                }
+
                 OrdersDiscountCodes::where(['order_id' => $order->id])->delete();
                 foreach ($order->discount_codes as $codes) {
                     OrdersDiscountCodes::create([
@@ -62,6 +85,14 @@ class Orders extends Model
                 $orderRecord->save();
                 //Get the last date for the next potential run
                 $ordersSince = $order->updated_at;
+                $date = new \DateTime();
+                Storage::disk('s3-private')->put(
+                    'Year=' . $date->format('Y') .
+                    '/Month=' . $date->format('m') .
+                    '/Day=' . $date->format('d') .
+                    '/' .$shop->id . '/' . Uuid::uuid4().'.json',
+                json_encode($order));
+
             }
         }
         $lastUpdate = \DateTime::createFromFormat(\DateTime::ISO8601, $ordersSince)->format('Y-m-d H:i:s');
