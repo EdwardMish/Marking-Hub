@@ -188,7 +188,6 @@ class CampaignController extends Controller
 //                'shop' => $shop,
 //            ]);
 //        }
-
     }
 
     public function restartCampaign(Request $request)
