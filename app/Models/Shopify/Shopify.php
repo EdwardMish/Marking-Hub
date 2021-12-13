@@ -43,8 +43,8 @@ class Shopify
     {
         $client = new Client();
         $apiV = config('services.shopify.api_version');
-        $res = json_decode($client->request('GET',
-            'https://'.$social->nickname.'/admin/api/'.$apiV.'/orders.json?limit='.$limit.'&updated_at_min='.$sinceDateTime, [
+        $url = 'https://'.$social->nickname.'/admin/api/'.$apiV.'/orders.json?limit='.$limit.'&updated_at_min='.$sinceDateTime.'&order=updated_at asc';
+        $res = json_decode($client->request('GET', $url, [
                 'headers' => ['X-Shopify-Access-Token' => $social->access_token],
             ])->getBody());
 
@@ -56,7 +56,7 @@ class Shopify
         $client = new Client();
         $apiV = config('services.shopify.api_version');
         $res = json_decode($client->request('GET',
-            'https://'.$social->nickname.'/admin/api/'.$apiV.'/checkouts.json?created_at_min='.$sinceDateTime.'&order=updated_at asc', [
+            'https://'.$social->nickname.'/admin/api/'.$apiV.'/checkouts.json?created_at_min='.$sinceDateTime.'&order=updated_at%20asc', [
                 'headers' => ['X-Shopify-Access-Token' => $social->access_token],
             ])->getBody());
 
