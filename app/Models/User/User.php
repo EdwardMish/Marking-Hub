@@ -2,6 +2,7 @@
 
 namespace App\Models\User;
 
+use App\Models\Shop;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -37,6 +38,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function shops()
+    {
+        return $this->hasMany(Shop::class, 'user_id' );
+    }
+
 
     public static function makePassword($length = 16)
     {

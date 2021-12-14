@@ -31,7 +31,7 @@
 </div>
 <div class="row">
     <div class="col-lg-12">
-        <button class="btn btn-primary btn-lg" name="submit" value="start" type="submit">Start Campaign</button>
+        <a class="btn btn-primary btn-lg" id="submitCampaign" value="start" type="submit" href="javascript:void(0)">Start Campaign</a>
     </div>
 </div>
 

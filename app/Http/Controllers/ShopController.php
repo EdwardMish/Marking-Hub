@@ -21,6 +21,16 @@ class ShopController extends Controller
         });
     }
 
+    public function redirectToPortal (Request $request) {
+
+        $shop = Shop::where([
+            'id' => $request->route('shop_id'),
+            'user_id' => $this->userId
+        ])->first();
+
+        return $shop->redirectToBillingPortal();
+    }
+
     public function startSubscription(Request $request)
     {
         $rules = [
@@ -53,40 +63,63 @@ class ShopController extends Controller
             'id' => $data['shop_id'],
             'user_id' => $this->userId
         ])->first();
-        $subbed = $shop->subscribed('default');
+
+        $planId = config('cashier.subscription.plan');
+        $pricingId = config('cashier.subscription.pricing');
+        $subbed = $shop->subscribed($planId);
+
         if ($subbed) {
             return true;
         }
 
-        $customer = $shop->createOrGetStripeCustomer([
-            'name' => $data['fullname'],
-            'email' => $request->user()->email,
-            'address' => [
-                         'city' => $data['city'],
-                         'country' => $data['country'],
-                         'line1' => $data['address1'],
-                         'line2' => $data['address2'],
-                         'postal_code' => $data['zip'],
-                         'state' => $data['state'],
-            ]
-        ]);
-        $stripe = new \Stripe\StripeClient(
-            config('cashier.secret')
-        );
-        $payment = $stripe->paymentMethods->create([
-            'type' => 'card',
-            'card' => [
-                'number' => '4242424242424242',
-                'exp_month' => 12,
-                'exp_year' => 2022,
-                'cvc' => '314',
-            ],
-        ]);
+        try {
+            $customer = $shop->createOrGetStripeCustomer([
+                'name' => $data['fullname'],
+                'email' => $request->user()->email,
+                'address' => [
+                    'city' => $data['city'],
+                    'country' => $data['country'],
+                    'line1' => $data['address1'],
+                    'line2' => $data['address2'],
+                    'postal_code' => $data['zip'],
+                    'state' => $data['state'],
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['customer' => $e->getMessage()], 400);
+        }
 
-        $sub = $shop->newSubscription('default', 'price_monthly'
-        )->create($request->paymentMethodId);
+        try {
+            $expiration = explode('/', $data['expiration']);
+            $dt = \DateTime::createFromFormat('y', $expiration[1]);
+            $year = $dt->format('Y');
 
-        dd('Done');
+            // Add Payment Method
+            $stripe = new \Stripe\StripeClient(
+                config('cashier.secret')
+            );
+            $payment = $stripe->paymentMethods->create([
+                'type' => 'card',
+                'card' => [
+                    'number' => $data['number'],
+                    'exp_month' =>  $expiration[0],
+                    'exp_year' =>  $year,
+                    'cvc' => $data['cvv'],
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['payment' => $e->getMessage()], 400);
+        }
+
+        try {
+            $shop->newSubscription($planId)
+                ->meteredPrice($pricingId)
+                ->create($payment->id);
+        } catch (\Exception $e) {
+            return response()->json(['subscription' => $e->getMessage()], 400);
+        }
+
+        return true;
     }
 
     public function viewSubscriptionForm(Request $request)

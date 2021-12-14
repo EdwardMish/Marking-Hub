@@ -136,10 +136,17 @@ class CampaignController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages = [
             'thumbnail_url.required' => 'You must save your postcard design before proceeding',
             'project_id.required' => 'You must select a postcard template before proceeding',
+            'discount_type.required' => 'Discount type is required',
+            'discount_amount.required' => 'Discount amount is required',
+            'discount_amount.regex' => 'Please enter a valid discount account',
+            'max_sends.min' => 'Leave blank or enter a number great than 0',
+            'max_sends.int' => 'You can only enter numbers for max sends',
+            'shop_id.required' => 'Select a valid shop name'
+
         ]);
 
         if ($validator->errors()->count() > 0) {
-            return redirect()->route('viewCampaigns')->withErrors($validator);
+            return response()->json(['errors' => $validator->getMessageBag()], 400);
         }
 
         $params = $validator->validate();
@@ -172,6 +179,10 @@ class CampaignController extends Controller
         $campaign->max_sends_per_period = $params['max_sends'];
         $campaign->user_id = $this->userId;
         $campaign->save();
+
+        if ($validator->errors()->count() > 0) {
+            return response()->json(['errors' => $validator->getMessageBag()], 400);
+        }
         // Queue the design to be downloaded
         (new DesignHuddle())->exportDesignQueue($campaign);
         $shop = Shop::where([
@@ -179,15 +190,22 @@ class CampaignController extends Controller
             'user_id' => $this->userId
         ])->first();
 
-        return redirect()->route('viewCampaigns')->withErrors($validator);
-
-//        if ($shop->subscribed('default'))
-//            return redirect()->route('viewCampaigns')->withErrors($validator);
-//        else {
-//            return view('form.payment', [
-//                'shop' => $shop,
-//            ]);
-//        }
+        if ($shop->subscribed(config('cashier.subscription.plan')))
+            return response()->json([
+                'errors' => [],
+                'success' => [
+                    'redirect' => route('viewCampaigns')
+                ]
+            ], 200);
+        else {
+            $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
+            $campaign->save();
+            return response()->json([
+                'errors' => [
+                    'payment' => 'An active subscription is required',
+                ],
+            ], 402);
+        }
     }
 
     public function restartCampaign(Request $request)
@@ -220,7 +238,7 @@ class CampaignController extends Controller
         ])->first();
 
         //No Active Subscription
-        if (!$shop->subscribed('default'))
+        if (!$shop->subscribed(config('cashier.subscription.plan')))
             return view('form.payment', ['shop' => $shop]);
 
         if ($campaign === 0) {
