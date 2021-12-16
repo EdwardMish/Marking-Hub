@@ -1,18 +1,4 @@
-@extends('layouts.app', ['activePage' => 'design', 'titlePage' => __('Select A Postcard')])
-
-{{--@push('js')--}}
-{{--    <script src="https://js.stripe.com/v3/"></script>--}}
-
-{{--    <script>--}}
-{{--        const stripe = Stripe('stripe-public-key');--}}
-
-{{--        const elements = stripe.elements();--}}
-{{--        const cardElement = elements.create('card');--}}
-
-{{--        cardElement.mount('#card-element');--}}
-{{--    </script>--}}
-{{--@endpush--}}
-@section('content')
+<div class="modal inmodal fade" id="paymentModal" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
             <h2>Add a Subscription</h2>
@@ -33,7 +19,7 @@
         </div>
         <form action="{{ Route('startSubscription') }}" method="post">
             @csrf
-            <input hidden name="shop_id" value="{{  $shop->id  }}" />
+            <input hidden name="payment_shop_id" value=""/>
             <div class="row">
                 <div class="col-lg-6 col-md-12">
                     <div id="card-element"></div>
@@ -106,12 +92,12 @@
                                         <label>Street Address</label>
                                         <input type="text" class="form-control" name="address1"
                                                placeholder="Street address"
-                                               value="{{old('address1')}}" >
+                                               value="{{old('address1')}}">
                                     </div>
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="address2"
                                                placeholder="Apt, suite, building (optional)"
-                                               value="{{old('address2')}}" >
+                                               value="{{old('address2')}}">
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +115,7 @@
                                         <label>State/Providence</label>
                                         <input type="text" class="form-control" name="state"
                                                placeholder="e.g. MA" required="required"
-                                               value="{{old('state')}}" >
+                                               value="{{old('state')}}">
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +124,7 @@
                                     <div class="form-group">
                                         <label>Country</label>
                                         <input type="text" class="form-control" name="country"
-                                               required="required" value="{{old('country')}}" >
+                                               required="required" value="{{old('country')}}">
                                     </div>
                                 </div>
                                 <div class="col-5 col-md-5 float-right">
@@ -146,14 +132,14 @@
                                         <label>Postal / Zip Code</label>
                                         <input type="text" class="form-control" name="zip"
                                                placeholder="e.g. 01234" required="required"
-                                               value="{{old('zip')}}" >
+                                               value="{{old('zip')}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <button class="btn btn-primary btn-lg" name="submit" value="start"
-                                            type="submit" data-secret="{{ $intent->client_secret }}">
+                                            type="submit">
                                         Start Campaign
                                     </button>
                                 </div>
@@ -164,4 +150,4 @@
             </div>
         </form>
     </div>
-@endsection
+</div>

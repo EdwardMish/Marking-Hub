@@ -1,37 +1,48 @@
-<h5>Create Your Offer</h5>
-<p>Statistics show that customers are more likely to convert when presented an offer.
-    Each customer’s
-    post card will come with a custom printed code they can use at checkout</p>
+<div class="ibox">
+    <div class="ibox-title heading-dashboard">
+        Step 4: Create Your Offer
+    </div>
+    <div class="ibox-content">
+        <div class="sk-spinner sk-spinner-double-bounce">
+            <div class="sk-double-bounce1"></div>
+            <div class="sk-double-bounce2"></div>
+        </div>
+        <p class="custom-text">Statistics show that customers are more likely to convert when presented an offer.
+            Each customer’s
+            post card will come with a custom printed code they can use at checkout</p>
 
-<div class="row">
-    <div class="col-lg-3">
-        <div class="form-group"><label>Offer Type</label><select class="form-control m-b"
-                                                                 name="discount_type"
-                                                                 id="input_discount_type">
-                <option value="1">% Off</option>
-                <option value="2">Flat Discount</option>
-            </select></div>
-    </div>
-    <div class="col-lg-3">
-        <div class="form-group"><label>Amount</label><input class="form-control" name="discount_amount"
-                                                            id="input_discount_amount" value="10"></div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-3">
-        Discount Prefix
-    </div>
-    <div class="col-lg-3">
-        <input class="form-control" name="discount_prefix" id="input_discount_prefix" value="
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group mb-3">
+                    <label class="inputs-label" for="input_discount_type">Offer Type</label>
+                    <select class="form-control custom-input" name="discount_type" id="input_discount_type">
+                        <option value="1">% Off</option>
+                        <option value="2">Flat Discount</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group mb-3">
+                    <label for="input_discount_amount" class="inputs-label">Amount</label>
+                    <input type="text" class="form-control custom-input" name="discount_amount" id="input_discount_amount" value="10">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <label for="input_discount_prefix" class="inputs-label">Discount Prefix</label>
+                <input class="form-control" name="discount_prefix" id="input_discount_prefix" value="
 {{ preg_replace("/[^A-Z0-9 ]/", '', strtoupper(substr($userShop, 0,6))) }}">
-    </div>
-    <div class="col-lg-6">
-        <p id="discount-code-sample"></p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12">
-        <button class="btn btn-primary btn-lg" name="submit" value="start" type="submit">Start Campaign</button>
+            </div>
+            <div class="col-lg-6">
+                <p id="discount-code-sample" class="faded-text"></p>
+            </div>
+        </div>
+        <div class="col-lg-12" style="padding: 20px 10px 0px 0px">
+            <a class="btn custom-button" id="submitCampaign" value="start" type="submit" href="javascript:void(0)">Start
+                Campaign</a>
+        </div>
+        @include('form.campaign.limit-send')
     </div>
 </div>
 

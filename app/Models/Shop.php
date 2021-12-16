@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Campaign\Campaigns;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
