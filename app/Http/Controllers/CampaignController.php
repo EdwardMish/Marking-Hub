@@ -141,7 +141,8 @@ class CampaignController extends Controller
             'discount_amount.regex' => 'Please enter a valid discount account',
             'max_sends.min' => 'Leave blank or enter a number great than 0',
             'max_sends.int' => 'You can only enter numbers for max sends',
-            'shop_id.required' => 'Select a valid shop name'
+            'shop_id.required' => 'Select a valid shop name',
+            'audience.required' => 'You must select your audience size'
 
         ]);
 
@@ -190,22 +191,22 @@ class CampaignController extends Controller
             'user_id' => $this->userId
         ])->first();
 
-        if ($shop->subscribed(config('cashier.subscription.plan')))
+        //if ($shop->subscribed(config('cashier.subscription.plan')))
             return response()->json([
                 'errors' => [],
                 'success' => [
                     'redirect' => route('viewCampaigns')
                 ]
             ], 200);
-        else {
-            $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
-            $campaign->save();
-            return response()->json([
-                'errors' => [
-                    'payment' => 'An active subscription is required',
-                ],
-            ], 402);
-        }
+//        else {
+//            $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
+//            $campaign->save();
+//            return response()->json([
+//                'errors' => [
+//                    'payment' => 'An active subscription is required',
+//                ],
+//            ], 402);
+//        }
     }
 
     public function restartCampaign(Request $request)
@@ -308,8 +309,8 @@ class CampaignController extends Controller
         $campaigns = (new Campaigns)->getAllCampaignsReadable($this->userId);
         $audienceSizes = CampaignAudienceSizes::all();
         $archivedCampaigns = (new Campaigns)->getAllDeletedCampaignsReadable($this->userId);
-        $shop = new Shop();
 
+        $shop = new Shop();
         $available = $shop->shopsWithoutCampaigns($this->userId);
         $DH = (new DesignHuddle)->firstOrCreate($shopifyUser);
 
