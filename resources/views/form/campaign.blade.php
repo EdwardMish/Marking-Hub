@@ -1,6 +1,3 @@
-@foreach ($errors->all() as $error)
-    {{ $error }}<br/>
-@endforeach
 <form action="{{ Route('saveCampaign') }}" method="post" name="campaign">
     @csrf
     @include('form.campaign.select-shop')
@@ -8,7 +5,6 @@
     @include('form.campaign.select-postcard')
     @include('form.campaign.create-code')
 </form>
-@include('form.payment')
 
 @push('js')
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}" defer></script>
@@ -24,7 +20,7 @@
                 $('.ibox').children('.ibox-content').toggleClass('sk-loading');
                 window.location.href = result.success['redirect'];
             }).fail(function(result) {
-                // $('#paymentModal').show();
+                $('#paymentModal').show();
                 let obj = result.responseJSON.errors;
 
                 let arr = Object.keys(obj).map(function (key) { return obj[key]; });

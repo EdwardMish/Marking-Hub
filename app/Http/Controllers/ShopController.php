@@ -21,7 +21,8 @@ class ShopController extends Controller
         });
     }
 
-    public function redirectToPortal (Request $request) {
+    public function redirectToPortal(Request $request)
+    {
 
         $shop = Shop::where([
             'id' => $request->route('shop_id'),
@@ -35,7 +36,7 @@ class ShopController extends Controller
     {
         $rules = [
             'fullname' => ['required', 'string'],
-            'number' => 'required|int',
+            'card_number' => 'required|int',
             'expiration' => ['required', 'regex:/^([0-9]{2})\s?\/\s?([0-9]{2})$/'],
             'cvv' => 'required|int',
             'shop_id' => 'required|int',
@@ -69,7 +70,12 @@ class ShopController extends Controller
         $subbed = $shop->subscribed($planId);
 
         if ($subbed) {
-            return true;
+            return response()->json([
+                'errors' => [],
+                'success' => [
+                    'redirect' => route('viewCampaigns')
+                ]
+            ], 200);
         }
 
         try {
@@ -101,9 +107,9 @@ class ShopController extends Controller
             $payment = $stripe->paymentMethods->create([
                 'type' => 'card',
                 'card' => [
-                    'number' => $data['number'],
-                    'exp_month' =>  $expiration[0],
-                    'exp_year' =>  $year,
+                    'number' => $data['card_number'],
+                    'exp_month' => $expiration[0],
+                    'exp_year' => $year,
                     'cvc' => $data['cvv'],
                 ],
             ]);
@@ -119,7 +125,12 @@ class ShopController extends Controller
             return response()->json(['subscription' => $e->getMessage()], 400);
         }
 
-        return true;
+        return response()->json([
+            'errors' => [],
+            'success' => [
+                'redirect' => route('viewCampaigns')
+            ]
+        ], 200);
     }
 
     public function viewSubscriptionForm(Request $request)

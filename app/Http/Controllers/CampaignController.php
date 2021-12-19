@@ -191,22 +191,23 @@ class CampaignController extends Controller
             'user_id' => $this->userId
         ])->first();
 
-        //if ($shop->subscribed(config('cashier.subscription.plan')))
+        if ($shop->subscribed(config('cashier.subscription.plan')))
             return response()->json([
                 'errors' => [],
                 'success' => [
                     'redirect' => route('viewCampaigns')
                 ]
             ], 200);
-//        else {
-//            $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
-//            $campaign->save();
-//            return response()->json([
-//                'errors' => [
-//                    'payment' => 'An active subscription is required',
-//                ],
-//            ], 402);
-//        }
+        else {
+            $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
+            $campaign->save();
+            return response()->json([
+                'errors' => [
+                    'payment' => 'An active subscription is required',
+                    'campaign_id' => $campaign->id
+                ],
+            ], 402);
+        }
     }
 
     public function restartCampaign(Request $request)
@@ -239,21 +240,36 @@ class CampaignController extends Controller
         ])->first();
 
         //No Active Subscription
-        if (!$shop->subscribed(config('cashier.subscription.plan')))
-            return view('form.payment', ['shop' => $shop]);
-
-        if ($campaign === 0) {
-            $message = [
-                'error' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'
-            ];
-        } else {
-            $campaign->restore();
-            $message = [
-                'success' => 'Campaign successfully restarted'
-            ];
+        if (!$shop->subscribed(config('cashier.subscription.plan'))) {
+            return response()->json([
+                'errors' => [
+                    'payment' => 'An active subscription is required',
+                    'campaign_id' => $campaign->id
+                ],
+            ], 402);
         }
 
-        return Redirect::route('viewCampaigns')->with($message);
+        $request->session()->flash('success', 'Your campaign was activated successfully');
+        return response()->json([
+            'errors' => [],
+            'success' => [
+                'redirect' => route('viewCampaigns')
+            ]
+        ], 200);
+
+//        if ($campaign === 0) {
+//            return response()->json(['errors' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'], 400);
+//        } else {
+//            $request->session()->flash('success', 'Your campaign was activated successfully');
+//            return response()->json([
+//                'errors' => [],
+//                'success' => [
+//                    'redirect' => route('viewCampaigns')
+//                ]
+//            ], 200);
+//        }
+
+
     }
 
     public function stopCampaign(Request $request)

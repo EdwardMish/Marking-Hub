@@ -20,9 +20,26 @@
             @if ($campaign->deleted_at === null)
                 <th><a href="{{ Route('stopCampaign', $campaign->project_id)}}">Stop</a></th>
             @else
-                <th><a href="{{ Route('restartCampaign', $campaign->project_id)}}">Restart</a></th>
+                <th><a data-id="{{ Route('restartCampaign' , $campaign->project_id) }}" href="javascript:void(0)" class="restart-campaign">Restart</a></th>
             @endif
         </tr>
     @endforeach
     </tbody>
 </table>
+
+@push('js')
+    <script>
+        $('.restart-campaign').on('click', function (result) {
+            const postUrl = $(this).attr("data-id");
+
+            $.ajax({
+                method: "get",
+                url: postUrl,
+            }).done(function(result) {
+                window.location.href = result.success['redirect'];
+            }).fail(function(result) {
+                $('#paymentModal').show();
+            });
+        })
+    </script>
+@endpush

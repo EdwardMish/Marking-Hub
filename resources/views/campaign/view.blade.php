@@ -2,6 +2,13 @@
 
 @section('content')
 
+    @if(Session::has('message'))
+        <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+    @endif
+    <div class="alert alert-info alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        A wonderful serenity has taken possession. <a class="alert-link" href="#">Alert Link</a>.
+    </div>
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
@@ -42,10 +49,18 @@
                         </div>
                     @endif
                 </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">
+                        Large Modal
+                    </button>
+                </div>
+                @include('form.payment')
             </div>
             <div class="col-lg-6 col-md-4">
                 @include('campaign.calculator')
             </div>
         </div>
     </div>
+
 @endsection
