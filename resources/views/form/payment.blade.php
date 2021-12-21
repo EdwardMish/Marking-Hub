@@ -1,12 +1,9 @@
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="campaignOverviewModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form action="{{ Route('startSubscription') }}" method="post">
+        <form onsubmit="return false" method="post">
+            <input type="hidden" id="payment_shop_id" name="payment_shop_id">
             <div class="modal-content">
-                <div class="sk-spinner sk-spinner-double-bounce">
-                    <div class="sk-double-bounce1"></div>
-                    <div class="sk-double-bounce2"></div>
-                </div>
                 <div class="row">
                     <div class="col-lg-12" style="margin-top: -15px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
@@ -24,6 +21,10 @@
                                         Campaign Overview
                                     </div>
                                     <div class="ibox-content">
+                                        <div class="sk-spinner sk-spinner-double-bounce">
+                                            <div class="sk-double-bounce1"></div>
+                                            <div class="sk-double-bounce2"></div>
+                                        </div>
                                         <p class="custom-text">
                                             $1.50 per postcard sent.
                                         </p>
@@ -38,6 +39,10 @@
                                         Payment Information
                                     </div>
                                     <div class="ibox-content">
+                                        <div class="sk-spinner sk-spinner-double-bounce">
+                                            <div class="sk-double-bounce1"></div>
+                                            <div class="sk-double-bounce2"></div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group mb-3">
@@ -89,6 +94,10 @@
                                         Billing Address
                                     </div>
                                     <div class="ibox-content">
+                                        <div class="sk-spinner sk-spinner-double-bounce">
+                                            <div class="sk-double-bounce1"></div>
+                                            <div class="sk-double-bounce2"></div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group mb-3">
@@ -399,8 +408,8 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12 text-center">
-                                <a class="btn custom-button" id="confirmSub" href="javascript:void(0)">
-                                    Confirm Subscription</a>
+                                <button class="btn custom-button" id="confirmSub" href="javascript:void(0)">
+                                    Confirm Subscription</button>
                             </div>
                         </div>
                     </div>
@@ -413,14 +422,14 @@
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}" defer></script>
     <script>
         $('#confirmSub').on('click', function (result) {
-            $('.modal').children('.modal-content').toggleClass('sk-loading');
-            var shopId = $('select[name="shop_id"]').val();
+            $('.ibox').children('.ibox-content').toggleClass('sk-loading');
+            $('#confirmSub').prop("disabled",true);
             $.ajax({
                 method: "post",
                 url: "{{ Route('startSubscription') }}",
                 data: $("form").serialize()
             }).done(function(result) {
-                $('.modal').children('.modal-content').toggleClass('sk-loading');
+                $('.ibox').children('.ibox-content').toggleClass('sk-loading');
                 window.location.href = result.success['redirect'];
             }).fail(function(result) {
 
@@ -433,8 +442,8 @@
                     icon: "error",
                     confirmButtonColor: "#DD6B55",
                 });
-
-                $('.modal').children('.modal-content').toggleClass('sk-loading');
+                $('#confirmSub').prop("disabled",false);
+                $('.ibox').children('.ibox-content').toggleClass('sk-loading');
             });
         })
     </script>

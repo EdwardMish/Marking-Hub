@@ -5,6 +5,7 @@
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 @include('form.campaign')
+                @include('form.payment')
             </div>
             <div class="col-lg-6 col-md-6">
                 @include('campaign.calculator')

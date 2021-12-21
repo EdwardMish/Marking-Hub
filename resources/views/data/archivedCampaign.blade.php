@@ -38,7 +38,8 @@
             }).done(function(result) {
                 window.location.href = result.success['redirect'];
             }).fail(function(result) {
-                $('#paymentModal').show();
+                $('#paymentModal').modal('show');
+                $('#payment_shop_id').val(result.responseJSON.errors.campaign_id);
             });
         })
     </script>

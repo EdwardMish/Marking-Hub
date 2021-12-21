@@ -49,12 +49,6 @@
                         </div>
                     @endif
                 </div>
-
-                <div class="text-center">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">
-                        Large Modal
-                    </button>
-                </div>
                 @include('form.payment')
             </div>
             <div class="col-lg-6 col-md-4">
