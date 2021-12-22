@@ -155,12 +155,43 @@ class DesignHuddle extends Model
             //Update the Campaign
             $campaign->save();
 
+            //Split the PDF into 2 pages
+            $this->splitPdf($resBody->data->download_url, $export->project_id);
+
             //Remove the Record from the Queue
             $export->delete();
             return true;
         }
         //Looks like it wasn't ready yet do nothing
         return null;
+    }
+
+    public function splitPdf($imageUrl, $projectId) {
+
+        $im = new \Imagick($imageUrl);
+        $im->setResolution(300,300); //print resolution
+        $im->readimage($imageUrl); //whatever the name of the 2-page file design huddle sends us
+        $current = $im->current();
+        $im->previousImage();
+        $previousImg = $im->current();
+        $im->setImageFormat('pdf');
+
+        $blob = $previousImg->getImageBlob();
+        Storage::put('campaigns/postcards/page-2/' . $projectId . '.pdf', $blob);
+        $im->previousImage();
+
+        $blob2 = $current->getImageBlob();
+        $current->clear();
+        $current->destroy();
+        unset($current);
+        $previousImg->clear();
+        $previousImg->destroy();
+        unset($previousImg);
+        unset($blob);
+        Storage::put('campaigns/postcards/page-1/' . $projectId . '.pdf', $blob2);
+        $im->clear();
+        $im->destroy();
+
     }
 
     public function refreshAppToken()

@@ -177,6 +177,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // QRcode Generator
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+
     ],
 
     /*
@@ -230,6 +233,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'AWS' => Aws\Laravel\AwsFacade::class,
+
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 
 
     ],

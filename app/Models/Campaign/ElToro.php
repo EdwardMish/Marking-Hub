@@ -19,12 +19,11 @@ class ElToro
         $campaigns = Campaigns::find($campaignHistory->campaign_id);
         $date = (new \DateTime())->format('Y-m-d');
         $fn = $date . '-' . $campaignHistory->campaign_id.'-'.$campaignHistory->id.'.csv';
-        $rows[] ='"ip", "discount_code", "postcard_design", "store_id"';
+        $rows[] ='"ip", "discount_code", "store_id"';
 
         foreach ($targets as $target) {
             $rows[] =  '"'. $target->browser_ip
                 . '","' .  $target->discount_code
-                . '","' . $campaigns->postcard_design_url
                 . '","' . $campaignHistory->campaign_id
                 .'"';
         }
@@ -37,12 +36,14 @@ class ElToro
     {
         $date = (new \DateTime())->format('Y-m-d');
         $fn = $date . '-max-to-send.csv';
-        $rows[] ='"store_id", "max_to_send", "current_sent"';
+        $rows[] ='"store_id", "max_to_send", "current_sent", "front", "back"';
 
         foreach ($campaignLimit as $campaignId => $limit) {
             $rows[] =  $campaignId
                 . ',' .  $limit['max']
-                . ',' .  $limit['current'];
+                . ',' .  $limit['current']
+                . ',' .  $limit['front']
+                . ',' .  $limit['back'];
         }
 
         Storage::disk('eltoro')->put($fn, implode(PHP_EOL,$rows));

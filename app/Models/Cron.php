@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cron
 {
     function fetchOrderHistory() {
-        $shops = Shops::all();
+        $shops = Shop::all();
 
         foreach($shops as $shop) {
             $social = SocialProviders::where(['provider_id' => 1, 'nickname' => $shop->shop_name])->first();

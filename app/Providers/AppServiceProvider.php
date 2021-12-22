@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Shop;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $loader = AliasLoader::getInstance();
-        $loader->alias(\SocialiteProviders\Shopify\Provider::class,\App\Overrides\Socialite\Shopify\Provider::class);
+        $loader->alias(\SocialiteProviders\Shopify\Provider::class, \App\Overrides\Socialite\Shopify\Provider::class);
     }
 
     /**
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \Illuminate\Support\Facades\URL::forceScheme('https');
+        Cashier::useCustomerModel(Shop::class);
     }
 }

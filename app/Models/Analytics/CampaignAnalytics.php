@@ -4,7 +4,7 @@ namespace App\Models\Analytics;
 
 use App\Models\Campaign\CampaignHistory;
 use App\Models\Campaign\Campaigns;
-use App\Models\Shops;
+use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use App\Models\User\User;
 use GuzzleHttp\Client;

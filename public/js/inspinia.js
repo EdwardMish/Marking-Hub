@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     // Add body-small class if window less than 768px
     if (window.innerWidth < 769) {
-        $('body').addClass('body-small')
+        $('body').addClass('body-small mini-navbar')
     } else {
         $('body').removeClass('body-small')
     }

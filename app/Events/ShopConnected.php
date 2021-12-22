@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Shops;
+use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -21,7 +21,7 @@ class ShopConnected
      *
      * @return void
      */
-    public function __construct(Shops $shop, SocialProviders $socialProvider)
+    public function __construct(Shop $shop, SocialProviders $socialProvider)
     {
         $this->shop = $shop;
         $this->socialProvider = $socialProvider;

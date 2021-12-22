@@ -106,7 +106,7 @@
 
 
     <div class="row">
-        <div class="col-lg-3 col-xl-3 col-md-6">
+        <div class="col-lg-4 col-xl-3 col-md-12">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -123,7 +123,7 @@
                 </div> <!-- end card-body -->
             </div> <!-- end card -->
         </div> <!-- end col -->
-        <div class="col-lg-3 col-xl-3 col-md-6">
+        <div class="col-lg-4 col-xl-3 col-md-12">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -140,7 +140,7 @@
                 </div> <!-- end card-body -->
             </div> <!-- end card -->
         </div> <!-- end col -->
-        <div class="col-lg-3 col-xl-3 col-md-6">
+        <div class="col-lg-4 col-xl-3 col-md-12">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -176,8 +176,8 @@
                     <div class="col-lg-12">
                         <h2 class="heading-dashboard text-center mt-0 p-t-10">With Simplepost you made:</h2>
                         <div class="row no-gutters">
-                            <div class="col-xl-3"></div>
-                            <div class="col-sm-6 col-xl-2">
+                            <div class="col-xl-2 .d-none d-lg-block d-xl-block d-md-none d-sm-none d-xs-none"></div>
+                            <div class="col-sm-6 col-xl-3 col-lg-4 col-md-12">
                                 <div class=" shadow-none m-0">
                                     <div class="card-body text-center">
                                         <i class="dripicons-briefcase text-muted" style="font-size: 24px;"></i>
@@ -187,7 +187,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 col-xl-2">
+                            <div class="col-sm-6 col-xl-3 col-lg-4 col-md-12">
                                 <div class=" shadow-none m-0 ">
                                     <div class="card-body text-center">
                                         <i class="dripicons-checklist text-muted" style="font-size: 24px;"></i>
@@ -197,7 +197,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 col-xl-2">
+                            <div class="col-sm-6 col-xl-3 col-lg-4 col-md-12">
                                 <div class=" shadow-none m-0 ">
                                     <div class="card-body text-center">
                                         <i class="dripicons-user-group text-muted" style="font-size: 24px;"></i>
@@ -206,7 +206,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3"></div>
+
+                            <div class="col-xl-2 .d-none d-lg-block d-xl-block d-md-none d-sm-none d-xs-none"></div>
                         </div>
                     </div>
                 </div> <!-- end row-->
@@ -333,7 +334,7 @@
     <br>
 
 
-  <script src="../js/analytics.js"></script>
+    <script src="../js/analytics.js"></script>
 
 </div>
 @endsection

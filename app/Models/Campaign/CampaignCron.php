@@ -7,7 +7,7 @@ use App\Events\CampaignProcessed;
 use App\Models\Analytics\CampaignAnalytics;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shopify;
-use App\Models\Shops;
+use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -100,10 +100,13 @@ class CampaignCron
 
             //Fire Event
             CampaignProcessed::dispatch($campaignHistory);
+            $fileUrl = config('filesystems.disks.s3.url');
             if ($i > 0) {
                 $campaignLimits[$campaign->id] = [
                     'max' => empty($campaign->max_sends_per_period) ? 999999999 : $campaign->max_sends_per_period,
-                    'current' => (new CampaignAnalytics())->getMonthlySent($campaign)
+                    'current' => (new CampaignAnalytics())->getMonthlySent($campaign),
+                    'front' => $fileUrl . 'campaigns/postcards/page-1/' . $campaign->id . '.pdf',
+                    'back' => $fileUrl . 'campaigns/postcards/page-2/' . $campaign->id . '.pdf',
                 ];
             }
         }
@@ -112,7 +115,6 @@ class CampaignCron
         CampaignProcessComplete::dispatch($campaignLimits);
 
         return null;
-
     }
 
 }
