@@ -38,7 +38,10 @@ Route::get('auth/shopify/install',
 
 Route::get('/getting-started', [App\Http\Controllers\Controller::class, 'index'])->name('gettingStarted');
 Route::get('/analytics-dashboard', [App\Http\Controllers\Controller::class, 'analyticsDashboard'])->name('analyticsDashboard');
+Route::post('/prepare/analytics-data', [App\Http\Controllers\Controller::class, 'prepareAnalyticsData'])->name('prepareAnalyticsData');
+
 Route::get('/account', [App\Http\Controllers\Controller::class, 'account'])->name('account');
+Route::get('/manual-campaigns', [App\Http\Controllers\Controller::class, 'manualCampaigns'])->name('manualCampaigns');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/campaign/thumbnail',
