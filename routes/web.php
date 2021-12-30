@@ -37,8 +37,13 @@ Route::get('auth/shopify/install',
     [App\Http\Controllers\Auth\ShopifyController::class, 'install'])->name('Shopify.Install');
 
 Route::get('/getting-started', [App\Http\Controllers\Controller::class, 'index'])->name('gettingStarted');
+Route::post('/get-qrcode', [App\Http\Controllers\Controller::class, 'getQRCode'])->name('getQRCode');
+
 Route::get('/analytics-dashboard', [App\Http\Controllers\Controller::class, 'analyticsDashboard'])->name('analyticsDashboard');
 Route::post('/prepare/analytics-data', [App\Http\Controllers\Controller::class, 'prepareAnalyticsData'])->name('prepareAnalyticsData');
+
+Route::get('/all-orders', [App\Http\Controllers\OrderController::class, 'index'])->name('getAllOrders');
+Route::post('/all-orders-data/{shop}', [App\Http\Controllers\OrderController::class, 'data'])->name('getAllOrdersData');
 
 Route::get('/account', [App\Http\Controllers\Controller::class, 'account'])->name('account');
 Route::get('/manual-campaigns', [App\Http\Controllers\Controller::class, 'manualCampaigns'])->name('manualCampaigns');

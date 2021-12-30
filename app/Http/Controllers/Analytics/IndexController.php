@@ -2,40 +2,40 @@
 
 namespace App\Http\Controllers\Analytics;
 
+// use Illuminate\Routing\Controller;
 use App\Http\Controllers\Controller;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shop;
+use App\Models\Visitor;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Frontend\LogVisitRequest;
 
 class IndexController extends Controller
 {
-    public function logVisit(Request $request) {
+    public function logVisit(LogVisitRequest $request) {
 
-        $rules = [
-            'shopName' => 'required',
-            'path' => 'required',
-            'variantId' => '',
-            'sessionId' => 'required',
-            'timestamp' => 'required|date',
-            'ip' => 'required|ip',
-            'audience_size_id' => 'int',
-            'type' => 'required'
-        ];
-        $validator = Validator::make($request->all(), $rules);
+        $input = $request->all();
 
-        if ($validator->fails()) {
-            $messages=$validator->messages();
-            $errors=$messages->all();
-            return response()->json(['Status' => 'Error', 'Message' => $errors], 400);
+        if($shop = Shop::where('shop_name' , $input['shopName'] )->first()){
+            
+            $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $input['timestamp']);
+            
+            $timestamp = $date->format('Y-m-d');
+
+            $visitor = Visitor::updateOrCreate([
+                'shop_id' => $shop->id,
+                'timestamp' => $timestamp,
+                'type' => $input['type'],
+            ],[
+                'path' => $input['path'],
+                'variant_id' => $input['variantId'],
+                'session' => $input['sessionId'],
+            ]);
+            $visitor->update(['counter' => $visitor->counter+1,]);
+
         }
-
-        $validated = $validator->validated();
-        $shop = Shop::where(['shop_name' => $validated['shopName']])->first();
-        $validated['shop_id'] = $shop->id;
-
-        $logVisit = (new Dynamo())->logVisit($validated);
 
         return response()->json([
             'Status' => 'SUCCESS'
