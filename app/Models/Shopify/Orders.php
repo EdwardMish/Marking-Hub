@@ -74,7 +74,9 @@ class Orders extends Model
                 foreach ($order->discount_codes as $codes) {
                     OrdersDiscountCodes::create([
                         'order_id' => $order->id,
-                        'discount_code' => $codes->code
+                        'discount_code' => $codes->code,
+                        'discount_amount' => $codes->amount,
+                        'discount_type' => $codes->type,
                     ]);
 
                     //Update Campaign Stats & Campaign History Data
@@ -86,12 +88,12 @@ class Orders extends Model
                 //Get the last date for the next potential run
                 $ordersSince = $order->updated_at;
                 $date = new \DateTime();
-                Storage::disk('s3-private')->put(
-                    'Year=' . $date->format('Y') .
-                    '/Month=' . $date->format('m') .
-                    '/Day=' . $date->format('d') .
-                    '/' .$shop->id . '/' . Uuid::uuid4().'.json',
-                json_encode($order));
+                // Storage::disk('s3-private')->put(
+                //     'Year=' . $date->format('Y') .
+                //     '/Month=' . $date->format('m') .
+                //     '/Day=' . $date->format('d') .
+                //     '/' .$shop->id . '/' . Uuid::uuid4().'.json',
+                // json_encode($order));
 
             }
         }

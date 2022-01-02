@@ -101,6 +101,13 @@ class Controller extends BaseController
         $neworder_daywise_total = Orders::where($neworderChartWhere)->whereNotNull('browser_ip')->whereBetween('order_date',$startEndDate)->groupBy(\DB::raw("DATE(`order_date`)"))->orderBy('x','asc')->select(\DB::raw('COUNT(`order_total`) as y'), \DB::raw('DATE(`order_date`) as x'))->get()->toArray();
         
 
+        // returns_chart
+        $returnQuery = Orders::join('shop_order_history_discount_codes','order_id','=','shop_order_history.id')->where($shopWhere)->whereNotNull('browser_ip')->whereBetween('order_date',$startEndDate);
+        $returnChartWhere = $shopWhere + [];
+        $return_total = $returnQuery->count('shop_order_history_discount_codes.discount_amount');
+        $return_daywise_total = $returnQuery->groupBy(\DB::raw("DATE(`order_date`)"))->orderBy('x','asc')->select(\DB::raw('SUM(`shop_order_history_discount_codes`.`discount_amount`) as y'), \DB::raw('DATE(`order_date`) as x'))->get()->toArray();
+        
+
         // dd($revenue_daywise_total);
         // $total_orders;
         $preparedData = [
@@ -134,12 +141,9 @@ class Controller extends BaseController
                 ],
             ],
             "returns_chart" => [
-                [ "value"   =>  3.4  ],
+                [ "value"   =>  $return_total  ],
                 [
-                    "data"  => [
-                        ["x"    => "08/01/2020", "y" => 2],
-                        ["x"    => "09/01/2020", "y" => 3],
-                    ],
+                    "data"  => $return_daywise_total,
                 ],
             ],
             "total_cost_chart" => [
