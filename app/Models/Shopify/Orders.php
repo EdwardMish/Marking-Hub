@@ -22,7 +22,7 @@ class Orders extends Model
 
     public function codes()
     {
-        return $this->hasMany(OrdersDiscountCodes::class);
+        return $this->hasMany(OrdersDiscountCodes::class, 'order_id');
     }
 
     public function upsertOrder(SocialProviders $shopifyUser, Shop $shop, $limit = 50)
@@ -55,6 +55,7 @@ class Orders extends Model
                         'billing_address_province_code' => $order->billing_address->province_code,
                         'billing_address_zip' => $order->billing_address->zip,
                         'order_date' => $order->created_at,
+                        'customer_id' => $order->customer->id,
                     ];
                 } catch (\Exception $e) {
                     $data = [
@@ -67,6 +68,7 @@ class Orders extends Model
                         'billing_address_province_code' => '',
                         'billing_address_zip' => '',
                         'order_date' => $order->created_at,
+                        'customer_id' => '',
                     ];
                 }
 

@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Visitor extends Model
+class VisitorIp extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
 
-    public function ips()
+    public function visitor()
     {
-        return $this->hasMany(VisitorIp::class, 'visitor_id');
+        return $this->belongsTo(Visitor::class);
     }
 }

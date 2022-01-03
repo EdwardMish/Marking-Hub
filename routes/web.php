@@ -14,6 +14,13 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
+
+Route::get('/test/price-rule', [App\Http\Controllers\TestController::class, 'index']);
+Route::get('/test/custom-login', [App\Http\Controllers\TestController::class, 'customLogin']);
+Route::get('/test/create-unique-code', [App\Http\Controllers\TestController::class, 'createUniqueCode']);
+Route::get('/test/dump-visitors', [App\Http\Controllers\TestController::class, 'dumpVisitors']);
+
+
 // Auth Routes
 Route::get('/auth/redirect', function () {
     return Socialite::driver('shopify')->scopes([
@@ -43,7 +50,7 @@ Route::get('/analytics-dashboard', [App\Http\Controllers\Controller::class, 'ana
 Route::post('/prepare/analytics-data', [App\Http\Controllers\Controller::class, 'prepareAnalyticsData'])->name('prepareAnalyticsData');
 
 Route::get('/all-orders', [App\Http\Controllers\OrderController::class, 'index'])->name('getAllOrders');
-Route::post('/all-orders-data/{shop}', [App\Http\Controllers\OrderController::class, 'data'])->name('getAllOrdersData');
+Route::post('/all-orders-data', [App\Http\Controllers\OrderController::class, 'data'])->name('getAllOrdersData');
 
 Route::get('/account', [App\Http\Controllers\Controller::class, 'account'])->name('account');
 Route::get('/manual-campaigns', [App\Http\Controllers\Controller::class, 'manualCampaigns'])->name('manualCampaigns');

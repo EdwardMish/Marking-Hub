@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Analytics;
 
-// use Illuminate\Routing\Controller;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
+// use App\Http\Controllers\Controller;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shop;
 use App\Models\Visitor;
+use App\Models\VisitorIp;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -33,6 +34,15 @@ class IndexController extends Controller
                 'variant_id' => $input['variantId'],
                 'session' => $input['sessionId'],
             ]);
+
+            VisitorIp::create([
+                'visitor_id'    =>  $visitor->id,
+                'browser_ip'    =>  $input['ip'],
+                'session'       =>  $input['sessionId'],
+                'variant_id'    =>  $input['variantId'],
+                'path'          =>  $input['path'],
+            ]);
+
             $visitor->update(['counter' => $visitor->counter+1,]);
 
         }

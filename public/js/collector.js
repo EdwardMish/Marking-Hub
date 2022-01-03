@@ -1,5 +1,5 @@
-// let api_url = 'https://analytics.simplepost.co/api/logVisit';
-let api_url = 'https://simplepost.test/api/logVisit';
+let api_url = 'https://analytics.simplepost.co/api/logVisit';
+// let api_url = 'https://app.simplepost.co/api/logVisit';
 let apiHeaders = {
     "Content-Type": "application/json"
 }
