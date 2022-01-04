@@ -89,7 +89,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group mb-3">
                                         <label for="audience_inp" class="inputs-label">Audience Size</label>
-                                        <input type="text" id="audience_inp" class="form-control custom-input">
+                                        <input type="text" id="audience_inp" class="form-control custom-input" value="1500">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -106,7 +106,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group mb-3">
                                         <label for="avg_order_val" class="inputs-label">Average Order Value</label>
-                                        <input type="text" id="avg_order_val" class="form-control custom-input">
+                                        <input type="text" id="avg_order_val" class="form-control custom-input" value="150">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -123,7 +123,7 @@
                                             <div class=" shadow-none m-0">
                                                 <div class="card-body text-center">
                                                     <i class="dripicons-briefcase text-muted" style="font-size: 24px;"></i>
-                                                    <h3 class="green-figures"><span>750</span></h3>
+                                                    <h3 class="green-figures"><span id="postcards-to-send">750</span></h3>
                                                     <p class="mb-0 text-figures">Post Cards Sent</p>
                                                 </div>
                                             </div>
@@ -133,7 +133,7 @@
                                             <div class=" shadow-none m-0 ">
                                                 <div class="card-body text-center">
                                                     <i class="dripicons-checklist text-muted" style="font-size: 24px;"></i>
-                                                    <h3 class="green-figures"><span>$1,125</span></h3>
+                                                    <h3 class="green-figures"><span id="total-post-card-cost">$1,125</span></h3>
                                                     <p class="mb-0 text-figures">Total Cost</p>
                                                 </div>
                                             </div>
@@ -143,7 +143,7 @@
                                             <div class=" shadow-none m-0 ">
                                                 <div class="card-body text-center">
                                                     <i class="dripicons-user-group text-muted" style="font-size: 24px;"></i>
-                                                    <h3 class="green-figures"><span>38</span></h3>
+                                                    <h3 class="green-figures"><span id="incremental-orders">38</span></h3>
                                                     <p class="mb-0 text-figures">Number of New Orders</p>
                                                 </div>
                                             </div>
@@ -157,7 +157,7 @@
                                             <div class=" shadow-none m-0">
                                                 <div class="card-body text-center">
                                                     <i class="dripicons-briefcase text-muted" style="font-size: 24px;"></i>
-                                                    <h3 class="green-figures"><span>$3,800</span></h3>
+                                                    <h3 class="green-figures"><span id="additional-revenue">$3,800</span></h3>
                                                     <p class="mb-0 text-figures">New Revenue</p>
                                                 </div>
                                             </div>
@@ -167,7 +167,7 @@
                                             <div class=" shadow-none m-0 ">
                                                 <div class="card-body text-center">
                                                     <i class="dripicons-checklist text-muted" style="font-size: 24px;"></i>
-                                                    <h3 class="green-figures"><span>$30</span></h3>
+                                                    <h3 class="green-figures"><span id="cost-per-acquisition">$30</span></h3>
                                                     <p class="mb-0 text-figures">Customer Acquisition Cost</p>
                                                 </div>
                                             </div>
@@ -177,7 +177,7 @@
                                             <div class=" shadow-none m-0 ">
                                                 <div class="card-body text-center">
                                                     <i class="dripicons-user-group text-muted" style="font-size: 24px;"></i>
-                                                    <h3 class="green-figures"><span>3.4x</span></h3>
+                                                    <h3 class="green-figures"><span id="return-on-ad-spend">3.4x</span></h3>
                                                     <p class="mb-0 text-figures">Return on Ad Spend</p>
                                                 </div>
                                             </div>
@@ -653,6 +653,67 @@
         var AudienceSize = new NumericInput(document.getElementById("audience_inp"));
 
 
+        var audienceSizeEle = document.getElementById("audience_inp");
+        var averageOrderSizeEle = document.getElementById("avg_order_val");
+        var conversionRate_LabelEle = document.getElementById("conversionRate_Label");
+        var audienceSize = parseInt(audienceSizeEle.value);
+        var averageOrderSize = parseInt(averageOrderSizeEle.value);
+
+        audienceSizeEle.addEventListener('change', function() {
+            audienceSize = parseInt(audienceSizeEle.value)
+            updateCalculator();
+
+        });
+
+        averageOrderSizeEle.addEventListener('change', function() {
+            averageOrderSize = parseInt(averageOrderSizeEle.value)
+            if (averageOrderSize > 0) {
+                updateCalculator();
+            }
+        });
+
+        // conversionRate_LabelEle.addEventListener('input', function() {
+        //     updateCalculator();
+        // });
+
+
+        function updateCalculator() {
+
+            let audienceSize = audienceSizeEle.value;
+            audienceSize = audienceSize.replace(/\D/g, '');
+
+            let estMatch = '50%';
+            estMatch = estMatch.replace(/\D/g, '');
+
+            let postCardsToSend = document.getElementById('postcards-to-send');
+            postCardsToSend.innerText = Math.ceil(estMatch / 100 * audienceSize);
+
+            let conversionRate = document.getElementById('conversionRate_Label').value
+            conversionRate = conversionRate.replace(/\D/g, '');
+
+            let incrementalOrders = document.getElementById('incremental-orders');
+            incrementalOrders.innerText = Math.ceil(conversionRate / 100 * postCardsToSend.innerText);
+            let totalPostCardCost = document.getElementById('total-post-card-cost');
+            let totalPostCardCostVal = Math.round(1.5 * postCardsToSend.innerText);
+            totalPostCardCost.innerText = '$' + totalPostCardCostVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            let costPerAcquisition = document.getElementById('cost-per-acquisition');
+            let costPerAcqRounded = totalPostCardCost.innerText.substring(1, totalPostCardCost.innerText.length).replace(',', '') / incrementalOrders.innerText.replace(',', '');
+           // costPerAcquisition.innerText = '$' + costPerAcqRounded.toFixed(2)
+            costPerAcquisition.innerText = '$' + Math.round(costPerAcqRounded);
+
+            let averageOrderSize = document.getElementById('avg_order_val').value;
+            averageOrderSize = averageOrderSize.replace(/\D/g, '');
+
+            let additionalRevenue = document.getElementById('additional-revenue');
+            additionalRevenue.innerText = '$' + (Math.ceil(averageOrderSize * incrementalOrders.innerText)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            let roas = document.getElementById('return-on-ad-spend');
+            let roasVal = averageOrderSize / costPerAcqRounded;
+            roas.innerText = roasVal.toFixed(1) + 'x';
+
+        }
+
         // Script written for range sliders
 
         const conversionRate = document.querySelector('#conversionRate input');
@@ -669,6 +730,7 @@
 
         conversionRate.addEventListener('input', function() {
             conversionRateLabel.value = `${Number(conversionRate.value)}%`;
+            updateCalculator();
         }, false);
 
         document.getElementById("conversionRate_ranger").oninput = function() {

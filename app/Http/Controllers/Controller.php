@@ -270,7 +270,7 @@ class Controller extends BaseController
         foreach($array as $each) {
             $total+=(float) $each[$ele];
         }
-        return $total / $count;
+        return $total !=0 ? $total / $count : 0;
     }
     public function manualCampaigns()
     {
