@@ -52,7 +52,7 @@ class Shopify
         return $res->orders;
     }
 
-    public function getAllOrders(SocialProviders $social, $token = null, $limit = 10)
+    public function getAllOrders(SocialProviders $social, $token = null, $limit = 50)
     {
         $client = new Client();
         $apiV = config('services.shopify.api_version');

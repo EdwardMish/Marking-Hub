@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Shopify;
+namespace App\Models\Mongo;
 
 use App\Models\Campaign\CampaignHistory;
 use App\Models\Campaign\Campaigns;
@@ -8,18 +8,22 @@ use App\Models\Campaign\CampaignTargetHistory;
 use App\Models\Shop;
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
-use App\Models\Mongo\Orders as MongoOrders;
-use App\Models\Mongo\OrdersDiscountCodes as MongoOrdersDiscountCodes;
+use App\Models\Shopify\Shopify;
 
 class Orders extends Model
 {
     use HasFactory;
+    protected $connection = 'mongodb';
+    protected $collection = 'shop_order_history';
 
-    protected $table = 'shop_order_history';
+    protected $primaryKey = 'id';
+    // protected $table = 'shop_order_history';
 
+    protected $dates = ['order_date'];
     protected $guarded = [];
 
     public function codes()
@@ -46,10 +50,6 @@ class Orders extends Model
                 $orderRecord = Orders::firstOrNew([
                     'id' => $order->id
                 ]);
-                $mongoOrderRecord = MongoOrders::firstOrNew([
-                    'id' => $order->id
-                ]);
-                
                 try {
                     $data = [
                         'shop_id' => $shop->id,
@@ -79,16 +79,13 @@ class Orders extends Model
                 }
 
                 OrdersDiscountCodes::where(['order_id' => $order->id])->delete();
-                MongoOrdersDiscountCodes::where(['order_id' => $order->id])->delete();
                 foreach ($order->discount_codes as $codes) {
-                    $ordersDiscountData = [
+                    OrdersDiscountCodes::create([
                         'order_id' => $order->id,
                         'discount_code' => $codes->code,
                         'discount_amount' => $codes->amount,
                         'discount_type' => $codes->type,
-                    ];
-                    OrdersDiscountCodes::create($ordersDiscountData);
-                    MongoOrdersDiscountCodes::create($ordersDiscountData);
+                    ]);
 
                     //Update Campaign Stats & Campaign History Data
                     $this->updateCampaignStats($shop, $orderRecord, $codes->code, $order);
@@ -96,8 +93,6 @@ class Orders extends Model
                 }
                 $orderRecord->fill($data);
                 $orderRecord->save();
-                $mongoOrderRecord->fill($data);
-                $mongoOrderRecord->save();
                 //Get the last date for the next potential run
                 $ordersSince = $order->updated_at;
                 $date = new \DateTime();

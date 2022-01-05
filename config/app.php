@@ -180,6 +180,8 @@ return [
         // QRcode Generator
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
 
+        Jenssegers\Mongodb\MongodbServiceProvider::class,
+
     ],
 
     /*
