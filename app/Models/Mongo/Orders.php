@@ -23,7 +23,7 @@ class Orders extends Model
     protected $primaryKey = 'id';
     // protected $table = 'shop_order_history';
 
-    protected $dates = ['order_date'];
+    // protected $dates = ['order_date'];
     protected $guarded = [];
 
     public function codes()

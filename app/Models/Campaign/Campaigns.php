@@ -15,6 +15,11 @@ class Campaigns extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const Prior_Customers = 'All unique prior customers';
+    const Purchase_More_Then = 'Customers who purchased more than [X]';
+    const purchase_More_Then_Times = 'Customers who purchased more than [X] times';
+    const Top_Customer_By_Spend = 'Top [X]% of customers by spend';
+
     protected $guarded = ['id'];
 
     public function user()

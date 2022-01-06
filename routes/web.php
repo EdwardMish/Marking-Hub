@@ -53,7 +53,12 @@ Route::get('/all-orders', [App\Http\Controllers\OrderController::class, 'index']
 Route::post('/all-orders-data/{shop}', [App\Http\Controllers\OrderController::class, 'data'])->name('getAllOrdersData');
 
 Route::get('/account', [App\Http\Controllers\Controller::class, 'account'])->name('account');
-Route::get('/manual-campaigns', [App\Http\Controllers\Controller::class, 'manualCampaigns'])->name('manualCampaigns');
+
+// manualCampaigns
+Route::group(['prefix' => 'manual-campaigns', 'as' => 'manualCampaigns'],function(){
+    Route::get('/', [App\Http\Controllers\ManualCampaignController::class, 'index']);
+    Route::post('/draw-data', [App\Http\Controllers\ManualCampaignController::class, 'draw'])->name('.draw-data');    
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/campaign/thumbnail',

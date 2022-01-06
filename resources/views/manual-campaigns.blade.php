@@ -30,11 +30,10 @@
                             </p>
                             <div class="row">
                                 <div class="col-6">
-                                    <select class="form-control custom-input" id="example-select">
-                                        <option>All unique prior customers</option>
-                                        <option>Customers who purchased more than [X]</option>
-                                        <option>Customers who purchased more than [X] times</option>
-                                        <option>Top [X]% of customers by spend</option>
+                                    <select class="form-control custom-input" id="postcard_audience" name="postcard_audience">
+                                        @foreach(HelperService::postcardAudienceOptions() as $option)
+                                        <option>{{$option}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-6"></div>
@@ -45,13 +44,13 @@
                                     <input type="text" id="customer_spend" class="form-control custom-input" value="Customer Spend">
                                 </div>
                                 <div class="col-3 p-l-5">
-                                    <select class="form-control custom-input" id="example-select">
+                                    <select class="form-control custom-input" id="spend_operator" name="spend_operator">
                                         <option>equals</option>
                                         <option>greator to</option>
                                         <option>less than</option>
                                     </select>
                                 </div>
-                                <div class="col-6"><input type="text" id="amount_inp" class="form-control custom-input" value="100"></div>
+                                <div class="col-6"><input type="text" id="input_value" name="input_value" class="form-control custom-input" value="100"></div>
 
                             </div>
                         </div>
@@ -68,9 +67,6 @@
                                     <div id="audience_chart"></div>
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
@@ -748,43 +744,83 @@
         });
 
 
-        //Apex Donut Chart whole #80b880
+        function drawChart(series){
+            //Apex Donut Chart whole #80b880
+            var options = {
+                chart: {
+                    height: 350,
+                    type: 'donut'
+                },
+                fill: {
+                    colors: ['#80b880', '#007200']
+                },
+                legend: {
+                    show: true,
+                    showForSingleSeries: false,
+                    showForNullSeries: true,
+                    showForZeroSeries: true,
+                    position: 'bottom',
+                    horizontalAlign: 'center',
+                    floating: false,
+                    fontSize: '14px',
+                    fontFamily: 'Helvetica Neue Normal',
+                    fontWeight: 400
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '50%'
+                        },
+                        expandOnClick: false
+                    }
+                },
+                colors: ['#80b880', '#007200'],
+                labels: ['Whole Audience (# and $ revenue focused)', 'Selected audience size (# and order value)'],
+                series
+            };
+            
+            var chart = new ApexCharts(document.querySelector("#audience_chart"), options);
+            chart.render();
+        }
 
-        var options = {
-            chart: {
-                height: 350,
-                type: 'donut'
-            },
-            fill: {
-                colors: ['#80b880', '#007200']
-            },
-            legend: {
-                show: true,
-                showForSingleSeries: false,
-                showForNullSeries: true,
-                showForZeroSeries: true,
-                position: 'bottom',
-                horizontalAlign: 'center',
-                floating: false,
-                fontSize: '14px',
-                fontFamily: 'Helvetica Neue Normal',
-                fontWeight: 400
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '50%'
-                    },
-                    expandOnClick: false
+        const postcard_audience = document.getElementById('postcard_audience');
+        const spend_operator = document.getElementById('spend_operator');
+        const input_value = document.getElementById('input_value');
+        
+        function getAudienceChartData(){
+            let postcardAudienceVal = postcard_audience.value;
+            let spendOperatorVal = spend_operator.value;
+            let inputValueVal = input_value.value;
+            
+            $.ajax({
+                method: "post",
+                url: "/manual-campaigns/draw-data",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                data: {
+                    audience:postcardAudienceVal,
+                    operator:spendOperatorVal,
+                    value:inputValueVal
+                },
+                dataType:'json',
+                success:function(serialData) {
+                    drawChart(serialData);
+                },
+                error: function(error) {
+                    console.log('error', error)                                
+                    drawChart([]);
                 }
-            },
-            colors: ['#80b880', '#007200'],
-            labels: ['Whole Audience (# and $ revenue focused)', 'Selected audience size (# and order value)'],
-            series: [80, 20]
-        };
+            });
 
-        var chart = new ApexCharts(document.querySelector("#audience_chart"), options);
-        chart.render();
+        }
+
+        postcard_audience.addEventListener('change', getAudienceChartData);
+        spend_operator.addEventListener('change', getAudienceChartData);
+        input_value.addEventListener('change', getAudienceChartData);
+
+        getAudienceChartData();
+
     </script>
 
 

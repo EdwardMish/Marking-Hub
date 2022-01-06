@@ -22,7 +22,7 @@ class CampaignCron
 
         // Get List of Active Campaigns
         $campaigns = Campaigns::with('shop')->get();
-        // $dynamo = new Dynamo();
+        $dynamo = new Dynamo();
         $social = new SocialProviders();
         $orders = new Shopify\Orders();
         $history = new CampaignTargetHistory();
@@ -51,11 +51,11 @@ class CampaignCron
             $exemptVisitors = array_merge($exemptOrders, $exemptHistory);
 
             $lastRan = ($campaign->last_ran === null) ? 0 : \DateTime::createFromFormat('Y-m-d H:i:s',$campaign->last_ran)->getTimestamp();
-            // $visitors = $dynamo->getVisitByShop($campaign->shop->id, $lastRan);
-            $visitors = VisitorIp::whereHas('visitor', function($q) use($campaign){
-                $q->where('shop_id', $campaign->shop->id);
-            })->where(\DB::raw("DATE(created_at) >= DATE({$lastRan})"))->select(\DB::raw('browser_ip as ip'))->get()->toArray();
-            // dd($visitors);
+            $visitors = $dynamo->getVisitByShop($campaign->shop->id, $lastRan);
+            // $visitors = VisitorIp::whereHas('visitor', function($q) use($campaign){
+            //     $q->where('shop_id', $campaign->shop->id);
+            // })->where(\DB::raw("DATE(created_at) >= DATE({$lastRan})"))->select(\DB::raw('browser_ip as ip'))->get()->toArray();
+
             $campaignHistory = CampaignHistory::create([
                 'campaign_id' => $campaign->id,
                 'shop_id' => $campaign->shop->id,

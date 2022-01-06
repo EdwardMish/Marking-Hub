@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use App\Models\Campaign\Campaigns;
 
 class HelperService {
 
@@ -25,6 +26,15 @@ class HelperService {
         } else {
             return false;
         }
+    }
+
+    public function postcardAudienceOptions(){
+        return [ 
+            Campaigns::Prior_Customers,
+            Campaigns::Purchase_More_Then,
+            Campaigns::purchase_More_Then_Times,
+            Campaigns::Top_Customer_By_Spend,
+        ];
     }
 
 }

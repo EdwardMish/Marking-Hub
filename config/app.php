@@ -237,6 +237,7 @@ return [
         'AWS' => Aws\Laravel\AwsFacade::class,
 
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'HelperService' => App\Services\HelperService::class,
 
 
     ],

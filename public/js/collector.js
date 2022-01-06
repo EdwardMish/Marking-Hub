@@ -128,7 +128,7 @@ async function saveCartLog() {
                     sessionId: sessionID,
                     timestamp: new Date(),
                     ip,
-                    type: 'add_to_cart'
+                    type: 'add to cart'
                 }),
                 headers: { ...apiHeaders }
             }).then(()=>{

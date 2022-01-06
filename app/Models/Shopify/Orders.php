@@ -46,9 +46,11 @@ class Orders extends Model
                 $orderRecord = Orders::firstOrNew([
                     'id' => $order->id
                 ]);
-                $mongoOrderRecord = MongoOrders::firstOrNew([
-                    'id' => $order->id
-                ]);
+
+                $mongoOrderRecord = MongoOrders::updateOrCreate([
+                    'id' => $order->id,
+                    'shop_id' => $shop->id,
+                ], (array) $order);
                 
                 try {
                     $data = [
@@ -79,7 +81,6 @@ class Orders extends Model
                 }
 
                 OrdersDiscountCodes::where(['order_id' => $order->id])->delete();
-                MongoOrdersDiscountCodes::where(['order_id' => $order->id])->delete();
                 foreach ($order->discount_codes as $codes) {
                     $ordersDiscountData = [
                         'order_id' => $order->id,
@@ -88,7 +89,6 @@ class Orders extends Model
                         'discount_type' => $codes->type,
                     ];
                     OrdersDiscountCodes::create($ordersDiscountData);
-                    MongoOrdersDiscountCodes::create($ordersDiscountData);
 
                     //Update Campaign Stats & Campaign History Data
                     $this->updateCampaignStats($shop, $orderRecord, $codes->code, $order);

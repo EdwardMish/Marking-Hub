@@ -17,35 +17,29 @@ class IndexController extends Controller
 {
     public function logVisit(LogVisitRequest $request) {
 
-        $input = $request->all();
+        $rules = [
+            'shopName' => 'required',
+            'path' => 'required',
+            'variantId' => '',
+            'sessionId' => 'required',
+            'timestamp' => 'required|date',
+            'ip' => 'required|ip',
+            'audience_size_id' => 'int',
+            'type' => 'required'
+        ];
+        $validator = Validator::make($request->all(), $rules);
 
-        if($shop = Shop::where('shop_name' , $input['shopName'] )->first()){
-            
-            $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $input['timestamp']);
-            
-            $timestamp = $date->format('Y-m-d');
-
-            $visitor = Visitor::updateOrCreate([
-                'shop_id' => $shop->id,
-                'timestamp' => $timestamp,
-                'type' => $input['type'],
-            ],[
-                'path' => $input['path'],
-                'variant_id' => $input['variantId'],
-                'session' => $input['sessionId'],
-            ]);
-
-            VisitorIp::create([
-                'visitor_id'    =>  $visitor->id,
-                'browser_ip'    =>  $input['ip'],
-                'session'       =>  $input['sessionId'],
-                'variant_id'    =>  $input['variantId'],
-                'path'          =>  $input['path'],
-            ]);
-
-            $visitor->update(['counter' => $visitor->counter+1,]);
-
+        if ($validator->fails()) {
+            $messages=$validator->messages();
+            $errors=$messages->all();
+            return response()->json(['Status' => 'Error', 'Message' => $errors], 400);
         }
+
+        $validated = $validator->validated();
+        $shop = Shop::where(['shop_name' => $validated['shopName']])->first();
+        $validated['shop_id'] = $shop->id;
+
+        $logVisit = (new Dynamo())->logVisit($validated);
 
         return response()->json([
             'Status' => 'SUCCESS'

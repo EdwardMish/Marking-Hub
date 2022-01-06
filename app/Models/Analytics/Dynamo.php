@@ -39,7 +39,7 @@ class Dynamo extends Model
                 'type' => ['S' => (string) $data['type']]
             ]
         ]);
-
+        
         return $result;
 
     }
@@ -74,6 +74,57 @@ class Dynamo extends Model
         }
 
         return $visitor;
+
+    }
+
+    public function getVisitors(int $shopId, int $startDate, int $endDate,string $type, array $browserIps)
+    {
+        $client = \AWS::createClient('DynamoDb');
+        $marshaler = new Marshaler();
+        $visitor = [];
+
+        $eav = $marshaler->marshalJson('
+        {
+            ":shopId":'.$shopId.',
+            ":startDate":'.$startDate.',
+            ":endDate":'.$endDate.',
+            ":vType":"'.$type.'"
+        }');
+
+        // dd($eav);
+
+        $tableName = Config::get('aws.dynamo.visits.name');
+        
+        $params = [
+            'TableName' => $tableName,
+            'FilterExpression' => "#dynobase_type = :vType",
+            'KeyConditionExpression' => 'shop_id = :shopId AND created_at BETWEEN :startDate AND :endDate',
+            'ExpressionAttributeValues'=> $eav,
+            "ExpressionAttributeNames"  => [
+                "#dynobase_type"        => "type"
+            ]
+        ];
+
+        $response = $client->query($params);
+        $count = 0;
+        foreach ($response['Items'] as $v) {
+            $browser_ip = !empty($v['browser_ip']) ? $marshaler->unmarshalValue($v['browser_ip']) : null;
+            if(in_array($browser_ip,$browserIps)){
+                $created_at = !empty($v['created_at']) ? $marshaler->unmarshalValue($v['created_at']) : null;
+                if($created_at){
+                    $created_at = date('Y-m-d', $created_at);
+                    
+                    $visitor[$created_at] =  isset($visitor[$created_at]) ? $visitor[$created_at]+1 : 1;
+                    $count+=1;
+                }
+            }
+        }
+        $visitor = array_values($visitor);
+
+        return [
+            'count'     =>  $count,
+            'daywise'   =>  $visitor
+        ];
 
     }
 }
