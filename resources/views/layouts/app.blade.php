@@ -55,15 +55,15 @@
             <div style="min-height: 100%">
                 @include('layouts.flash')
                 @yield('content')
-            </div>
-            <div class="footer">
+            </div>            
+        </div>        
+    </div>
+    @stack('js')
+    <div class="footer">
                 <div>
                     <strong>Copyright</strong> Simplepost &copy; <?php echo date("Y") ?>
                 </div>
             </div>
-        </div>
-    </div>
-    @stack('js')
 </body>
 
 </html>

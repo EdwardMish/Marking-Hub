@@ -178,6 +178,7 @@ class CampaignController extends Controller
         $campaign->discount_type = $params['discount_type'];
         $campaign->thumbnail_url = $params['thumbnail_url'];
         $campaign->max_sends_per_period = $params['max_sends'];
+        $campaign->campaign_name = $params['campaign_name'];
         $campaign->user_id = $this->userId;
         $campaign->save();
 
@@ -340,4 +341,4 @@ class CampaignController extends Controller
         ]);
 
     }
-}
+}   

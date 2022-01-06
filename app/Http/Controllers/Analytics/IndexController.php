@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Analytics;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
+// use App\Http\Controllers\Controller;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shop;
+use App\Models\Visitor;
+use App\Models\VisitorIp;
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Frontend\LogVisitRequest;
 
 class IndexController extends Controller
 {
-    public function logVisit(Request $request) {
+    public function logVisit(LogVisitRequest $request) {
 
         $rules = [
             'shopName' => 'required',

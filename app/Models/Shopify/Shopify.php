@@ -6,6 +6,7 @@ use App\Models\Campaign\Campaigns;
 use App\Models\User\SocialProviders;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use App\Services\HelperService;
 
 class Shopify
 {
@@ -49,6 +50,28 @@ class Shopify
             ])->getBody());
 
         return $res->orders;
+    }
+
+    public function getAllOrders(SocialProviders $social, $token = null, $limit = 50)
+    {
+        $client = new Client();
+        $apiV = config('services.shopify.api_version');
+        $url = 'https://'.$social->nickname.'/admin/api/'.$apiV.'/orders.json?limit='.$limit.($token?'&page_info='.$token:'');
+        $response = $client->request('GET', $url, [
+            'headers' => ['X-Shopify-Access-Token' => $social->access_token],
+        ]);
+        $headers = $response->getHeaders();
+        
+        $nexttoken = HelperService::getPageInfoToken($headers, 'next');
+        $prevtoken = HelperService::getPageInfoToken($headers);
+        
+        $res = json_decode($response->getBody());
+
+        return [
+            'data'  => $res->orders,
+            'next'  => $nexttoken,
+            'prev'  => $prevtoken, 
+        ];
     }
 
     public function getAbandonCart(SocialProviders $social, $sinceDateTime)

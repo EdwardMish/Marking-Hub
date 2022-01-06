@@ -24,5 +24,10 @@ class CampaignTargetHistory extends Model
         return $exempt;
     }
 
+    public function campaign()
+    {
+        return $this->belongsTo(Campaigns::class,'campaign_id');
+    }
+
 
 }

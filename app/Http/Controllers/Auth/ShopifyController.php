@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Events\ShopConnected;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Models\Shopify\Orders;
 use App\Models\Shopify\Shopify;
 use App\Models\Shop;

@@ -31,16 +31,30 @@
         <div class="row">
             <div class="col-lg-6">
                 <label for="input_discount_prefix" class="inputs-label">Discount Prefix</label>
-                <input class="form-control" name="discount_prefix" id="input_discount_prefix" value="
-{{ preg_replace("/[^A-Z0-9 ]/", '', strtoupper(substr($userShop, 0,6))) }}">
+                <input class="form-control" name="discount_prefix" id="input_discount_prefix" value="{{ preg_replace("/[^A-Z0-9 ]/", '', strtoupper(substr($userShop, 0,6))) }}">
             </div>
             <div class="col-lg-6">
                 <p id="discount-code-sample" class="faded-text"></p>
             </div>
         </div>
-        <div class="col-lg-12" style="padding: 20px 10px 0px 0px">
-            <a class="btn custom-button" id="submitCampaign" value="start" type="submit" href="javascript:void(0)">Start
-                Campaign</a>
+        <div class="row mt-20">
+            <div class="col-lg-8"><small class="custom-text">Do you want to utilize a QR Code?</small></div>
+            <div class="col-lg-4">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="hasQR">
+                    <label class="custom-control-label custom-text" for="hasQR">Yes</label>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12" id="linkContainer" style="display:none;">
+                <input type="text" class="form-control" id="storeLink" />
+            </div>
+            <div class="col-lg-12" style="padding-top: 20px">
+                <a class="btn custom-button" id="submitCampaign" value="start" type="submit" href="javascript:void(0)">Start
+                    Campaign</a>
+            </div>           
         </div>
         @include('form.campaign.limit-send')
     </div>
@@ -48,46 +62,66 @@
 
 
 @push('js')
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function() {
+        let shopName = $('#input_shop_id option:selected').text();
+        let storeLink = document.getElementById('storeLink');
+        let discountPrefix = document.getElementById('input_discount_prefix');
 
-            let discountPrefix = document.getElementById('input_discount_prefix');
-            let discountType = document.getElementById('input_discount_type');
-            let discountAmount = document.getElementById('input_discount_amount');
-            updateOfferAmount(discountType.value)
-            updateOfferDescription(discountPrefix.value, discountAmount.value)
+        function getStoreLink(value) {
+            return "https://" + shopName + "/discount/" + value + "?redirect=/collections/all"
+        }
 
-            discountType.addEventListener('change', function () {
-                updateOfferAmount(this.value)
-                updateOfferDescription(discountPrefix.value, discountAmount.value)
-            });
+        storeLink.value = getStoreLink(discountPrefix.value)
 
-            discountAmount.addEventListener('change', function () {
-                updateOfferAmount(discountType.value)
-                updateOfferDescription(discountPrefix.value, discountAmount.value)
-            });
-
-            discountPrefix.addEventListener('change', function () {
-                updateOfferDescription(discountPrefix.value, discountAmount.value)
-            });
+        $("#hasQR").change(function() {
+            if (this.checked) {
+                $("#linkContainer").slideDown();
+            } else {
+                $("#linkContainer").slideUp();
+            }
         });
 
-        function updateOfferAmount($offerType) {
-            let discountAmount = document.getElementById('input_discount_amount');
-            let discountAmountVal = discountAmount.value
-            discountAmountVal = discountAmountVal.replace(/\D/g, '');
-            if ($offerType == 1) {
-                discountAmount.value = discountAmountVal + '%';
-            } else if ($offerType == 2) {
-                discountAmount.value = '$' + discountAmountVal;
-            }
+        let discountType = document.getElementById('input_discount_type');
+        let discountAmount = document.getElementById('input_discount_amount');
+        updateOfferAmount(discountType.value)
+        updateOfferDescription(discountPrefix.value, discountAmount.value)
+
+
+        discountType.addEventListener('change', function() {
+            updateOfferAmount(this.value)
+            updateOfferDescription(discountPrefix.value, discountAmount.value)
+        });
+
+        discountAmount.addEventListener('change', function() {
+            updateOfferAmount(discountType.value)
+            updateOfferDescription(discountPrefix.value, discountAmount.value)
+        });
+
+        discountPrefix.addEventListener('change', function() {
+            updateOfferDescription(discountPrefix.value, discountAmount.value)
+        });
+        $(discountPrefix).on('keyup', function() {
+            storeLink.value = getStoreLink(discountPrefix.value)
+        })
+
+    });
+
+    function updateOfferAmount($offerType) {
+        let discountAmount = document.getElementById('input_discount_amount');
+        let discountAmountVal = discountAmount.value
+        discountAmountVal = discountAmountVal.replace(/\D/g, '');
+        if ($offerType == 1) {
+            discountAmount.value = discountAmountVal + '%';
+        } else if ($offerType == 2) {
+            discountAmount.value = '$' + discountAmountVal;
         }
+    }
 
-        function updateOfferDescription($discountPrefix, $discountAmount) {
-            let discountDescription = document.getElementById('discount-code-sample');
-            discountDescription.innerText = 'Ex. Code: `' + $discountPrefix + '-ABC123` grants ' + $discountAmount + ' off purchases'
+    function updateOfferDescription($discountPrefix, $discountAmount) {
+        let discountDescription = document.getElementById('discount-code-sample');
+        discountDescription.innerText = 'Ex. Code: `' + $discountPrefix + '-ABC123` grants ' + $discountAmount + ' off purchases'
 
-        }
-
-    </script>
+    }
+</script>
 @endpush

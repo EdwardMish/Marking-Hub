@@ -36,3 +36,9 @@
         </table>
     </div>
 </div>
+
+<script>
+    $('input[type=radio][name=audience]').change(function() {
+ console.log("this.value", this.value);
+});
+</script>

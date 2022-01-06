@@ -8,6 +8,7 @@ use App\Models\Analytics\CampaignAnalytics;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shopify;
 use App\Models\Shop;
+use App\Models\VisitorIp;
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -51,6 +52,10 @@ class CampaignCron
 
             $lastRan = ($campaign->last_ran === null) ? 0 : \DateTime::createFromFormat('Y-m-d H:i:s',$campaign->last_ran)->getTimestamp();
             $visitors = $dynamo->getVisitByShop($campaign->shop->id, $lastRan);
+            // $visitors = VisitorIp::whereHas('visitor', function($q) use($campaign){
+            //     $q->where('shop_id', $campaign->shop->id);
+            // })->where(\DB::raw("DATE(created_at) >= DATE({$lastRan})"))->select(\DB::raw('browser_ip as ip'))->get()->toArray();
+
             $campaignHistory = CampaignHistory::create([
                 'campaign_id' => $campaign->id,
                 'shop_id' => $campaign->shop->id,
@@ -99,20 +104,20 @@ class CampaignCron
             $campaignHistory->save();
 
             //Fire Event
-            CampaignProcessed::dispatch($campaignHistory);
-            $fileUrl = config('filesystems.disks.s3.url');
-            if ($i > 0) {
-                $campaignLimits[$campaign->id] = [
-                    'max' => empty($campaign->max_sends_per_period) ? 999999999 : $campaign->max_sends_per_period,
-                    'current' => (new CampaignAnalytics())->getMonthlySent($campaign),
-                    'front' => $fileUrl . 'campaigns/postcards/page-1/' . $campaign->id . '.pdf',
-                    'back' => $fileUrl . 'campaigns/postcards/page-2/' . $campaign->id . '.pdf',
-                ];
-            }
+            // CampaignProcessed::dispatch($campaignHistory);
+            // $fileUrl = config('filesystems.disks.s3.url');
+            // if ($i > 0) {
+            //     $campaignLimits[$campaign->id] = [
+            //         'max' => empty($campaign->max_sends_per_period) ? 999999999 : $campaign->max_sends_per_period,
+            //         'current' => (new CampaignAnalytics())->getMonthlySent($campaign),
+            //         'front' => $fileUrl . 'campaigns/postcards/page-1/' . $campaign->id . '.pdf',
+            //         'back' => $fileUrl . 'campaigns/postcards/page-2/' . $campaign->id . '.pdf',
+            //     ];
+            // }
         }
 
         //Fire Event
-        CampaignProcessComplete::dispatch($campaignLimits);
+        // CampaignProcessComplete::dispatch($campaignLimits);
 
         return null;
     }

@@ -1,4 +1,5 @@
 let api_url = 'https://analytics.simplepost.co/api/logVisit';
+// let api_url = 'https://app.simplepost.co/api/logVisit';
 let apiHeaders = {
     "Content-Type": "application/json"
 }
@@ -54,23 +55,54 @@ function getIP() {
 async function saveCustomerLog(ip, path, sessionID, variant) {
     let ipAddress = await fetch("https://api.ipify.org/?format=json");
 
-    await fetch(`${api_url}`, {
-        method: 'POST',
-        body: JSON.stringify({
-            shopName: window.Shopify.shop,
-            path: path || window.location.pathname,
-            variantId: variant || '',
-            sessionId: sessionID || generateSessionID(ipAddress?.json()?.ip, window.location.pathname),
-            timestamp: new Date(),
-            ip: ip || ipAddress?.json()?.ip,
-            type: 'activity'
-        }),
-        headers: { ...apiHeaders }
-    });
+    let cookiename = 'log_visit__' + new Date().toDateString();
+
+    if(getCookie(cookiename) == ""){
+        await fetch(`${api_url}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                shopName: window.Shopify.shop,
+                path: path || window.location.pathname,
+                variantId: variant || '',
+                sessionId: sessionID || generateSessionID(ipAddress?.json()?.ip, window.location.pathname),
+                timestamp: new Date(),
+                ip: ip || ipAddress?.json()?.ip,
+                type: 'activity'
+            }),
+            headers: { ...apiHeaders }
+        });
+    
+        setCookie(cookiename, true, 1);
+    }    
+}
+
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
 }
 
 async function saveCartLog() {
-    fetch("https://api.ipify.org/?format=json")
+    let cookiename = 'log_cart__' + new Date().toDateString();
+    if(getCookie(cookiename) == ""){
+        fetch("https://api.ipify.org/?format=json")
         .then((ipAddress) => ipAddress.json())
         .then((ipRes) => {
             let ip = ipRes?.ip || '';
@@ -86,7 +118,8 @@ async function saveCartLog() {
                 path: window.location.pathname,
             };
             let sessionID = window.btoa(JSON.stringify(session));
-            fetch(`${api_url}saveCustomerLog`, {
+            
+            fetch(`${api_url}`, {
                 method: 'POST',
                 body: JSON.stringify({
                     shopName: window.Shopify.shop,
@@ -98,8 +131,12 @@ async function saveCartLog() {
                     type: 'add to cart'
                 }),
                 headers: { ...apiHeaders }
+            }).then(()=>{
+                setCookie(cookiename, true, 1)
             });
         })
+    }
+
 }
 
 getIP();
@@ -112,23 +149,18 @@ setInterval(function () {
 }, 500);
 
 
-//every time a customer clicks
-window.addEventListener('click', () => {
-    
-    //check if we're on the product page
-    if(window.location.href.indexOf("products") > -1) {
-        
-        function checkCart(){
-            //check if there are items in the cart
-            jQuery.getJSON('/cart.js', function(cart) {
-                if(cart.item_count > 0){
-                    saveCartLog();
-                }
-            });
-        }
-
-        setTimeout(function(){ checkCart(); }, 1000);
-
-    }
-
-});
+const constantMock = window.fetch;
+window.fetch = function(){
+    return new Promise((resolve, reject) => {
+        constantMock.apply(this, arguments)
+        .then((response)=>{
+            if(response?.url?.indexOf("/cart/add") > -1){
+                saveCartLog();
+            }
+            resolve(response);
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    });
+}

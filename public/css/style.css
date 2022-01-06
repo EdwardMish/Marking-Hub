@@ -143,6 +143,23 @@
     letter-spacing: 0.07rem;
 }
 
+.custom_launch_button{
+    background: #007200;
+    border-radius: 4px !important;
+    border-color: #007200;
+    font-family: 'Helvetica Neue Bold';
+    font-style: normal;
+    font-size: 16px !important;
+    line-height: 20px;
+    text-align: center;
+    color: #ffffff;
+    padding: 11px 30px !important;
+    box-shadow: none;
+    letter-spacing: 0.07rem;
+    width: 100%;
+    margin-top: 27px;
+}
+
 .cancel-button {
     float: left !important;
     background: #ffffff !important;
@@ -285,7 +302,7 @@ input[type="range"]::-webkit-slider-thumb {
     background: linear-gradient(
         to right,
         #007200 30%,
-        #007200 47%,
+        #007200 43%,
         #fff 38%,
         #fff 100%
     );
@@ -299,6 +316,12 @@ input[type="range"]::-webkit-slider-thumb {
 #eAddressMatch,
 #conversionRate {
     margin-top: -11px;
+}
+
+.input-group-addon {
+    border:0px !important;
+    border-right: 1px solid #e5e6e7 !important;
+    padding: 0 !important;
 }
 
 .custom-period-box {
@@ -509,10 +532,16 @@ input[type="range"]::-webkit-slider-thumb {
 .p-t-25 {
     padding-top: 25px;
 }
+.p-r-5 {
+    padding-right: 5px;
+}
 .p-r-15 {
     padding-right: 15px;
 }
 
+.p-l-5 {
+    padding-left: 5px;
+}
 .p-l-10 {
     padding-left: 10px;
 }
@@ -552,6 +581,10 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .mb-40 {
     margin-bottom: 40px;
+}
+
+.apexcharts-legend-marker{
+    margin: 0px 5px 4px !important;
 }
 /* ENDS Custom CSS for new dashboard */
 .glyphicon {
@@ -3343,7 +3376,8 @@ select.form-control:not([size]):not([multiple]) {
     border-radius: 1px;
     color: inherit;
     display: block;
-    padding: 6px 12px;
+    /* padding: 6px 12px; */
+    padding: 6px 9px;
     transition: border-color 0.15s ease-in-out 0s,
         box-shadow 0.15s ease-in-out 0s;
     width: 100%;
@@ -5234,7 +5268,7 @@ ol.unstyled {
     bottom: 0;
     left: 0;
     padding: 10px 20px;
-    position: absolute;
+    position: static;
     right: 0;
 }
 .footer.fixed_full {
