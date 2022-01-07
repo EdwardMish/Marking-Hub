@@ -192,13 +192,18 @@ class CampaignController extends Controller
             'user_id' => $this->userId
         ])->first();
 
+<<<<<<< HEAD
         if ($shop->subscribed(config('cashier.subscription.plan')))
+=======
+        //if ($shop->subscribed(config('cashier.subscription.plan')))
+>>>>>>> new-design
             return response()->json([
                 'errors' => [],
                 'success' => [
                     'redirect' => route('viewCampaigns')
                 ]
             ], 200);
+<<<<<<< HEAD
         else {
             $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
             $campaign->save();
@@ -209,6 +214,17 @@ class CampaignController extends Controller
                 ],
             ], 402);
         }
+=======
+//        else {
+//            $campaign->deleted_at = (new \DateTime())->format('Y-m-d H:i:s');
+//            $campaign->save();
+//            return response()->json([
+//                'errors' => [
+//                    'payment' => 'An active subscription is required',
+//                ],
+//            ], 402);
+//        }
+>>>>>>> new-design
     }
 
     public function restartCampaign(Request $request)
@@ -241,6 +257,7 @@ class CampaignController extends Controller
         ])->first();
 
         //No Active Subscription
+<<<<<<< HEAD
         if (!$shop->subscribed(config('cashier.subscription.plan'))) {
             return response()->json([
                 'errors' => [
@@ -248,6 +265,20 @@ class CampaignController extends Controller
                     'campaign_id' => $campaign->id
                 ],
             ], 402);
+=======
+        if (!$shop->subscribed(config('cashier.subscription.plan')))
+            return view('form.payment', ['shop' => $shop]);
+
+        if ($campaign === 0) {
+            $message = [
+                'error' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'
+            ];
+        } else {
+            $campaign->restore();
+            $message = [
+                'success' => 'Campaign successfully restarted'
+            ];
+>>>>>>> new-design
         }
 
         $request->session()->flash('success', 'Your campaign was activated successfully');

@@ -43,6 +43,7 @@ Route::get('/', function () {
 Route::get('auth/shopify/install',
     [App\Http\Controllers\Auth\ShopifyController::class, 'install'])->name('Shopify.Install');
 
+<<<<<<< HEAD
 Route::get('/getting-started', [App\Http\Controllers\GettingStartedController::class, 'index'])->name('gettingStarted');
 Route::post('/get-qrcode', [App\Http\Controllers\GettingStartedController::class, 'getQRCode'])->name('getQRCode');
 
@@ -61,6 +62,14 @@ Route::group(['prefix' => 'manual-campaigns', 'as' => 'manualCampaigns'],functio
     Route::post('/draw-data', [App\Http\Controllers\ManualCampaignController::class, 'draw'])->name('.draw-data');    
     Route::post('/start-campaign', [App\Http\Controllers\ManualCampaignController::class, 'startCampaign'])->name('.startCampaign');    
 });
+=======
+Route::get('/getting-started', [App\Http\Controllers\Controller::class, 'index'])->name('gettingStarted');
+Route::post('/get-qrcode', [App\Http\Controllers\Controller::class, 'getQRCode'])->name('getQRCode');
+
+Route::get('/analytics-dashboard', [App\Http\Controllers\Controller::class, 'analyticsDashboard'])->name('analyticsDashboard');
+Route::get('/account', [App\Http\Controllers\Controller::class, 'account'])->name('account');
+Route::get('/manual-campaigns', [App\Http\Controllers\Controller::class, 'manualCampaigns'])->name('manualCampaigns');
+>>>>>>> new-design
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/campaign/thumbnail',
@@ -92,6 +101,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/campaign/view',
         [App\Http\Controllers\CampaignController::class, 'viewCampaigns'])->name('viewCampaigns');
 
+<<<<<<< HEAD
     // automated-retargeting
     Route::get('/automated-retargeting',[App\Http\Controllers\AutomatedRetargetingController::class, 'index'])->name('automated-retargeting.index');
 
@@ -103,6 +113,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/campaign/stop/{project_id}', [App\Http\Controllers\CampaignOverviewController::class, 'stopCampaign'])->where('project_id','[A-Za-z0-9]+')->name('.stopCampaign');
     });
 
+=======
+>>>>>>> new-design
     //Shop Links
     Route::post('/shop/subscription/',
         [App\Http\Controllers\ShopController::class, 'startSubscription'])->name('startSubscription');

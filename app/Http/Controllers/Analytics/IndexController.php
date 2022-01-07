@@ -6,8 +6,11 @@ use Illuminate\Routing\Controller;
 // use App\Http\Controllers\Controller;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shop;
+<<<<<<< HEAD
 use App\Models\Visitor;
 use App\Models\VisitorIp;
+=======
+>>>>>>> new-design
 use App\Models\User\SocialProviders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

@@ -3,11 +3,26 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element">
+<<<<<<< HEAD
                     <img alt="image" class="w-100-p b-r-10" src="../images/simplepost_logo_01.png"/>
                 </div>
                 <div class="logo-element">
                     <img alt="image" class="w-100-p b-r-10" style="padding:5px;" src="../images/simplepost_logo_01.png"/>
                 </div>
+=======
+                    <img alt="image" class="w-100-p b-r-10" src="../images/simplepost_logo_01.jpg"/>
+                </div>
+                <div class="logo-element">
+                    <img alt="image" class="w-100-p b-r-10" src="../images/simplepost_logo_01.jpg"/>
+                </div>
+                @if (Auth::check())
+                    <div class="dropdown profile-element">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="block m-t-xs font-bold">{{ auth()->user()->name }}</span>
+                        </a>
+                    </div>
+                @endif
+>>>>>>> new-design
             </li>
             {{-- <li class="{{ Route::is('dashboard') ? 'active' : '' }}">--}}
             {{-- <a href="{{ Route('dashboard') }}"><i class="fa fa-dashboard"></i>
@@ -19,6 +34,7 @@
                 <li class="{{ Route::is('manualCampaigns') ? 'active' : '' }}">
                     <a href="{{ Route('manualCampaigns') }}"><i class="fa fa-bullseye"></i> <span class="nav-label">Manual Campaigns</span></a>
                 </li>
+<<<<<<< HEAD
 
             <li class="{{ Route::is('automated-retargeting.index') ? 'active' : '' }}">
                 <a href="{{ Route('automated-retargeting.index') }}"><i class="fa fa-bullhorn"></i> <span class="nav-label">Automated Retargeting</span></a>
@@ -26,6 +42,11 @@
 
             <li class="{{ Route::is('campaign-overview.index') ? 'active' : '' }}">
                 <a href="{{ Route('campaign-overview.index') }}"><i class="fa fa-bullhorn"></i> <span class="nav-label">Campaign Overview</span></a>
+=======
+
+            <li class="{{ Route::is('viewCampaigns') ? 'active' : '' }}">
+                <a href="{{ Route('viewCampaigns') }}"><i class="fa fa-bullhorn"></i> <span class="nav-label">Automated Retargeting</span></a>
+>>>>>>> new-design
             </li>
 
             <li class="{{ Route::is('analyticsDashboard') ? 'active' : '' }}">

@@ -8,7 +8,10 @@ use App\Models\Analytics\CampaignAnalytics;
 use App\Models\Analytics\Dynamo;
 use App\Models\Shopify;
 use App\Models\Shop;
+<<<<<<< HEAD
 use App\Models\VisitorIp;
+=======
+>>>>>>> new-design
 use App\Models\User\SocialProviders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

@@ -180,8 +180,11 @@ return [
         // QRcode Generator
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
 
+<<<<<<< HEAD
         Jenssegers\Mongodb\MongodbServiceProvider::class,
 
+=======
+>>>>>>> new-design
     ],
 
     /*
@@ -237,7 +240,10 @@ return [
         'AWS' => Aws\Laravel\AwsFacade::class,
 
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+<<<<<<< HEAD
         'HelperService' => App\Services\HelperService::class,
+=======
+>>>>>>> new-design
 
 
     ],
