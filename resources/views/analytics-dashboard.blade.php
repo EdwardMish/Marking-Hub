@@ -32,9 +32,13 @@
             <div class="form-group mb-3">
                 <select class="form-control custom-input" id="campaign-select" name="campaign_select" >
                     <option value="all">All Campaigns</option>
-                    @foreach($campaigns as $index=>$campaign)
+                    <!-- @foreach($campaigns as $index=>$campaign)
                         <option value="{{$campaign->id}}" {{ $selected_campaign_id == $campaign->id ? 'selected=""' : ''}}>Campaign-{{$campaign->discount_prefix}}-{{$index+1}}</option>
-                    @endforeach
+                    @endforeach -->
+
+                    <option value="campaign_01">Campaign-01</option>
+                    <option value="campaign_02">Campaign-02</option>
+                    <option value="campaign_03">Campaign-03</option>
                 </select>
             </div>
         </div>
@@ -333,7 +337,7 @@
     <!-- end row-->
     <br>
 
-    
+
     <script src="../js/analytics.js"></script>
 
 </div>
