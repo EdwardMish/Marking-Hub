@@ -73,6 +73,11 @@
     color: #007200;
 }
 
+iframe{
+    border: 2px solid #387f37 !important;
+    border-radius: 5px  !important;
+}
+
 .table-responsiveness {
     display: table;
     width: 100%;
@@ -1427,6 +1432,7 @@ h5 {
     font-weight: 600;
 }
 .nav > li > a {
+    font-family: 'Open Sans';
     color: #a7b1c2;
     font-weight: 600;
     padding: 14px 20px 14px 25px;
@@ -5053,8 +5059,12 @@ samp {
     padding: 15px 20px;
     border-bottom: 1px solid #e7eaec;
 }
+.btn:hover {
+    color: #cfcfcf !important;
+}
 body {
-    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /* font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif; */
+    font-family: "Helvetica Neue Normal", Helvetica, Arial, sans-serif;
     background-color: #2f4050;
     font-size: 13px;
     color: #676a6c;

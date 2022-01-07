@@ -1,64 +1,85 @@
 @extends('layouts.app', ['activePage' => 'design', 'titlePage' => __('Select A Postcard')])
 
 @section('content')
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="container-fluid">
+        <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
-                <div class="ibox">
-                    <div class="ibox-title heading-dashboard">
-                        New Getting Started
-                    </div>
-                    <div class="ibox-content">
-                        <p class="custom-text">Over 200 billion emails are sent each day, but the recipient opens only 34.1% of those emails. Given that potential customers are already overwhelmed with an inbox full of emails, there's a significant chance that they won't open your email, regardless of how relevant or personalized it is.</p>
-                        <p>Direct mailing lists have a much higher delivery rate and open rate than email campaigns. And 77% of people sort through their physical mail as soon as they get it.</p>
-                        <p>Direct mail is inherently more visible than email communication because it is tangible. By sending it, you can get around email fatigue and get your message in front of high-intent customers.</p>
-                    </div>
-                </div>
+                <div class="card growth-bg">
+                    <div class="card-body">
+                        <h4 class="heading-dashboard mb-20 mb-3">With SimplePost, access the power of direct mail!</h4>
+                        <p class="custom-text" style="color: #387f37;font-family: 'Helvetica Neue Bold';line-height: 1.5em;">Direct mail is a great way to both keep in touch with existing customers and expand your customer base through automated retargeting.</p>
+                        <p>Our research shows that direct mail has a significantly higher both open and conversion rate than traditional email marketing campaigns.</p>
+                        <p>Additionally, our research shows that customers prefer having physical contact with brands and that physical advertising is an important part of any brands marketing mix.</p>
+
+                    </div> <!-- end card body-->
+                </div> <!-- end card -->
             </div>
         </div>
-        <div class="row">
 
-            <div class="col-lg-6 col-md-6">
-                <iframe style="width:100%;" width="420" height="400" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+        <div class="row mb-3">
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <iframe style="width:100%;" width="420" height="415" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+
+                    </div> <!-- end card body-->
+                </div> <!-- end card -->
             </div>
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-content">
+                                        <p class="heading-dashboard">
+                                            <i class="fa fa-bullhorn"></i> Automated Retargeting:
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p class="custom-text">Send website vistors direct mail discounts through our proprietary IP -> physical address process! You can set rules for specific actions (such as just visitors or add to carts or abandon checkouts) and send only those higher potential converting customers specific discounts for them.</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
 
-            <div class="col-lg-6 col-md-6">
+                                                <a href="/automated-retargeting" type="button" class="btn custom-button btn" style="    float: right;    width: 100%;    max-width: 250px;">Automated Retargeting </a>
 
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <p class="custom-text">
-                                    Automated Retargeting:
-                                </p>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <input type="text" id="customer_spend" class="form-control custom-input" value="">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <div class="ibox">
-                            <div class="ibox-content">
-                                <p class="custom-text">
-                                    Manual Retargeting:
-                                </p>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <input type="text" id="customer_spend" class="form-control custom-input" value="">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-content">
+                                        <p class="heading-dashboard">
+                                            <i class="fa fa-bullseye"></i> Manual Retargeting:
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p class="custom-text">Send direct mail discounts to specific segments of your customer base with a few clicks of a button! you’ve spent money acquiring these customers, remind them how much they enjoy the brand with unique coupons for their behavior.</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+
+                                                <a href="/manual-campaigns" type="button" class="btn custom-button btn" style="    float: right;    width: 100%;    max-width: 250px;">Manual Retargeting</a>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
+                    </div> <!-- end card body-->
+                </div> <!-- end card -->
             </div>
         </div>
     </div>
+</div>
 @endsection
