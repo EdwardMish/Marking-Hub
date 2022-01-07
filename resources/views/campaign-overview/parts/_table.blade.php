@@ -19,6 +19,7 @@
                 </tr>
                 </thead>
                 <tbody>
+
                     <!-- Please Remove these in production Starts -->
                 <tr>
                         <td><img src="https://simplepost.s3.us-east-2.amazonaws.com/campaigns/thumbnails/c6k4fcnnkde0028rmnyg.jpg"></td>
@@ -26,9 +27,9 @@
                         <td>simplepostco.myshopify.com</td>
                         <td>Automated</td>
                         <td>Add to Carts</td>
-                        <th><a href="{{ Route('analyticsDashboard',$campaign->id)}}">view</a></th>
+                        <th><a href="#">view</a></th>
                         <td>Active</td>
-                        <th><a href="{{ Route('campaign-overview.stopCampaign', $campaign->project_id)}}">Stop</a></th>
+                        <th><a href="#">Stop</a></th>
                     </tr>
                 <tr>
                         <td><img src="https://simplepost.s3.us-east-2.amazonaws.com/campaigns/thumbnails/c6k4fcnnkde0028rmnyg.jpg"></td>
@@ -36,9 +37,9 @@
                         <td>simplepostco.myshopify.com</td>
                         <td>Manual Retargeting</td>
                         <td>Add to Carts</td>
-                        <th><a href="{{ Route('analyticsDashboard',$campaign->id)}}">view</a></th>
+                        <th><a href="#">view</a></th>
                         <td>Active</td>
-                        <th><a href="{{ Route('campaign-overview.stopCampaign', $campaign->project_id)}}">Stop</a></th>
+                        <th><a href="#">Stop</a></th>
                     </tr>
                 <tr>
                         <td><img src="https://simplepost.s3.us-east-2.amazonaws.com/campaigns/thumbnails/c6k4fcnnkde0028rmnyg.jpg"></td>
@@ -46,13 +47,13 @@
                         <td>simplepostco.myshopify.com</td>
                         <td>Manual Retargeting</td>
                         <td>Add to Carts</td>
-                        <th><a href="{{ Route('analyticsDashboard',$campaign->id)}}">view</a></th>
+                        <th><a href="#">view</a></th>
                         <td>Active</td>
-                        <th><a href="{{ Route('campaign-overview.stopCampaign', $campaign->project_id)}}">Stop</a></th>
+                        <th><a href="#">Stop</a></th>
                     </tr>
 
                     <!-- Please Remove these in production Ends -->
-                <!-- @foreach ($campaigns as $campaign)
+                @foreach ($campaigns as $campaign)
                     <tr>
                         <td><img src="{{ $campaign->thumbnail_url }}"></td>
                         <td>{{ $campaign->campaign_name }}</td>
@@ -67,7 +68,7 @@
                             <th><a href="{{ Route('campaign-overview.restartCampaign', $campaign->project_id)}}">Restart</a></th>
                         @endif
                     </tr>
-                @endforeach -->
+                @endforeach
                 </tbody>
             </table>
             </div>
