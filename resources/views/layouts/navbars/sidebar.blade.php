@@ -8,13 +8,6 @@
                 <div class="logo-element">
                     <img alt="image" class="w-100-p b-r-10" style="padding:5px;" src="../images/simplepost_logo_01.png"/>
                 </div>
-                @if (Auth::check())
-                    <div class="dropdown profile-element">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="block m-t-xs font-bold">{{ auth()->user()->name }}</span>
-                        </a>
-                    </div>
-                @endif
             </li>
             {{-- <li class="{{ Route::is('dashboard') ? 'active' : '' }}">--}}
             {{-- <a href="{{ Route('dashboard') }}"><i class="fa fa-dashboard"></i>
