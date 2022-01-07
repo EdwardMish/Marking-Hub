@@ -43,21 +43,23 @@ Route::get('/', function () {
 Route::get('auth/shopify/install',
     [App\Http\Controllers\Auth\ShopifyController::class, 'install'])->name('Shopify.Install');
 
-Route::get('/getting-started', [App\Http\Controllers\Controller::class, 'index'])->name('gettingStarted');
-Route::post('/get-qrcode', [App\Http\Controllers\Controller::class, 'getQRCode'])->name('getQRCode');
+Route::get('/getting-started', [App\Http\Controllers\GettingStartedController::class, 'index'])->name('gettingStarted');
+Route::post('/get-qrcode', [App\Http\Controllers\GettingStartedController::class, 'getQRCode'])->name('getQRCode');
 
-Route::get('/analytics-dashboard', [App\Http\Controllers\Controller::class, 'analyticsDashboard'])->name('analyticsDashboard');
-Route::post('/prepare/analytics-data', [App\Http\Controllers\Controller::class, 'prepareAnalyticsData'])->name('prepareAnalyticsData');
+// analytics-dashboard
+Route::get('/analytics-dashboard/{campaign_id?}', [App\Http\Controllers\AnalyticsDashboardController::class, 'analyticsDashboard'])->name('analyticsDashboard');
+Route::post('/prepare/analytics-data', [App\Http\Controllers\AnalyticsDashboardController::class, 'prepareAnalyticsData'])->name('prepareAnalyticsData');
 
 Route::get('/all-orders', [App\Http\Controllers\OrderController::class, 'index'])->name('getAllOrders');
 Route::post('/all-orders-data/{shop}', [App\Http\Controllers\OrderController::class, 'data'])->name('getAllOrdersData');
 
-Route::get('/account', [App\Http\Controllers\Controller::class, 'account'])->name('account');
+Route::get('/account', [App\Http\Controllers\AccountController::class, 'index'])->name('account');
 
 // manualCampaigns
 Route::group(['prefix' => 'manual-campaigns', 'as' => 'manualCampaigns'],function(){
     Route::get('/', [App\Http\Controllers\ManualCampaignController::class, 'index']);
     Route::post('/draw-data', [App\Http\Controllers\ManualCampaignController::class, 'draw'])->name('.draw-data');    
+    Route::post('/start-campaign', [App\Http\Controllers\ManualCampaignController::class, 'startCampaign'])->name('.startCampaign');    
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -89,6 +91,17 @@ Route::middleware(['auth'])->group(function () {
         '[A-Za-z0-9]+')->name('designPostcard'); //This is hardcoded in some JS
     Route::get('/campaign/view',
         [App\Http\Controllers\CampaignController::class, 'viewCampaigns'])->name('viewCampaigns');
+
+    // automated-retargeting
+    Route::get('/automated-retargeting',[App\Http\Controllers\AutomatedRetargetingController::class, 'index'])->name('automated-retargeting.index');
+
+    // campaign-overview
+    Route::group(['prefix' => 'campaign-overview', 'as' => 'campaign-overview'], function(){
+        Route::get('/',[App\Http\Controllers\CampaignOverviewController::class, 'index'])->name('.index');
+        Route::post('/campaign/start/{project_id}', [App\Http\Controllers\CampaignOverviewController::class, 'startCampaign'])->where('project_id','[A-Za-z0-9]+')->name('.startCampaign');
+        Route::get('/campaign/restart/{project_id}', [App\Http\Controllers\CampaignOverviewController::class, 'restartCampaign'])->where('project_id','[A-Za-z0-9]+')->name('.restartCampaign');
+        Route::get('/campaign/stop/{project_id}', [App\Http\Controllers\CampaignOverviewController::class, 'stopCampaign'])->where('project_id','[A-Za-z0-9]+')->name('.stopCampaign');
+    });
 
     //Shop Links
     Route::post('/shop/subscription/',

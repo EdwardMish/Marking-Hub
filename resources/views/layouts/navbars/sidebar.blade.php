@@ -3,10 +3,10 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element">
-                    <img alt="image" class="w-100-p b-r-10" src="../images/simplepost_logo_01.jpg"/>
+                    <img alt="image" class="w-100-p b-r-10" src="../images/simplepost_logo_01.png"/>
                 </div>
                 <div class="logo-element">
-                    <img alt="image" class="w-100-p b-r-10" src="../images/simplepost_logo_01.jpg"/>
+                    <img alt="image" class="w-100-p b-r-10" style="padding:5px;" src="../images/simplepost_logo_01.png"/>
                 </div>
                 @if (Auth::check())
                     <div class="dropdown profile-element">
@@ -27,8 +27,12 @@
                     <a href="{{ Route('manualCampaigns') }}"><i class="fa fa-bullseye"></i> <span class="nav-label">Manual Campaigns</span></a>
                 </li>
 
-            <li class="{{ Route::is('viewCampaigns') ? 'active' : '' }}">
-                <a href="{{ Route('viewCampaigns') }}"><i class="fa fa-bullhorn"></i> <span class="nav-label">Automated Retargeting</span></a>
+            <li class="{{ Route::is('automated-retargeting.index') ? 'active' : '' }}">
+                <a href="{{ Route('automated-retargeting.index') }}"><i class="fa fa-bullhorn"></i> <span class="nav-label">Automated Retargeting</span></a>
+            </li>
+
+            <li class="{{ Route::is('campaign-overview.index') ? 'active' : '' }}">
+                <a href="{{ Route('campaign-overview.index') }}"><i class="fa fa-bullhorn"></i> <span class="nav-label">Campaign Overview</span></a>
             </li>
 
             <li class="{{ Route::is('analyticsDashboard') ? 'active' : '' }}">
