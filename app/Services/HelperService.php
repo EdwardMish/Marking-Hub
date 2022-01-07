@@ -28,7 +28,7 @@ class HelperService {
         }
     }
 
-    public function postcardAudienceOptions(){
+    public static function postcardAudienceOptions(){
         return [ 
             Campaigns::Prior_Customers,
             Campaigns::Purchase_More_Then,
