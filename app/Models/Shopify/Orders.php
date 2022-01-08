@@ -11,11 +11,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
-<<<<<<< HEAD
 use App\Models\Mongo\Orders as MongoOrders;
 use App\Models\Mongo\OrdersDiscountCodes as MongoOrdersDiscountCodes;
-=======
->>>>>>> new-design
 
 class Orders extends Model
 {
@@ -49,15 +46,12 @@ class Orders extends Model
                 $orderRecord = Orders::firstOrNew([
                     'id' => $order->id
                 ]);
-<<<<<<< HEAD
 
                 $mongoOrderRecord = MongoOrders::updateOrCreate([
                     'id' => $order->id,
                     'shop_id' => $shop->id,
                 ], (array) $order);
                 
-=======
->>>>>>> new-design
                 try {
                     $data = [
                         'shop_id' => $shop->id,
@@ -69,10 +63,7 @@ class Orders extends Model
                         'billing_address_province_code' => $order->billing_address->province_code,
                         'billing_address_zip' => $order->billing_address->zip,
                         'order_date' => $order->created_at,
-<<<<<<< HEAD
                         'customer_id' => $order->customer->id,
-=======
->>>>>>> new-design
                     ];
                 } catch (\Exception $e) {
                     $data = [
@@ -85,10 +76,7 @@ class Orders extends Model
                         'billing_address_province_code' => '',
                         'billing_address_zip' => '',
                         'order_date' => $order->created_at,
-<<<<<<< HEAD
                         'customer_id' => '',
-=======
->>>>>>> new-design
                     ];
                 }
 
@@ -113,21 +101,12 @@ class Orders extends Model
                 //Get the last date for the next potential run
                 $ordersSince = $order->updated_at;
                 $date = new \DateTime();
-<<<<<<< HEAD
-                // Storage::disk('s3-private')->put(
-                //     'Year=' . $date->format('Y') .
-                //     '/Month=' . $date->format('m') .
-                //     '/Day=' . $date->format('d') .
-                //     '/' .$shop->id . '/' . Uuid::uuid4().'.json',
-                // json_encode($order));
-=======
                 Storage::disk('s3-private')->put(
                     'Year=' . $date->format('Y') .
                     '/Month=' . $date->format('m') .
                     '/Day=' . $date->format('d') .
                     '/' .$shop->id . '/' . Uuid::uuid4().'.json',
                 json_encode($order));
->>>>>>> new-design
 
             }
         }

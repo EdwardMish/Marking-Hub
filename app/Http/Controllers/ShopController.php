@@ -21,12 +21,8 @@ class ShopController extends Controller
         });
     }
 
-<<<<<<< HEAD
     public function redirectToPortal(Request $request)
     {
-=======
-    public function redirectToPortal (Request $request) {
->>>>>>> new-design
 
         $shop = Shop::where([
             'id' => $request->route('shop_id'),
@@ -40,11 +36,7 @@ class ShopController extends Controller
     {
         $rules = [
             'fullname' => ['required', 'string'],
-<<<<<<< HEAD
-            'card_number' => 'required|int',
-=======
             'number' => 'required|int',
->>>>>>> new-design
             'expiration' => ['required', 'regex:/^([0-9]{2})\s?\/\s?([0-9]{2})$/'],
             'cvv' => 'required|int',
             'shop_id' => 'required|int',
@@ -78,16 +70,7 @@ class ShopController extends Controller
         $subbed = $shop->subscribed($planId);
 
         if ($subbed) {
-<<<<<<< HEAD
-            return response()->json([
-                'errors' => [],
-                'success' => [
-                    'redirect' => route('viewCampaigns')
-                ]
-            ], 200);
-=======
             return true;
->>>>>>> new-design
         }
 
         try {
@@ -119,15 +102,9 @@ class ShopController extends Controller
             $payment = $stripe->paymentMethods->create([
                 'type' => 'card',
                 'card' => [
-<<<<<<< HEAD
-                    'number' => $data['card_number'],
-                    'exp_month' => $expiration[0],
-                    'exp_year' => $year,
-=======
                     'number' => $data['number'],
                     'exp_month' =>  $expiration[0],
                     'exp_year' =>  $year,
->>>>>>> new-design
                     'cvc' => $data['cvv'],
                 ],
             ]);
@@ -143,16 +120,7 @@ class ShopController extends Controller
             return response()->json(['subscription' => $e->getMessage()], 400);
         }
 
-<<<<<<< HEAD
-        return response()->json([
-            'errors' => [],
-            'success' => [
-                'redirect' => route('viewCampaigns')
-            ]
-        ], 200);
-=======
         return true;
->>>>>>> new-design
     }
 
     public function viewSubscriptionForm(Request $request)

@@ -30,17 +30,12 @@
     <div class="row">
         <div class="col-xl-2">
             <div class="form-group mb-3">
-<<<<<<< HEAD
                 <select class="form-control custom-input" id="campaign-select" name="campaign_select" >
                     <option value="all">All Campaigns</option>
                     <!-- @foreach($campaigns as $index=>$campaign)
                         <option value="{{$campaign->id}}" {{ $selected_campaign_id == $campaign->id ? 'selected=""' : ''}}>Campaign-{{$campaign->discount_prefix}}-{{$index+1}}</option>
                     @endforeach -->
 
-=======
-                <select class="form-control custom-input" id="campaign-select">
-                    <option value="all">All Campaigns</option>
->>>>>>> new-design
                     <option value="campaign_01">Campaign-01</option>
                     <option value="campaign_02">Campaign-02</option>
                     <option value="campaign_03">Campaign-03</option>
@@ -49,11 +44,7 @@
         </div>
         <div class="col-xl-2">
             <div class="form-group mb-3">
-<<<<<<< HEAD
                 <select class="form-control custom-input select2-hidden-accessible" name="daterange" id="datepicker" data-select2-id="select2-data-datepicker" tabindex="-1" aria-hidden="true">
-=======
-                <select class="form-control custom-input select2-hidden-accessible" id="datepicker" data-select2-id="select2-data-datepicker" tabindex="-1" aria-hidden="true">
->>>>>>> new-design
                     <option data-select2-id="select2-data-2-ms9n">Select Date</option>
                 </select>
                 <span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" data-select2-id="select2-data-1-9rxa" style="width: 247.156px;"><span class="selection">

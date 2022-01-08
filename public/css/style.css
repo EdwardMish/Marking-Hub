@@ -73,14 +73,11 @@
     color: #007200;
 }
 
-<<<<<<< HEAD
 iframe{
     border: 2px solid #387f37 !important;
     border-radius: 5px  !important;
 }
 
-=======
->>>>>>> new-design
 .table-responsiveness {
     display: table;
     width: 100%;
@@ -1435,10 +1432,7 @@ h5 {
     font-weight: 600;
 }
 .nav > li > a {
-<<<<<<< HEAD
     font-family: 'Open Sans';
-=======
->>>>>>> new-design
     color: #a7b1c2;
     font-weight: 600;
     padding: 14px 20px 14px 25px;
@@ -5064,7 +5058,6 @@ samp {
 .sidebar-container .setings-item {
     padding: 15px 20px;
     border-bottom: 1px solid #e7eaec;
-<<<<<<< HEAD
 }
 .btn:hover {
     color: #cfcfcf !important;
@@ -5072,11 +5065,6 @@ samp {
 body {
     /* font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif; */
     font-family: "Helvetica Neue Normal", Helvetica, Arial, sans-serif;
-=======
-}
-body {
-    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
->>>>>>> new-design
     background-color: #2f4050;
     font-size: 13px;
     color: #676a6c;

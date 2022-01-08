@@ -13,10 +13,7 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.3",
-<<<<<<< HEAD
         "jenssegers/mongodb": "^3.8",
-=======
->>>>>>> new-design
         "laravel/cashier": "^13.6",
         "laravel/framework": "^8.40",
         "laravel/socialite": "^5.2",

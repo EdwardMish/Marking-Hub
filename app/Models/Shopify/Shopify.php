@@ -50,7 +50,6 @@ class Shopify
             ])->getBody());
 
         return $res->orders;
-<<<<<<< HEAD
     }
 
     public function getAllOrders(SocialProviders $social, $token = null, $limit = 50)
@@ -73,8 +72,6 @@ class Shopify
             'next'  => $nexttoken,
             'prev'  => $prevtoken, 
         ];
-=======
->>>>>>> new-design
     }
 
     public function getAbandonCart(SocialProviders $social, $sinceDateTime)

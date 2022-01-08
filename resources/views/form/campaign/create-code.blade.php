@@ -31,12 +31,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <label for="input_discount_prefix" class="inputs-label">Discount Prefix</label>
-<<<<<<< HEAD
                 <input class="form-control" name="discount_prefix" id="input_discount_prefix" value="{{ preg_replace("/[^A-Z0-9 ]/", '', strtoupper(substr($userShop, 0,6))) }}">
-=======
-                <input class="form-control" name="discount_prefix" id="input_discount_prefix" value="
-{{ preg_replace("/[^A-Z0-9 ]/", '', strtoupper(substr($userShop, 0,6))) }}">
->>>>>>> new-design
             </div>
             <div class="col-lg-6">
                 <p id="discount-code-sample" class="faded-text"></p>
@@ -52,16 +47,6 @@
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
-        <div class="row">
-            <div class="col-lg-12" id="linkContainer" style="display:none;">
-                <input type="text" class="form-control" id="storeLink" />
-            </div>
-            <div class="col-lg-12" style="padding-top: 20px">
-                <a class="btn custom-button" id="submitCampaign" value="start" type="submit" href="javascript:void(0)">Start
-                    Campaign</a>
-            </div>           
-=======
         <div class="row" id="linkContainer" style="display:none;">
             <div class="col-lg-12">
                 <input type="text" class="form-control" id="storeLink"/>
@@ -73,7 +58,6 @@
         <div class="col-lg-12" style="padding: 20px 10px 0px 0px">
             <a class="btn custom-button" id="submitCampaign" value="start" type="submit" href="javascript:void(0)">Start
                 Campaign</a>
->>>>>>> new-design
         </div>
         @include('form.campaign.limit-send')
     </div>
@@ -83,49 +67,6 @@
 @push('js')
 <script>
     $(document).ready(function() {
-<<<<<<< HEAD
-        let shopName = $('#input_shop_id option:selected').text();
-        let storeLink = document.getElementById('storeLink');
-        let discountPrefix = document.getElementById('input_discount_prefix');
-
-        function getStoreLink(value) {
-            return "https://" + shopName + "/discount/" + value + "?redirect=/collections/all"
-        }
-
-        storeLink.value = getStoreLink(discountPrefix.value)
-
-        $("#hasQR").change(function() {
-            if (this.checked) {
-                $("#linkContainer").slideDown();
-            } else {
-                $("#linkContainer").slideUp();
-            }
-        });
-
-        let discountType = document.getElementById('input_discount_type');
-        let discountAmount = document.getElementById('input_discount_amount');
-        updateOfferAmount(discountType.value)
-        updateOfferDescription(discountPrefix.value, discountAmount.value)
-
-
-        discountType.addEventListener('change', function() {
-            updateOfferAmount(this.value)
-            updateOfferDescription(discountPrefix.value, discountAmount.value)
-        });
-
-        discountAmount.addEventListener('change', function() {
-            updateOfferAmount(discountType.value)
-            updateOfferDescription(discountPrefix.value, discountAmount.value)
-        });
-
-        discountPrefix.addEventListener('change', function() {
-            updateOfferDescription(discountPrefix.value, discountAmount.value)
-        });
-        $(discountPrefix).on('keyup', function() {
-            storeLink.value = getStoreLink(discountPrefix.value)
-        })
-
-=======
             let shopName = $('#input_shop_id option:selected').text();
             let storeLink = document.getElementById('storeLink');
             let discountPrefix = document.getElementById('input_discount_prefix');
@@ -166,7 +107,6 @@
                 storeLink.value = getStoreLink(discountPrefix.value)
             })
 
->>>>>>> new-design
     });
 
     function updateOfferAmount($offerType) {
