@@ -21,8 +21,7 @@ class ShopController extends Controller
         });
     }
 
-    public function redirectToPortal(Request $request)
-    {
+    public function redirectToPortal (Request $request) {
 
         $shop = Shop::where([
             'id' => $request->route('shop_id'),

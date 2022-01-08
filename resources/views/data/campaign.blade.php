@@ -20,7 +20,7 @@
             @if ($campaign->deleted_at === null)
                 <th><a href="{{ Route('stopCampaign', $campaign->project_id)}}">Stop</a></th>
             @else
-                <th><a data-id="$campaign->project_id)" href="javascript:void(0)" class="restart-campaign">Restart</a></th>
+                <th><a href="{{ Route('restartCampaign', $campaign->project_id)}}">Restart</a></th>
             @endif
         </tr>
     @endforeach

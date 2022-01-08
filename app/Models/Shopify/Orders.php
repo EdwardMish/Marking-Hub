@@ -101,12 +101,12 @@ class Orders extends Model
                 //Get the last date for the next potential run
                 $ordersSince = $order->updated_at;
                 $date = new \DateTime();
-                Storage::disk('s3-private')->put(
-                    'Year=' . $date->format('Y') .
-                    '/Month=' . $date->format('m') .
-                    '/Day=' . $date->format('d') .
-                    '/' .$shop->id . '/' . Uuid::uuid4().'.json',
-                json_encode($order));
+                // Storage::disk('s3-private')->put(
+                //     'Year=' . $date->format('Y') .
+                //     '/Month=' . $date->format('m') .
+                //     '/Day=' . $date->format('d') .
+                //     '/' .$shop->id . '/' . Uuid::uuid4().'.json',
+                // json_encode($order));
 
             }
         }

@@ -254,27 +254,7 @@ class CampaignController extends Controller
             ];
         }
 
-        $request->session()->flash('success', 'Your campaign was activated successfully');
-        return response()->json([
-            'errors' => [],
-            'success' => [
-                'redirect' => route('viewCampaigns')
-            ]
-        ], 200);
-
-//        if ($campaign === 0) {
-//            return response()->json(['errors' => 'Something went wrong we were unable to restart your campaign.  Please contact us.'], 400);
-//        } else {
-//            $request->session()->flash('success', 'Your campaign was activated successfully');
-//            return response()->json([
-//                'errors' => [],
-//                'success' => [
-//                    'redirect' => route('viewCampaigns')
-//                ]
-//            ], 200);
-//        }
-
-
+        return Redirect::route('viewCampaigns')->with($message);
     }
 
     public function stopCampaign(Request $request)
