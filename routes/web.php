@@ -24,7 +24,7 @@ Route::get('/test/dump-visitors', [App\Http\Controllers\TestController::class, '
 // Auth Routes
 Route::get('/auth/redirect', function () {
     return Socialite::driver('shopify')->scopes([
-        'write_orders', 'read_customers', 'write_script_tags', 'write_discounts', 'write_price_rules', 'read_all_orders'
+        'write_orders', 'read_customers', 'write_script_tags', 'write_discounts', 'write_price_rules', 'read_all_orders', 'read_products'
     ])->stateless()->redirect();
 })->name('Shopify.Redirect');
 Route::get('/auth/callback',
@@ -52,6 +52,9 @@ Route::post('/prepare/analytics-data', [App\Http\Controllers\AnalyticsDashboardC
 
 Route::get('/all-orders', [App\Http\Controllers\OrderController::class, 'index'])->name('getAllOrders');
 Route::post('/all-orders-data/{shop}', [App\Http\Controllers\OrderController::class, 'data'])->name('getAllOrdersData');
+
+Route::get('/all-products', [App\Http\Controllers\ProductsController::class, 'index'])->name('getAllProducts');
+Route::post('/all-products-data/{shop}', [App\Http\Controllers\ProductsController::class, 'data'])->name('getAllProductsData');
 
 Route::get('/account', [App\Http\Controllers\AccountController::class, 'index'])->name('account');
 

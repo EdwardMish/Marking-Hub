@@ -32,6 +32,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('refresh-social')->daily();
         $schedule->command('fetch-orders')->dailyAt('02:00');
         $schedule->command('process-campaigns')->dailyAt('04:00');
+        $schedule->command('mongodb:fetch-products')->dailyAt('06:00');
     }
 
     /**

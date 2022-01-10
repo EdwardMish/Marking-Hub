@@ -52,6 +52,18 @@ class Shopify
         return $res->orders;
     }
 
+    public function getOrdersFormBegin(SocialProviders $social, $since_id, $limit = 50)
+    {
+        $client = new Client();
+        $apiV = config('services.shopify.api_version');
+        $url = 'https://'.$social->nickname.'/admin/api/'.$apiV.'/orders.json?limit='.$limit.'&since_id='.$since_id;
+        $res = json_decode($client->request('GET', $url, [
+                'headers' => ['X-Shopify-Access-Token' => $social->access_token],
+            ])->getBody());
+
+        return $res->orders;
+    }
+
     public function getAllOrders(SocialProviders $social, $token = null, $limit = 50)
     {
         $client = new Client();
@@ -69,6 +81,28 @@ class Shopify
 
         return [
             'data'  => $res->orders,
+            'next'  => $nexttoken,
+            'prev'  => $prevtoken, 
+        ];
+    }
+
+    public function getAllProducts(SocialProviders $social, $token = null, $limit = 50)
+    {
+        $client = new Client();
+        $apiV = config('services.shopify.api_version');
+        $url = 'https://'.$social->nickname.'/admin/api/'.$apiV.'/products.json?limit='.$limit.($token?'&page_info='.$token:'');
+        $response = $client->request('GET', $url, [
+            'headers' => ['X-Shopify-Access-Token' => $social->access_token],
+        ]);
+        $headers = $response->getHeaders();
+        
+        $nexttoken = HelperService::getPageInfoToken($headers, 'next');
+        $prevtoken = HelperService::getPageInfoToken($headers);
+        
+        $res = json_decode($response->getBody());
+
+        return [
+            'data'  => $res->products,
             'next'  => $nexttoken,
             'prev'  => $prevtoken, 
         ];

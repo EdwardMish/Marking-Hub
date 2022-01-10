@@ -4,24 +4,23 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Shop;
-use App\Models\User\SocialProviders;
-use App\Jobs\FetchShopOrdersJob;
+use App\Jobs\FetchShopProductsJob;
 
-class AddOrdersInMongodb extends Command
+class AddProductsInMongodb extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mongodb:fetch-orders';
+    protected $signature = 'mongodb:fetch-products';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'fetch orders from shopify and store it to mongodb';
+    protected $description = 'fetch products from shopify and store it to mongodb';
 
     /**
      * Create a new command instance.
@@ -43,7 +42,7 @@ class AddOrdersInMongodb extends Command
         $shops = Shop::all();
 
         foreach($shops as $shop) {
-            dispatch(new FetchShopOrdersJob($shop->id, $this->orders_next_token));
+            dispatch(new FetchShopProductsJob($shop->id, $shop->products_next_token));
         }
 
         return 0;
