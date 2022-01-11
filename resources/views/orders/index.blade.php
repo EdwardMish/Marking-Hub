@@ -57,7 +57,7 @@
 @endpush
 @push('js')
     <script>
-        let shop, token=null;
+        let shop, token=null, page = 1, last=null;
         function getData() {
             $.ajax({
                 method: "post",
@@ -65,7 +65,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
-                data: {token}
+                data: {token, page, last}
             }).done(function(result) {
                 $('#ordersContainer').empty().append(result);
             }).fail(function(result) {
@@ -81,13 +81,26 @@
                 getData();
             });
 
-            $(document).on('click','#listPrevBtn',function(e){
-                token = $(this).data('previd')
+            $(document).on('click','#listPageInput',function(e){
+                page = $(this).val()
                 getData();
             })
 
+            $(document).on('click','#listPrevBtn',function(e){
+                last = $('#listLastInput').val();
+                token = $(this).data('previd')
+                page--;
+                if(1==page){
+                    token=null;
+                }
+                getData();
+            })
+
+            
             $(document).on('click','#listNextBtn',function(e){
+                last = $('#listLastInput').val();
                 token = $(this).data('nextid')
+                page++;
                 getData();
             })
 

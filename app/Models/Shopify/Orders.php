@@ -148,13 +148,15 @@ class Orders extends Model
             $target->browser_user_id = $order->user_id;
             $target->save();
 
-            $history = CampaignHistory::find($target->campaign_history_id);
-            $history->total_revenue = $history->total_revenue + $orderTotal - $existingRevenue;
-            $history->save();
+            if($history = CampaignHistory::find($target->campaign_history_id)){
+                $history->total_revenue = $history->total_revenue + $orderTotal - $existingRevenue;
+                $history->save();    
+            }
 
-            $campaign = Campaigns::find($target->campaign_id);
-            $campaign->total_revenue = $campaign->total_revenue + $orderTotal - $existingRevenue;
-            $campaign->save();
+            if($campaign = Campaigns::find($target->campaign_id)){
+                $campaign->total_revenue = $campaign->total_revenue + $orderTotal - $existingRevenue;
+                $campaign->save();
+            }
 
         }
 

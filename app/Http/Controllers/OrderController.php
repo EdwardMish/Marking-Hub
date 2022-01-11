@@ -27,14 +27,25 @@ class OrderController extends Controller
 
     public function data(Request $request,Shop $shop)
     {
+        $limit = 200;
         $shopify = new Shopify();
         $shopifyUser = (new SocialProviders)->getShopifyById($shop->user_id);
-        $list = $shopify->getAllOrders($shopifyUser, $request->token);
+        $list = $shopify->getOrdersFormBegin($shopifyUser, $request->token, $limit);
+        $nextId = '';
+        if(count($list)>0){
+            $first = $list[0];
+            $prevId = $first->id;
+            if(count($list) == $limit){
+                $last = $list[count($list)-1];
+                $nextId = $last->id;    
+            }
+        }
 
         return view('orders.list', [
-            'list'      => $list['data'],
-            'nextId'    => $list['next'],
-            'prevId'    => $list['prev'],
+            'list'      => $list,
+            'nextId'    => $nextId,
+            'prevId'    => $request->page != 1 ? $request->last : '',
+            'page'      =>  $request->page ? $request->page : 1,
         ]);
     }
 }

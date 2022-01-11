@@ -13,7 +13,9 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($list as $order)
+        @php($lastId = null)
+        @foreach ($list as $oindex => $order)
+            @if($oindex == 0) @php($lastId = $order->id) @endif 
             <tr>
                 <td>{{ $order->order_number }}</td>
                 <td>{{ $order->name }}</td>
@@ -29,6 +31,8 @@
     </tbody>
 </table>
 <div class="col-lg-12">
+    <input type="hidden" id="listPageInput" value="{{$page}}" />
+    <input type="hidden" id="listLastInput" value="{{$lastId}}" />
     <button type="button" class="btn btn-default btn-lg" id="listPrevBtn" data-previd="{{$prevId}}" {{ $prevId =='' ? 'disabled' : ''}}>Previous</button>
     <button type="button" class="btn btn-default btn-lg" id="listNextBtn" data-nextid="{{$nextId}}" {{ $nextId =='' ? 'disabled' : ''}}>Next</button>
 </div>

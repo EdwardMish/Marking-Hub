@@ -43,7 +43,7 @@ class AddOrdersInMongodb extends Command
         $shops = Shop::all();
 
         foreach($shops as $shop) {
-            dispatch(new FetchShopOrdersJob($shop->id, $this->orders_next_token));
+            dispatch(new FetchShopOrdersJob($shop->id, $shop->orders_next_token));
         }
 
         return 0;
